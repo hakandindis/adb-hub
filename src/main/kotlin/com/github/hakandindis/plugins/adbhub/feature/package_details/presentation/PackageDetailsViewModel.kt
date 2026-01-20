@@ -5,10 +5,8 @@ import com.github.hakandindis.plugins.adbhub.constants.DumpsysCommands
 import com.github.hakandindis.plugins.adbhub.constants.ParsePatterns
 import com.github.hakandindis.plugins.adbhub.core.adb.AdbCommandExecutor
 import com.github.hakandindis.plugins.adbhub.feature.package_details.domain.mapper.ActivityMapper
-import com.github.hakandindis.plugins.adbhub.feature.package_details.domain.mapper.CertificateMapper
 import com.github.hakandindis.plugins.adbhub.feature.package_details.domain.mapper.GeneralInfoMapper
 import com.github.hakandindis.plugins.adbhub.feature.package_details.domain.mapper.PermissionMapper
-import com.github.hakandindis.plugins.adbhub.feature.package_details.domain.usecase.GetCertificateInfoUseCase
 import com.github.hakandindis.plugins.adbhub.feature.package_details.domain.usecase.GetPackageDetailsUseCase
 import com.github.hakandindis.plugins.adbhub.models.PermissionGrantStatus
 import com.github.hakandindis.plugins.adbhub.models.PermissionStatus
@@ -27,7 +25,6 @@ import kotlinx.coroutines.launch
  */
 class PackageDetailsViewModel(
     private val getPackageDetailsUseCase: GetPackageDetailsUseCase,
-    private val getCertificateInfoUseCase: GetCertificateInfoUseCase,
     private val commandExecutor: AdbCommandExecutor?,
     coroutineScope: CoroutineScope
 ) : Disposable {
@@ -49,33 +46,22 @@ class PackageDetailsViewModel(
     }
 
     /**
-     * Loads package details and certificate info
+     * Loads package details
      */
     private fun loadPackageDetails(packageName: String, deviceId: String) {
         scope.launch {
             _uiState.update { it.copy(isLoading = true, error = null) }
 
-            // Load package details
             getPackageDetailsUseCase(packageName, deviceId).fold(
                 onSuccess = { packageDetails ->
-                    // Load certificate info in parallel
-                    val certificateResult = getCertificateInfoUseCase(packageName, deviceId)
-
-                    // Map to UI models
                     val generalInfoItems = GeneralInfoMapper.toInfoItems(packageDetails)
                     val pathItems = GeneralInfoMapper.toPathItems(packageDetails)
                     val activities = packageDetails.activities.map { activity ->
                         ActivityMapper.toUiModel(activity)
                     }
 
-                    // Load permission statuses (temporary - will be moved to separate use case)
                     val permissionStatuses = loadPermissionStatuses(packageDetails.permissions, packageName, deviceId)
                     val permissionUiModels = PermissionMapper.toUiModels(permissionStatuses)
-
-                    // Map certificate info
-                    val certificateItems = certificateResult.getOrNull()?.let { certInfo ->
-                        CertificateMapper.toCertificateItems(certInfo)
-                    } ?: emptyList()
 
                     _uiState.update {
                         it.copy(
@@ -83,7 +69,6 @@ class PackageDetailsViewModel(
                             pathItems = pathItems,
                             activities = activities,
                             permissions = permissionUiModels,
-                            certificateItems = certificateItems,
                             isLoading = false
                         )
                     }

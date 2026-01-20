@@ -77,19 +77,14 @@ class AdbHubToolWindowFactory : ToolWindowFactory, DumbAware {
 
         val packageDetailsViewModel = if (executor != null) {
             val packageDetailsDataSource = PackageDetailsModule.createPackageDetailsDataSource(executor)
-            val certificateDataSource = PackageDetailsModule.createCertificateDataSource(executor)
-            if (packageDetailsDataSource != null && certificateDataSource != null) {
+            if (packageDetailsDataSource != null) {
                 val packageDetailsRepository = PackageDetailsModule.createPackageDetailsRepository(
-                    packageDetailsDataSource,
-                    certificateDataSource
+                    packageDetailsDataSource
                 )
                 val getPackageDetailsUseCase =
                     PackageDetailsModule.createGetPackageDetailsUseCase(packageDetailsRepository)
-                val getCertificateInfoUseCase =
-                    PackageDetailsModule.createGetCertificateInfoUseCase(packageDetailsRepository)
                 PackageDetailsViewModel(
                     getPackageDetailsUseCase = getPackageDetailsUseCase,
-                    getCertificateInfoUseCase = getCertificateInfoUseCase,
                     commandExecutor = executor,
                     coroutineScope = coroutineScope
                 )

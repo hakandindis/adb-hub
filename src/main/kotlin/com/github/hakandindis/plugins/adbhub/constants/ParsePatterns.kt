@@ -45,18 +45,6 @@ object ParsePatterns {
     val PERMISSION_LINE = "([a-zA-Z][a-zA-Z0-9_.]*permission[a-zA-Z0-9_.]*)".toRegex()
     val PERMISSION_FULL = "([a-zA-Z][a-zA-Z0-9_.]*\\.permission\\.[a-zA-Z0-9_]+)".toRegex()
 
-    // Certificate patterns
-    val CERTIFICATE_SIGNATURES = "signatures=\\[(.*?)\\]".toRegex()
-    val CERTIFICATE_ALGORITHM_1 = "Signature\\[.*?algorithm=(\\w+)".toRegex(RegexOption.IGNORE_CASE)
-    val CERTIFICATE_ALGORITHM_2 = "algorithm=(SHA\\d+with\\w+)".toRegex(RegexOption.IGNORE_CASE)
-    val CERTIFICATE_VALID_FROM = "validFrom=(\\d{4}-\\d{2}-\\d{2})".toRegex()
-    val CERTIFICATE_VALID_TO = "validTo=(\\d{4}-\\d{2}-\\d{2})".toRegex()
-    val CERTIFICATE_MD5 = "MD5:\\s*([0-9A-F:]+)".toRegex(RegexOption.IGNORE_CASE)
-    val CERTIFICATE_SHA1 = "SHA1:\\s*([0-9A-F:]+)".toRegex(RegexOption.IGNORE_CASE)
-    val CERTIFICATE_SHA256 = "SHA256:\\s*([0-9A-F:]+)".toRegex(RegexOption.IGNORE_CASE)
-    val CERTIFICATE_SUBJECT_DN = "subjectDN=(.*?)(?:,|\\n|$)".toRegex(RegexOption.IGNORE_CASE)
-    val CERTIFICATE_SERIAL_NUMBER = "serialNumber=(\\w+)".toRegex(RegexOption.IGNORE_CASE)
-
     // Enabled/Exported patterns
     val ENABLED_PATTERN = "enabled[=:]\\s*(true|false)".toRegex(RegexOption.IGNORE_CASE)
     val EXPORTED_TRUE = "exported=true"

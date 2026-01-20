@@ -10,7 +10,6 @@ import com.github.hakandindis.plugins.adbhub.core.models.Device
 import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.PackageDetailsUiState
 import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.PackageDetailsViewModel
 import com.github.hakandindis.plugins.adbhub.ui.components.details.ActivitiesTab
-import com.github.hakandindis.plugins.adbhub.ui.components.details.CertificateTab
 import com.github.hakandindis.plugins.adbhub.ui.components.details.GeneralInfoTab
 import com.github.hakandindis.plugins.adbhub.ui.components.details.PermissionsTab
 import com.github.hakandindis.plugins.adbhub.ui.theme.AdbHubTheme
@@ -78,10 +77,6 @@ fun DetailsContent(
                     generalInfoItems = packageDetailsUiState.generalInfoItems,
                     pathItems = packageDetailsUiState.pathItems,
                     onCopyPath = onCopyPath
-                )
-
-                DetailsTab.Certificate -> CertificateTab(
-                    certificateItems = packageDetailsUiState.certificateItems
                 )
 
                 DetailsTab.Permissions -> PermissionsTab(

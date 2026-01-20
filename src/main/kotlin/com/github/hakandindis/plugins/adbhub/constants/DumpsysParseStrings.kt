@@ -38,16 +38,4 @@ object DumpsysParseStrings {
     // Boolean values
     const val TRUE = "true"
     const val FALSE = "false"
-
-    // Certificate related
-    const val SIGNATURES = "signatures="
-    const val VALID_FROM = "validFrom="
-    const val VALID_TO = "validTo="
-    const val MD5 = "MD5:"
-    const val SHA1 = "SHA1:"
-    const val SHA256 = "SHA256:"
-    const val SUBJECT_DN = "subjectDN="
-    const val SERIAL_NUMBER = "serialNumber="
-    const val ALGORITHM = "algorithm="
-    const val ANDROID_DEBUG = "Android Debug"
 }
