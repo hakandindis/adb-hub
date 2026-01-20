@@ -11,6 +11,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import com.github.hakandindis.plugins.adbhub.core.adb.AdbInitializer
 import com.github.hakandindis.plugins.adbhub.core.models.DeviceState
+import com.github.hakandindis.plugins.adbhub.feature.console_log.presentation.ConsoleLogViewModel
 import com.github.hakandindis.plugins.adbhub.feature.device.presentation.DeviceIntent
 import com.github.hakandindis.plugins.adbhub.feature.device.presentation.DeviceViewModel
 import com.github.hakandindis.plugins.adbhub.feature.package_actions.presentation.PackageActionsIntent
@@ -30,7 +31,8 @@ fun AdbToolContent(
     deviceViewModel: DeviceViewModel?,
     packageListViewModel: PackageListViewModel?,
     packageDetailsViewModel: PackageDetailsViewModel?,
-    packageActionsViewModel: PackageActionsViewModel?
+    packageActionsViewModel: PackageActionsViewModel?,
+    consoleLogViewModel: ConsoleLogViewModel?
 ) {
     val deviceUiState = deviceViewModel?.uiState?.collectAsState()?.value
     val devices = deviceUiState?.devices ?: emptyList()
@@ -162,6 +164,8 @@ fun AdbToolContent(
                 packageActionsViewModel = packageActionsViewModel,
                 packageActionsUiState = packageActionsUiState,
                 packageListUiState = packageListUiState,
+                consoleLogViewModel = consoleLogViewModel,
+                consoleLogUiState = null,
                 selectedDevice = selectedDevice,
                 uid = null, // TODO: Get UID from package details or device info
                 onCopyPath = { path ->

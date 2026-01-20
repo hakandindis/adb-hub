@@ -42,6 +42,13 @@ object AdbHubTheme {
     val danger = AdbHubColors.red500
     val warning = AdbHubColors.yellow500
 
+    // ─── Console/Terminal Colors ────────────────────────────────────────────────
+    val consoleCommand = AdbHubColors.terminalGreen
+    val consoleTimestamp = AdbHubColors.grey400
+    val consoleOutput = AdbHubColors.grey200
+    val consoleError = AdbHubColors.red500
+    val consoleExitCode = AdbHubColors.yellow500
+
     // ─── Opacity Helpers ────────────────────────────────────────────────────────
     val successTint = success.copy(alpha = 0.1f)
     val whiteOverlay5 = AdbHubColors.white5

@@ -7,11 +7,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.github.hakandindis.plugins.adbhub.core.models.Device
+import com.github.hakandindis.plugins.adbhub.feature.console_log.presentation.ConsoleLogUiState
+import com.github.hakandindis.plugins.adbhub.feature.console_log.presentation.ConsoleLogViewModel
 import com.github.hakandindis.plugins.adbhub.feature.package_actions.presentation.PackageActionsUiState
 import com.github.hakandindis.plugins.adbhub.feature.package_actions.presentation.PackageActionsViewModel
 import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.PackageDetailsUiState
 import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.PackageDetailsViewModel
 import com.github.hakandindis.plugins.adbhub.feature.packages.presentation.PackageListUiState
+import com.github.hakandindis.plugins.adbhub.ui.components.console.ConsoleLogTab
 import com.github.hakandindis.plugins.adbhub.ui.components.details.AppActionsTab
 import com.github.hakandindis.plugins.adbhub.ui.theme.AdbHubTheme
 import org.jetbrains.jewel.foundation.theme.JewelTheme
@@ -24,6 +27,8 @@ fun AdbMainContent(
     packageActionsViewModel: PackageActionsViewModel?,
     packageActionsUiState: PackageActionsUiState?,
     packageListUiState: PackageListUiState?,
+    consoleLogViewModel: ConsoleLogViewModel?,
+    consoleLogUiState: ConsoleLogUiState?,
     selectedDevice: Device?,
     uid: String? = null,
     onCopyPath: (String) -> Unit = {},
@@ -49,11 +54,9 @@ fun AdbMainContent(
                     onActivityLaunch = onActivityLaunch
                 )
 
-                MainTab.Logcat -> TabPlaceholder("Logcat", "Logcat output will be shown here.")
-                MainTab.FileExplorer -> TabPlaceholder("File Explorer", "File explorer will be shown here.")
-                MainTab.NetworkMonitoring -> TabPlaceholder(
-                    "Network & Monitoring",
-                    "Network and monitoring tools will be shown here."
+                MainTab.ConsoleLog -> ConsoleLogTab(
+                    consoleLogViewModel = consoleLogViewModel,
+                    consoleLogUiState = consoleLogUiState
                 )
 
                 MainTab.AppActions -> {

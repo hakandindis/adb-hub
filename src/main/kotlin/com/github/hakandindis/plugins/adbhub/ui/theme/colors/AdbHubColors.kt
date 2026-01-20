@@ -28,6 +28,9 @@ object AdbHubColors {
     // Green colors (success)
     val green500 = Color(0xFF59A869)
 
+    // Terminal/Console colors
+    val terminalGreen = Color(0xFF4EC9B0) // Bright green-cyan for terminal commands
+
     // Red colors (danger/error)
     val red500 = Color(0xFFDB5860)
 

@@ -1,7 +1,9 @@
 package com.github.hakandindis.plugins.adbhub.toolWindow
 
 import com.github.hakandindis.plugins.adbhub.CoroutineScopeHolder
+import com.github.hakandindis.plugins.adbhub.core.adb.CommandLogger
 import com.github.hakandindis.plugins.adbhub.core.di.AdbModule
+import com.github.hakandindis.plugins.adbhub.feature.console_log.presentation.ConsoleLogViewModel
 import com.github.hakandindis.plugins.adbhub.feature.device.di.DeviceModule
 import com.github.hakandindis.plugins.adbhub.feature.device.presentation.DeviceViewModel
 import com.github.hakandindis.plugins.adbhub.feature.package_actions.di.PackageActionsModule
@@ -132,10 +134,16 @@ class AdbHubToolWindowFactory : ToolWindowFactory, DumbAware {
             null
         }
 
+        val consoleLogViewModel = ConsoleLogViewModel(
+            commandLogger = CommandLogger.getInstance(),
+            coroutineScope = coroutineScope
+        )
+
         deviceViewModel?.let { Disposer.register(toolWindow.disposable, it) }
         packageListViewModel?.let { Disposer.register(toolWindow.disposable, it) }
         packageDetailsViewModel?.let { Disposer.register(toolWindow.disposable, it) }
         packageActionsViewModel?.let { Disposer.register(toolWindow.disposable, it) }
+        Disposer.register(toolWindow.disposable, consoleLogViewModel)
 
         toolWindow.addComposeTab(focusOnClickInside = true) {
             AdbToolContent(
@@ -143,7 +151,8 @@ class AdbHubToolWindowFactory : ToolWindowFactory, DumbAware {
                 deviceViewModel = deviceViewModel,
                 packageListViewModel = packageListViewModel,
                 packageDetailsViewModel = packageDetailsViewModel,
-                packageActionsViewModel = packageActionsViewModel
+                packageActionsViewModel = packageActionsViewModel,
+                consoleLogViewModel = consoleLogViewModel
             )
         }
     }

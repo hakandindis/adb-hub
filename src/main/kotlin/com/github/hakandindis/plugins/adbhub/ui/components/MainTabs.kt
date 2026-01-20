@@ -17,9 +17,7 @@ import org.jetbrains.jewel.ui.icon.IconKey
 
 enum class MainTab(val label: String, val icon: IconKey) {
     Details("Details", AdbIcons.info),
-    Logcat("Logcat", AdbIcons.terminal),
-    FileExplorer("File Explorer", AdbIcons.folder),
-    NetworkMonitoring("Network & Monitoring", AdbIcons.queryStats),
+    ConsoleLog("Console Log", AdbIcons.terminal),
     AppActions("App Actions", AdbIcons.bolt)
 }
 
