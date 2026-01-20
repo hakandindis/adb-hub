@@ -63,11 +63,6 @@ fun MainTabs(
                     style = JewelTheme.defaultTextStyle
                 )
             }
-            // Bottom border for selected
-            if (isSelected) {
-                // Visual: 2dp bottom border in primary
-                // We'll handle via a shared modifier in the parent or a Box
-            }
         }
     }
 }

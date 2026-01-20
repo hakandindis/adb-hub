@@ -15,8 +15,8 @@ data class Device(
 }
 
 enum class DeviceState {
-    DEVICE,      // Device is online
-    OFFLINE,     // Device is offline
-    UNAUTHORIZED, // Device is not authorized
-    UNKNOWN      // Unknown state
+    DEVICE,
+    OFFLINE,
+    UNAUTHORIZED,
+    UNKNOWN
 }

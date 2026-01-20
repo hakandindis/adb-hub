@@ -53,7 +53,6 @@ fun AppActionsTab(
             .padding(24.dp),
         verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
-        // LIFECYCLE Section
         ListSection(
             title = "LIFECYCLE",
             icon = AdbIcons.playArrow
@@ -123,7 +122,6 @@ fun AppActionsTab(
             }
         }
 
-        // DATA MANAGEMENT Section
         ListSection(
             title = "DATA MANAGEMENT",
             icon = AdbIcons.cleaningServices
@@ -164,7 +162,6 @@ fun AppActionsTab(
             }
         }
 
-        // ADVANCED Section
         ListSection(
             title = "ADVANCED",
             icon = AdbIcons.settings
@@ -200,7 +197,6 @@ fun AppActionsTab(
             }
         }
 
-        // DEEP LINKS Section
         ListSection(
             title = "DEEP LINKS",
             icon = AdbIcons.link

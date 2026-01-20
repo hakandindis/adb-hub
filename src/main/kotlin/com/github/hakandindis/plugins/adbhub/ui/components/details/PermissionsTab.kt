@@ -132,7 +132,7 @@ private fun PermissionRow(permission: PermissionStatus) {
                 modifier = Modifier.weight(1f)
             ) {
                 Icon(
-                    AdbIcons.settings, // TODO: Use permission-specific icon
+                    AdbIcons.settings,
                     contentDescription = null,
                     modifier = Modifier.size(16.dp)
                 )

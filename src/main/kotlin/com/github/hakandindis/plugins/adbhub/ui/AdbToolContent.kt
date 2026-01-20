@@ -32,13 +32,11 @@ fun AdbToolContent(
     packageDetailsViewModel: PackageDetailsViewModel?,
     packageActionsViewModel: PackageActionsViewModel?
 ) {
-    // Device state from DeviceViewModel
     val deviceUiState = deviceViewModel?.uiState?.collectAsState()?.value
     val devices = deviceUiState?.devices ?: emptyList()
     val selectedDevice = deviceUiState?.selectedDevice
     val deviceInfo = deviceUiState?.deviceInfo
 
-    // Package list state from PackageListViewModel
     val packageListUiState = packageListViewModel?.uiState?.collectAsState()?.value
     val filteredPackages = packageListUiState?.filteredPackages ?: emptyList()
     val selectedPackage = packageListUiState?.selectedPackage
@@ -47,15 +45,12 @@ fun AdbToolContent(
     val showUserApps = packageListUiState?.showUserApps ?: true
     val showDebugApps = packageListUiState?.showDebugApps ?: false
 
-    // Initialize device refresh on first load
     LaunchedEffect(deviceViewModel) {
         deviceViewModel?.handleIntent(DeviceIntent.RefreshDevices)
     }
 
-    // Refresh packages when device is selected
     LaunchedEffect(selectedDevice) {
         selectedDevice?.let { device ->
-            // Refresh packages using PackageListViewModel
             if (device.state == DeviceState.DEVICE) {
                 packageListViewModel?.handleIntent(
                     PackageListIntent.RefreshPackages(device.id, includeSystemApps = true)
@@ -63,16 +58,10 @@ fun AdbToolContent(
             }
         }
     }
-    // Package details state from PackageDetailsViewModel
     val packageDetailsUiState = packageDetailsViewModel?.uiState?.collectAsState()?.value
-
-    // Package actions state from PackageActionsViewModel
     val packageActionsUiState = packageActionsViewModel?.uiState?.collectAsState()?.value
-
-    // Check ADB availability from AdbInitializer
     val isAdbAvailable = adbInitializer.isAdbAvailable()
 
-    // Load package details when package is selected
     LaunchedEffect(selectedPackage, selectedDevice) {
         selectedPackage?.let { packageItem ->
             selectedDevice?.let { device ->
@@ -122,7 +111,6 @@ fun AdbToolContent(
                 },
                 onPackageSelected = { packageItem ->
                     packageListViewModel?.handleIntent(PackageListIntent.SelectPackage(packageItem))
-                    // Package details will be loaded via LaunchedEffect above
                 },
                 onLaunch = {
                     selectedPackage?.let { packageItem ->

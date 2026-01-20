@@ -29,9 +29,6 @@ class DeviceViewModel(
     private val _uiState = MutableStateFlow(DeviceUiState())
     val uiState: StateFlow<DeviceUiState> = _uiState.asStateFlow()
 
-    /**
-     * Handles intents from UI
-     */
     fun handleIntent(intent: DeviceIntent) {
         when (intent) {
             is DeviceIntent.RefreshDevices -> refreshDevices()
@@ -40,9 +37,6 @@ class DeviceViewModel(
         }
     }
 
-    /**
-     * Refreshes the list of connected devices
-     */
     private fun refreshDevices() {
         scope.launch {
             _uiState.update { it.copy(isLoading = true, error = null) }
@@ -52,7 +46,6 @@ class DeviceViewModel(
                         it.copy(
                             devices = devices,
                             isLoading = false,
-                            // Auto-select first available device if none selected
                             selectedDevice = it.selectedDevice ?: devices.firstOrNull { device ->
                                 device.state == DeviceState.DEVICE
                             }
@@ -72,9 +65,6 @@ class DeviceViewModel(
         }
     }
 
-    /**
-     * Selects a device and loads its information
-     */
     private fun selectDevice(device: Device) {
         _uiState.update { it.copy(selectedDevice = device) }
         if (device.state == DeviceState.DEVICE) {
@@ -84,9 +74,6 @@ class DeviceViewModel(
         }
     }
 
-    /**
-     * Loads detailed information about a device
-     */
     private fun loadDeviceInfo(deviceId: String) {
         scope.launch {
             _uiState.update { it.copy(isLoading = true, error = null) }

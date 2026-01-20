@@ -60,7 +60,6 @@ fun AdbMainContent(
                     val selectedPackage = packageListUiState?.selectedPackage
                     val deviceId = selectedDevice?.id ?: ""
                     if (selectedPackage != null && selectedDevice != null) {
-                        // Extract suggested deep links from package details (if available)
                         val suggestedDeepLinks = packageDetailsUiState?.activities
                             ?.flatMap { it.intentFilters }
                             ?.flatMap { it.data }

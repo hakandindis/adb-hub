@@ -30,16 +30,13 @@ class AdbHubToolWindowFactory : ToolWindowFactory, DumbAware {
     override fun shouldBeAvailable(project: Project) = true
 
     override fun createToolWindowContent(project: Project, toolWindow: ToolWindow) {
-        // Create coroutine scope for the tool window
         val coroutineScope = project.service<CoroutineScopeHolder>()
             .createScope("AdbToolWindow")
 
-        // Initialize ADB
         val adbInitializer = AdbModule.createAdbInitializer()
         adbInitializer.initialize()
         val executor = adbInitializer.getExecutor()
 
-        // Create DeviceViewModel
         val deviceViewModel = if (executor != null) {
             val deviceDataSource = DeviceModule.createDeviceDataSource(executor)
             if (deviceDataSource != null) {
@@ -58,7 +55,6 @@ class AdbHubToolWindowFactory : ToolWindowFactory, DumbAware {
             null
         }
 
-        // Create PackageListViewModel
         val packageListViewModel = if (executor != null) {
             val packageDataSource = PackageModule.createPackageDataSource(executor)
             if (packageDataSource != null) {
@@ -77,7 +73,6 @@ class AdbHubToolWindowFactory : ToolWindowFactory, DumbAware {
             null
         }
 
-        // Create PackageDetailsViewModel
         val packageDetailsViewModel = if (executor != null) {
             val packageDetailsDataSource = PackageDetailsModule.createPackageDetailsDataSource(executor)
             val certificateDataSource = PackageDetailsModule.createCertificateDataSource(executor)
@@ -103,7 +98,6 @@ class AdbHubToolWindowFactory : ToolWindowFactory, DumbAware {
             null
         }
 
-        // Create PackageActionsViewModel
         val packageActionsViewModel = if (executor != null) {
             val packageActionsDataSource = PackageActionsModule.createPackageActionsDataSource(executor)
             if (packageActionsDataSource != null) {
@@ -138,13 +132,11 @@ class AdbHubToolWindowFactory : ToolWindowFactory, DumbAware {
             null
         }
 
-        // Register for disposal
         deviceViewModel?.let { Disposer.register(toolWindow.disposable, it) }
         packageListViewModel?.let { Disposer.register(toolWindow.disposable, it) }
         packageDetailsViewModel?.let { Disposer.register(toolWindow.disposable, it) }
         packageActionsViewModel?.let { Disposer.register(toolWindow.disposable, it) }
 
-        // Add Compose tab
         toolWindow.addComposeTab(focusOnClickInside = true) {
             AdbToolContent(
                 adbInitializer = adbInitializer,

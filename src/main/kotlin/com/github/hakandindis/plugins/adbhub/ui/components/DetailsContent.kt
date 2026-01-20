@@ -52,8 +52,6 @@ fun DetailsContent(
             .fillMaxSize()
             .background(AdbHubTheme.background)
     ) {
-        // PackageHeader will need to be updated to use UI state
-        // For now, we'll extract package name from generalInfoItems
         val packageName = packageDetailsUiState.generalInfoItems
             .firstOrNull { it.label == "Package" }?.value ?: ""
         val appName = packageDetailsUiState.generalInfoItems

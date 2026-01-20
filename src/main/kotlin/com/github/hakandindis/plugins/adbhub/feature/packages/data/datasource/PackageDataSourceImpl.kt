@@ -7,9 +7,6 @@ import com.github.hakandindis.plugins.adbhub.core.adb.AdbCommandExecutor
 import com.github.hakandindis.plugins.adbhub.models.ApplicationPackage
 import com.intellij.openapi.diagnostic.Logger
 
-/**
- * Implementation of PackageDataSource
- */
 class PackageDataSourceImpl(
     private val commandExecutor: AdbCommandExecutor
 ) : PackageDataSource {

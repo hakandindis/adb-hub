@@ -11,9 +11,7 @@ import com.github.hakandindis.plugins.adbhub.feature.package_actions.domain.usec
  * Dependency injection module for Package Actions feature
  */
 object PackageActionsModule {
-    /**
-     * Creates PackageActionsViewModel dependencies
-     */
+
     fun createPackageActionsDataSource(executor: AdbCommandExecutor?): PackageActionsDataSource? {
         return executor?.let { PackageActionsDataSourceImpl(it) }
     }

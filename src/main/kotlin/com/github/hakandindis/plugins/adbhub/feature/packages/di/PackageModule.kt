@@ -12,9 +12,7 @@ import com.github.hakandindis.plugins.adbhub.feature.packages.domain.usecase.Get
  * Dependency injection module for Package List feature
  */
 object PackageModule {
-    /**
-     * Creates PackageListViewModel dependencies
-     */
+
     fun createPackageDataSource(executor: AdbCommandExecutor?): PackageDataSource? {
         return executor?.let { PackageDataSourceImpl(it) }
     }

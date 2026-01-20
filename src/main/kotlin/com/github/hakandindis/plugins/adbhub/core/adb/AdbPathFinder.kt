@@ -12,7 +12,6 @@ class AdbPathFinder {
      * @return ADB path or null if not found
      */
     fun findAdbPath(): String? {
-        // 1. Check ANDROID_HOME environment variable
         System.getenv("ANDROID_HOME")?.let {
             val adb = File(it, "platform-tools/adb")
             if (adb.exists()) {
@@ -20,7 +19,6 @@ class AdbPathFinder {
             }
         }
 
-        // 2. Check ANDROID_SDK_ROOT environment variable
         System.getenv("ANDROID_SDK_ROOT")?.let {
             val adb = File(it, "platform-tools/adb")
             if (adb.exists()) {
@@ -50,7 +48,7 @@ class AdbPathFinder {
                 "/opt/homebrew/bin/adb"
             )
 
-            else -> listOf( // Linux
+            else -> listOf(
                 "${System.getProperty("user.home")}/Android/Sdk/platform-tools/adb",
                 "/usr/bin/adb",
                 "/usr/local/bin/adb"
