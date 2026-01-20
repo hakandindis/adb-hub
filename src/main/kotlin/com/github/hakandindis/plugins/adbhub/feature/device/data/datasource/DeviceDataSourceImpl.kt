@@ -25,39 +25,17 @@ class DeviceDataSourceImpl(
 
     override suspend fun getDeviceInfo(deviceId: String): DeviceInfo? {
         return try {
-            // Helper function to get property value
-            fun getProperty(property: String): String? {
-                val result = commandExecutor.executeCommandForDevice(deviceId, GetpropCommands.getProperty(property))
-                return if (result.isSuccess) {
-                    result.output.trim().takeIf { it.isNotBlank() }
-                } else {
-                    logger.debug("Failed to get property $property: ${result.error}")
-                    null
-                }
-            }
-
-            // Helper function to get screen info
-            fun getScreenInfo(command: String, prefix: String): String? {
-                val result = commandExecutor.executeCommandForDevice(deviceId, "shell $command")
-                return if (result.isSuccess) {
-                    result.output.trim().substringAfter(prefix).takeIf { it.isNotBlank() }
-                } else {
-                    logger.debug("Failed to get screen info: ${result.error}")
-                    null
-                }
-            }
-
-            val apiLevel = getProperty(DeviceProperties.API_LEVEL)
-            val manufacturer = getProperty(DeviceProperties.MANUFACTURER)
-            val model = getProperty(DeviceProperties.MODEL)
-            val product = getProperty(DeviceProperties.PRODUCT)
-            val androidVersion = getProperty(DeviceProperties.ANDROID_VERSION)
-            val buildNumber = getProperty(DeviceProperties.BUILD_NUMBER)
-            val buildFingerprint = getProperty(DeviceProperties.BUILD_FINGERPRINT)
-            val hardware = getProperty(DeviceProperties.HARDWARE)
-            val cpuAbi = getProperty(DeviceProperties.CPU_ABI)
-            val screenResolution = getScreenInfo("wm size", "Physical size: ")
-            val screenDensity = getScreenInfo("wm density", "Physical density: ")
+            val apiLevel = getProperty(deviceId, DeviceProperties.API_LEVEL)
+            val manufacturer = getProperty(deviceId, DeviceProperties.MANUFACTURER)
+            val model = getProperty(deviceId, DeviceProperties.MODEL)
+            val product = getProperty(deviceId, DeviceProperties.PRODUCT)
+            val androidVersion = getProperty(deviceId, DeviceProperties.ANDROID_VERSION)
+            val buildNumber = getProperty(deviceId, DeviceProperties.BUILD_NUMBER)
+            val buildFingerprint = getProperty(deviceId, DeviceProperties.BUILD_FINGERPRINT)
+            val hardware = getProperty(deviceId, DeviceProperties.HARDWARE)
+            val cpuAbi = getProperty(deviceId, DeviceProperties.CPU_ABI)
+            val screenResolution = getScreenInfo(deviceId, "wm size", "Physical size: ")
+            val screenDensity = getScreenInfo(deviceId, "wm density", "Physical density: ")
 
             DeviceInfo(
                 deviceId = deviceId,
@@ -66,7 +44,7 @@ class DeviceDataSourceImpl(
                 product = product,
                 androidVersion = androidVersion,
                 apiLevel = apiLevel,
-                sdkVersion = apiLevel, // Same as API level
+                sdkVersion = apiLevel,
                 buildNumber = buildNumber,
                 buildFingerprint = buildFingerprint,
                 screenResolution = screenResolution,
@@ -87,19 +65,16 @@ class DeviceDataSourceImpl(
         val devices = mutableListOf<Device>()
         val lines = output.lines()
 
-        // Skip first line (header: "List of devices attached")
         for (i in 1 until lines.size) {
             val line = lines[i].trim()
             if (line.isBlank()) continue
 
-            // Format: "device_id    device    model:model_name product:product_name transport_id:123"
             val parts = line.split("\\s+".toRegex())
             if (parts.size < 2) continue
 
             val deviceId = parts[0]
             val state = parseDeviceState(parts[1])
 
-            // Parse additional info (model, product, transport_id)
             var model: String? = null
             var product: String? = null
             var transportId: String? = null
@@ -127,4 +102,25 @@ class DeviceDataSourceImpl(
             else -> DeviceState.UNKNOWN
         }
     }
+
+    fun getProperty(deviceId: String, property: String): String? {
+        val result = commandExecutor.executeCommandForDevice(deviceId, GetpropCommands.getProperty(property))
+        return if (result.isSuccess) {
+            result.output.trim().takeIf { it.isNotBlank() }
+        } else {
+            logger.debug("Failed to get property $property: ${result.error}")
+            null
+        }
+    }
+
+    fun getScreenInfo(deviceId: String, command: String, prefix: String): String? {
+        val result = commandExecutor.executeCommandForDevice(deviceId, "shell $command")
+        return if (result.isSuccess) {
+            result.output.trim().substringAfter(prefix).takeIf { it.isNotBlank() }
+        } else {
+            logger.debug("Failed to get screen info: ${result.error}")
+            null
+        }
+    }
+
 }
