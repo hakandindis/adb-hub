@@ -36,7 +36,6 @@ fun ConsoleLogToolbar(
             )
         )
 
-        // Custom button using Box + clickable (Jewel UI doesn't have Button component)
         Box(
             modifier = Modifier
                 .height(28.dp)

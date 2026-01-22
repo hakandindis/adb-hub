@@ -28,31 +28,19 @@ class PackageListViewModel(
     private val _uiState = MutableStateFlow(PackageListUiState())
     val uiState: StateFlow<PackageListUiState> = _uiState.asStateFlow()
 
-    /**
-     * Handles intents from UI
-     */
     fun handleIntent(intent: PackageListIntent) {
         when (intent) {
             is PackageListIntent.SetSearchText -> updateSearchText(intent.text)
-            is PackageListIntent.SetShowSystemApps -> updateShowSystemApps(intent.show)
-            is PackageListIntent.SetShowUserApps -> updateShowUserApps(intent.show)
-            is PackageListIntent.SetShowDebugApps -> updateShowDebugApps(intent.show)
             is PackageListIntent.SelectPackage -> selectPackage(intent.packageItem)
             is PackageListIntent.RefreshPackages -> refreshPackages(intent.deviceId, intent.includeSystemApps)
         }
     }
 
-    /**
-     * Updates search text and applies filtering
-     */
     private fun updateSearchText(text: String) {
         _uiState.update { currentState ->
             val filtered = filterPackagesUseCase(
                 packages = currentState.packages,
                 searchText = text,
-                showSystemApps = currentState.showSystemApps,
-                showUserApps = currentState.showUserApps,
-                showDebugApps = currentState.showDebugApps
             )
             currentState.copy(
                 searchText = text,
@@ -61,73 +49,10 @@ class PackageListViewModel(
         }
     }
 
-    /**
-     * Updates show system apps filter and applies filtering
-     */
-    private fun updateShowSystemApps(show: Boolean) {
-        _uiState.update { currentState ->
-            val filtered = filterPackagesUseCase(
-                packages = currentState.packages,
-                searchText = currentState.searchText,
-                showSystemApps = show,
-                showUserApps = currentState.showUserApps,
-                showDebugApps = currentState.showDebugApps
-            )
-            currentState.copy(
-                showSystemApps = show,
-                filteredPackages = filtered
-            )
-        }
-    }
-
-    /**
-     * Updates show user apps filter and applies filtering
-     */
-    private fun updateShowUserApps(show: Boolean) {
-        _uiState.update { currentState ->
-            val filtered = filterPackagesUseCase(
-                packages = currentState.packages,
-                searchText = currentState.searchText,
-                showSystemApps = currentState.showSystemApps,
-                showUserApps = show,
-                showDebugApps = currentState.showDebugApps
-            )
-            currentState.copy(
-                showUserApps = show,
-                filteredPackages = filtered
-            )
-        }
-    }
-
-    /**
-     * Updates show debug apps filter and applies filtering
-     */
-    private fun updateShowDebugApps(show: Boolean) {
-        _uiState.update { currentState ->
-            val filtered = filterPackagesUseCase(
-                packages = currentState.packages,
-                searchText = currentState.searchText,
-                showSystemApps = currentState.showSystemApps,
-                showUserApps = currentState.showUserApps,
-                showDebugApps = show
-            )
-            currentState.copy(
-                showDebugApps = show,
-                filteredPackages = filtered
-            )
-        }
-    }
-
-    /**
-     * Selects a package
-     */
     private fun selectPackage(packageItem: ApplicationPackage) {
         _uiState.update { it.copy(selectedPackage = packageItem) }
     }
 
-    /**
-     * Refreshes the list of packages
-     */
     private fun refreshPackages(deviceId: String, includeSystemApps: Boolean) {
         scope.launch {
             _uiState.update { it.copy(isLoading = true, error = null) }
@@ -136,9 +61,6 @@ class PackageListViewModel(
                     val filtered = filterPackagesUseCase(
                         packages = packages,
                         searchText = _uiState.value.searchText,
-                        showSystemApps = _uiState.value.showSystemApps,
-                        showUserApps = _uiState.value.showUserApps,
-                        showDebugApps = _uiState.value.showDebugApps
                     )
                     _uiState.update {
                         it.copy(

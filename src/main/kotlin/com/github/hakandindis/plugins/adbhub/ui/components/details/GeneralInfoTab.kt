@@ -58,7 +58,6 @@ private fun GeneralSection(
                 InfoRow(
                     label = item.label,
                     value = item.value,
-                    isMonospace = item.isMonospace,
                     isLast = index == generalInfoItems.size - 1
                 )
             }

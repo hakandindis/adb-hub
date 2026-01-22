@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.github.hakandindis.plugins.adbhub.models.ApplicationPackage
 import com.github.hakandindis.plugins.adbhub.ui.AdbIcons
@@ -23,6 +24,21 @@ fun PackageListItem(
     isSelected: Boolean,
     onClick: () -> Unit
 ) {
+    val statusText = when {
+        packageItem.isSystemApp -> "System"
+        else -> "Installed"
+    }
+
+    val packageInitials = packageItem.displayName
+        .takeIf { it.length >= 2 }
+        ?.take(2)
+        ?.uppercase()
+        ?: packageItem.packageName
+            .takeIf { it.length >= 2 }
+            ?.take(2)
+            ?.uppercase()
+        ?: "AP"
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -36,30 +52,47 @@ fun PackageListItem(
             .clickable { onClick() }
             .padding(12.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        Row(
-            modifier = Modifier.weight(1f),
-            verticalAlignment = Alignment.CenterVertically
+        // Icon/Initialism
+        Box(
+            modifier = Modifier
+                .size(40.dp)
+                .clip(AdbHubShapes.SM)
+                .background(
+                    if (isSelected) Color.White.copy(alpha = 0.3f)
+                    else AdbHubTheme.itemHover
+                ),
+            contentAlignment = Alignment.Center
         ) {
-            Icon(
-                if (isSelected) AdbIcons.android else AdbIcons.apps,
-                contentDescription = null,
-                modifier = Modifier.size(16.dp)
-            )
-            Column(modifier = Modifier.padding(start = 8.dp)) {
-                Text(
-                    packageItem.displayName,
-                    style = JewelTheme.defaultTextStyle
+            if (isSelected) {
+                Icon(
+                    AdbIcons.android,
+                    contentDescription = null,
+                    modifier = Modifier.size(24.dp),
+                    tint = Color.White
                 )
+            } else {
                 Text(
-                    packageItem.packageName,
+                    packageInitials,
                     style = JewelTheme.defaultTextStyle
                 )
             }
         }
-        if (isSelected) {
-            Icon(AdbIcons.arrowForward, contentDescription = null, modifier = Modifier.size(16.dp))
+
+        // Package name and status
+        Column(
+            modifier = Modifier.weight(1f),
+            verticalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            Text(
+                packageItem.packageName,
+                style = JewelTheme.defaultTextStyle
+            )
+            Text(
+                statusText,
+                style = JewelTheme.defaultTextStyle
+            )
         }
     }
 }

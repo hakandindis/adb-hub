@@ -33,7 +33,7 @@ class AdbHubToolWindowFactory : ToolWindowFactory, DumbAware {
 
     override fun createToolWindowContent(project: Project, toolWindow: ToolWindow) {
         val coroutineScope = project.service<CoroutineScopeHolder>()
-            .createScope("AdbToolWindow")
+            .createScope("AdbHubToolWindow")
 
         val adbInitializer = AdbModule.createAdbInitializer()
         adbInitializer.initialize()

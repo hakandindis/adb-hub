@@ -10,14 +10,10 @@ import com.github.hakandindis.plugins.adbhub.ui.theme.AdbHubTheme
 import org.jetbrains.jewel.foundation.theme.JewelTheme
 import org.jetbrains.jewel.ui.component.Text
 
-/**
- * Reusable component for displaying key-value information rows
- */
 @Composable
 fun InfoRow(
     label: String,
     value: String,
-    isMonospace: Boolean = false,
     isLast: Boolean = false
 ) {
     Column {

@@ -44,7 +44,7 @@ class CommandLogger {
         )
 
         _logs.update { currentLogs ->
-            (currentLogs + log).takeLast(MAX_LOG_ENTRIES) // Keep only last N entries
+            (currentLogs + log).takeLast(MAX_LOG_ENTRIES)
         }
     }
 
@@ -56,7 +56,7 @@ class CommandLogger {
     }
 
     companion object {
-        private const val MAX_LOG_ENTRIES = 1000 // Keep last 1000 commands
+        private const val MAX_LOG_ENTRIES = 1000
 
         @Volatile
         private var INSTANCE: CommandLogger? = null

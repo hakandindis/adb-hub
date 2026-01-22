@@ -14,7 +14,6 @@ import com.github.hakandindis.plugins.adbhub.core.models.DeviceState
 import com.github.hakandindis.plugins.adbhub.feature.console_log.presentation.ConsoleLogViewModel
 import com.github.hakandindis.plugins.adbhub.feature.device.presentation.DeviceIntent
 import com.github.hakandindis.plugins.adbhub.feature.device.presentation.DeviceViewModel
-import com.github.hakandindis.plugins.adbhub.feature.package_actions.presentation.PackageActionsIntent
 import com.github.hakandindis.plugins.adbhub.feature.package_actions.presentation.PackageActionsViewModel
 import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.PackageDetailsIntent
 import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.PackageDetailsViewModel
@@ -43,9 +42,6 @@ fun AdbToolContent(
     val filteredPackages = packageListUiState?.filteredPackages ?: emptyList()
     val selectedPackage = packageListUiState?.selectedPackage
     val packageSearchText = packageListUiState?.searchText ?: ""
-    val showSystemApps = packageListUiState?.showSystemApps ?: false
-    val showUserApps = packageListUiState?.showUserApps ?: true
-    val showDebugApps = packageListUiState?.showDebugApps ?: false
 
     LaunchedEffect(deviceViewModel) {
         deviceViewModel?.handleIntent(DeviceIntent.RefreshDevices)
@@ -89,73 +85,18 @@ fun AdbToolContent(
                 deviceInfo = deviceInfo,
                 packages = filteredPackages,
                 selectedPackage = selectedPackage,
-                packageDetailsVersion = packageDetailsUiState?.generalInfoItems
-                    ?.firstOrNull { it.label == "Version Name" }?.value?.takeIf { it != "N/A" },
                 searchText = packageSearchText,
-                showSystem = showSystemApps,
-                showUser = showUserApps,
-                showDebug = showDebugApps,
-                packageActionsViewModel = packageActionsViewModel,
                 onSearchChange = { text ->
                     packageListViewModel?.handleIntent(PackageListIntent.SetSearchText(text))
-                },
-                onShowSystemChange = { show ->
-                    packageListViewModel?.handleIntent(PackageListIntent.SetShowSystemApps(show))
-                },
-                onShowUserChange = { show ->
-                    packageListViewModel?.handleIntent(PackageListIntent.SetShowUserApps(show))
-                },
-                onShowDebugChange = { show ->
-                    packageListViewModel?.handleIntent(PackageListIntent.SetShowDebugApps(show))
                 },
                 onDeviceSelected = { device ->
                     deviceViewModel?.handleIntent(DeviceIntent.SelectDevice(device))
                 },
+                onRefreshDevices = {
+                    deviceViewModel?.handleIntent(DeviceIntent.RefreshDevices)
+                },
                 onPackageSelected = { packageItem ->
                     packageListViewModel?.handleIntent(PackageListIntent.SelectPackage(packageItem))
-                },
-                onLaunch = {
-                    selectedPackage?.let { packageItem ->
-                        selectedDevice?.let { device ->
-                            packageActionsViewModel?.handleIntent(
-                                PackageActionsIntent.LaunchApp(packageItem.packageName, device.id)
-                            )
-                        }
-                    }
-                },
-                onForceStop = {
-                    selectedPackage?.let { packageItem ->
-                        selectedDevice?.let { device ->
-                            packageActionsViewModel?.handleIntent(
-                                PackageActionsIntent.ForceStop(packageItem.packageName, device.id)
-                            )
-                        }
-                    }
-                },
-                onClearData = {
-                    selectedPackage?.let { packageItem ->
-                        selectedDevice?.let { device ->
-                            packageActionsViewModel?.handleIntent(
-                                PackageActionsIntent.ClearData(packageItem.packageName, device.id)
-                            )
-                        }
-                    }
-                },
-                onUninstall = {
-                    selectedPackage?.let { packageItem ->
-                        selectedDevice?.let { device ->
-                            packageActionsViewModel?.handleIntent(
-                                PackageActionsIntent.Uninstall(packageItem.packageName, device.id)
-                            )
-                        }
-                    }
-                },
-                onDeepLink = { deepLink ->
-                    selectedDevice?.let { device ->
-                        packageActionsViewModel?.handleIntent(
-                            PackageActionsIntent.LaunchDeepLink(deepLink, device.id)
-                        )
-                    }
                 }
             )
             AdbMainContent(

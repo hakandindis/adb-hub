@@ -46,7 +46,6 @@ fun AdbMainContent(
         ) {
             when (selectedTab) {
                 MainTab.Details -> DetailsContent(
-                    packageDetailsViewModel = packageDetailsViewModel,
                     packageDetailsUiState = packageDetailsUiState,
                     selectedDevice = selectedDevice,
                     uid = uid,

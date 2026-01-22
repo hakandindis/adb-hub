@@ -3,9 +3,11 @@ package com.github.hakandindis.plugins.adbhub.ui.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,114 +39,152 @@ fun TargetDeviceSection(
             .fillMaxWidth()
             .padding(12.dp)
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                "TARGET DEVICE",
-                style = JewelTheme.defaultTextStyle
-            )
-            Row(
-                modifier = Modifier
-                    .clip(AdbHubShapes.XS)
-                    .background(AdbHubTheme.successTint)
-                    .padding(horizontal = 6.dp, vertical = 2.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(AdbIcons.wifi, contentDescription = null, modifier = Modifier.size(12.dp))
-                Spacer(Modifier.size(4.dp))
-                Text(
-                    "Online",
-                    style = JewelTheme.defaultTextStyle
-                )
-            }
-        }
-        Spacer(Modifier.height(6.dp))
+        Text(
+            "TARGET DEVICE",
+            style = JewelTheme.defaultTextStyle
+        )
+        Spacer(Modifier.height(8.dp))
+
         Box(modifier = Modifier.fillMaxWidth()) {
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(AdbHubShapes.SM)
-                    .background(AdbHubTheme.itemHover)
-                    .border(1.dp, AdbHubTheme.border, AdbHubShapes.SM)
-                    .clickable { if (devices.isNotEmpty()) expanded = !expanded }
-                    .padding(12.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(
-                    modifier = Modifier.weight(1f),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        AdbIcons.smartphone,
-                        contentDescription = null,
-                        modifier = Modifier.size(18.dp)
-                    )
-                    Column(modifier = Modifier.padding(start = 8.dp)) {
+                Box(modifier = Modifier.weight(1f)) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(AdbHubShapes.SM)
+                            .background(AdbHubTheme.itemHover)
+                            .border(1.dp, AdbHubTheme.border, AdbHubShapes.SM)
+                            .clickable { if (devices.isNotEmpty()) expanded = !expanded }
+                            .padding(12.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
                         Text(
                             selectedDevice?.displayName ?: "Select device",
                             style = JewelTheme.defaultTextStyle
                         )
-                        Text(
-                            "API ${deviceInfo?.apiLevel ?: "—"}",
-                            style = JewelTheme.defaultTextStyle
+                        Icon(
+                            AdbIcons.arrowDropDown,
+                            contentDescription = null,
+                            modifier = Modifier.size(20.dp)
                         )
                     }
-                }
-                Icon(
-                    AdbIcons.arrowDropDown,
-                    contentDescription = null,
-                    modifier = Modifier.size(20.dp)
-                )
-            }
-            if (expanded && devices.isNotEmpty()) {
-                Popup(
-                    alignment = Alignment.BottomStart,
-                    offset = IntOffset(0, 4),
-                    onDismissRequest = { expanded = false }
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .widthIn(min = 220.dp)
-                            .clip(AdbHubShapes.SM)
-                            .background(AdbHubTheme.surface)
-                            .border(1.dp, AdbHubTheme.border, AdbHubShapes.SM)
-                            .padding(4.dp)
-                    ) {
-                        LazyColumn(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                            items(devices) { device ->
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .clip(AdbHubShapes.XS)
-                                        .clickable {
-                                            onDeviceSelected(device)
-                                            expanded = false
+
+                    if (expanded && devices.isNotEmpty()) {
+                        Popup(
+                            alignment = Alignment.BottomStart,
+                            offset = IntOffset(0, 4),
+                            onDismissRequest = { expanded = false }
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .widthIn(min = 220.dp)
+                                    .clip(AdbHubShapes.SM)
+                                    .background(AdbHubTheme.surface)
+                                    .border(1.dp, AdbHubTheme.border, AdbHubShapes.SM)
+                                    .padding(4.dp)
+                            ) {
+                                LazyColumn(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                                    items(devices) { device ->
+                                        Row(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .clip(AdbHubShapes.XS)
+                                                .clickable {
+                                                    onDeviceSelected(device)
+                                                    expanded = false
+                                                }
+                                                .padding(8.dp),
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                            Icon(
+                                                AdbIcons.smartphone,
+                                                contentDescription = null,
+                                                modifier = Modifier.size(16.dp)
+                                            )
+                                            Column(modifier = Modifier.padding(start = 8.dp)) {
+                                                Text(device.displayName)
+                                                Text(
+                                                    device.id,
+                                                    style = JewelTheme.defaultTextStyle
+                                                )
+                                            }
                                         }
-                                        .padding(8.dp),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Icon(
-                                        AdbIcons.smartphone,
-                                        contentDescription = null,
-                                        modifier = Modifier.size(16.dp)
-                                    )
-                                    Column(modifier = Modifier.padding(start = 8.dp)) {
-                                        Text(device.displayName)
-                                        Text(
-                                            device.id,
-                                            style = JewelTheme.defaultTextStyle
-                                        )
                                     }
                                 }
                             }
                         }
                     }
                 }
+
+                Box(
+                    modifier = Modifier
+                        .size(40.dp)
+                        .clip(CircleShape)
+                        .background(AdbHubTheme.itemHover)
+                        .border(1.dp, AdbHubTheme.border, CircleShape)
+                        .clickable(
+                            onClick = {
+                                onRefreshDevices?.invoke()
+                            },
+                            indication = null,
+                            interactionSource = remember { MutableInteractionSource() }
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        AdbIcons.refresh,
+                        contentDescription = "Refresh devices",
+                        modifier = Modifier.size(18.dp)
+                    )
+                }
             }
         }
+
+        if (selectedDevice != null && deviceInfo != null) {
+            Spacer(Modifier.height(12.dp))
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(AdbHubShapes.SM)
+                    .background(AdbHubTheme.background)
+                    .border(1.dp, AdbHubTheme.border.copy(alpha = 0.5f), AdbHubShapes.SM)
+                    .padding(12.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Column(
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    DeviceDetailRow("Manufacturer", deviceInfo.manufacturer ?: "—")
+                    DeviceDetailRow("Density", deviceInfo.screenDensity ?: "—")
+                }
+                Column(
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    DeviceDetailRow("Android Ver", deviceInfo.androidInfo.takeIf { it.isNotBlank() } ?: "—")
+                    DeviceDetailRow("CPU/ABI", deviceInfo.cpuAbi ?: "—")
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun DeviceDetailRow(label: String, value: String) {
+    Column {
+        Text(
+            label,
+            style = JewelTheme.defaultTextStyle
+        )
+        Text(
+            value,
+            style = JewelTheme.defaultTextStyle
+        )
     }
 }

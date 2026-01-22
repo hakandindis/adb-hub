@@ -8,7 +8,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.github.hakandindis.plugins.adbhub.core.models.Device
 import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.PackageDetailsUiState
-import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.PackageDetailsViewModel
 import com.github.hakandindis.plugins.adbhub.ui.components.details.ActivitiesTab
 import com.github.hakandindis.plugins.adbhub.ui.components.details.GeneralInfoTab
 import com.github.hakandindis.plugins.adbhub.ui.components.details.PermissionsTab
@@ -18,7 +17,6 @@ import org.jetbrains.jewel.ui.component.Text
 
 @Composable
 fun DetailsContent(
-    packageDetailsViewModel: PackageDetailsViewModel?,
     packageDetailsUiState: PackageDetailsUiState?,
     selectedDevice: Device?,
     uid: String? = null,
@@ -61,9 +59,7 @@ fun DetailsContent(
             appName = appName,
             versionName = packageDetailsUiState.generalInfoItems
                 .firstOrNull { it.label == "Version Name" }?.value,
-            uid = uid,
-            targetSdkVersion = packageDetailsUiState.generalInfoItems
-                .firstOrNull { it.label == "Target SDK" }?.value?.substringBefore(" (")
+            uid = uid
         )
         DetailsSubTabs(selectedTab = selectedTab, onTabSelected = { selectedTab = it })
         Box(
