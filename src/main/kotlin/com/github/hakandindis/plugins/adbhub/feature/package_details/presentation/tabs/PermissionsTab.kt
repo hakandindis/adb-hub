@@ -46,41 +46,14 @@ fun PermissionsTab(
             .padding(24.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                Icon(AdbIcons.settings, contentDescription = null, modifier = Modifier.size(16.dp))
-                Text(
-                    "REQUESTED PERMISSIONS",
-                    style = JewelTheme.defaultTextStyle
-                )
-            }
-            Box(
-                modifier = Modifier.widthIn(max = 288.dp)
-            ) {
-                Icon(
-                    AdbIcons.search,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(16.dp)
-                        .align(Alignment.CenterStart)
-                        .padding(start = 10.dp, top = 8.dp)
-                )
-                TextField(
-                    state = searchState,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 36.dp),
-                    placeholder = { Text("Filter permissions...") }
-                )
-            }
-        }
+
+        TextField(
+            state = searchState,
+            modifier = Modifier
+                .fillMaxWidth(),
+            placeholder = { Text("Filter permissions...") }
+        )
+
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -97,12 +70,12 @@ fun PermissionsTab(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        "PERMISSION NAME",
+                        "Permissions Name",
                         modifier = Modifier.padding(start = 32.dp),
                         style = JewelTheme.defaultTextStyle
                     )
                     Text(
-                        "STATUS",
+                        "Status",
                         style = JewelTheme.defaultTextStyle
                     )
                 }
