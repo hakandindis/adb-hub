@@ -15,9 +15,6 @@ import org.jetbrains.jewel.ui.component.Icon
 import org.jetbrains.jewel.ui.component.Text
 import org.jetbrains.jewel.ui.icon.IntelliJIconKey
 
-/**
- * Reusable section container with title and icon
- */
 @Composable
 fun ListSection(
     title: String,

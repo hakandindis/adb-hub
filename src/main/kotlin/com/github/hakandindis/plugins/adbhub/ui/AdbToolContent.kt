@@ -12,16 +12,15 @@ import androidx.compose.ui.Modifier
 import com.github.hakandindis.plugins.adbhub.core.adb.AdbInitializer
 import com.github.hakandindis.plugins.adbhub.core.models.DeviceState
 import com.github.hakandindis.plugins.adbhub.feature.console_log.presentation.ConsoleLogViewModel
-import com.github.hakandindis.plugins.adbhub.feature.device.presentation.DeviceIntent
-import com.github.hakandindis.plugins.adbhub.feature.device.presentation.DeviceViewModel
+import com.github.hakandindis.plugins.adbhub.feature.devices.presentation.DeviceIntent
+import com.github.hakandindis.plugins.adbhub.feature.devices.presentation.DeviceViewModel
+import com.github.hakandindis.plugins.adbhub.feature.installed_packages.presentation.PackageListIntent
+import com.github.hakandindis.plugins.adbhub.feature.installed_packages.presentation.PackageListViewModel
+import com.github.hakandindis.plugins.adbhub.feature.main.AdbMainContent
 import com.github.hakandindis.plugins.adbhub.feature.package_actions.presentation.PackageActionsViewModel
 import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.PackageDetailsIntent
 import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.PackageDetailsViewModel
-import com.github.hakandindis.plugins.adbhub.feature.packages.presentation.PackageListIntent
-import com.github.hakandindis.plugins.adbhub.feature.packages.presentation.PackageListViewModel
-import com.github.hakandindis.plugins.adbhub.ui.components.AdbMainContent
-import com.github.hakandindis.plugins.adbhub.ui.components.AdbSidebar
-import com.github.hakandindis.plugins.adbhub.ui.components.AdbToolbar
+import com.github.hakandindis.plugins.adbhub.feature.sidebar.AdbSidebar
 import com.github.hakandindis.plugins.adbhub.ui.theme.AdbHubTheme
 
 @Composable
@@ -58,7 +57,7 @@ fun AdbToolContent(
     }
     val packageDetailsUiState = packageDetailsViewModel?.uiState?.collectAsState()?.value
     val packageActionsUiState = packageActionsViewModel?.uiState?.collectAsState()?.value
-    val isAdbAvailable = adbInitializer.isAdbAvailable()
+    adbInitializer.isAdbAvailable()
 
     LaunchedEffect(selectedPackage, selectedDevice) {
         selectedPackage?.let { packageItem ->
@@ -77,7 +76,6 @@ fun AdbToolContent(
             .fillMaxSize()
             .background(AdbHubTheme.background)
     ) {
-        AdbToolbar(isAdbConnected = isAdbAvailable)
         Row(modifier = Modifier.weight(1f).fillMaxWidth()) {
             AdbSidebar(
                 devices = devices,
