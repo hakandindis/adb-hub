@@ -74,7 +74,7 @@ fun DetailsContent(
                     searchText = packageDetailsUiState.permissionSearchText,
                     onPermissionFilterChange = {
                         packageDetailsViewModel.handleIntent(
-                            PackageDetailsIntent.SetPermissionSearchText(
+                            PackageDetailsIntent.FilterPermissions(
                                 it
                             )
                         )
@@ -86,7 +86,7 @@ fun DetailsContent(
                     searchText = packageDetailsUiState.activitySearchText,
                     onActivitySearchChange = {
                         packageDetailsViewModel.handleIntent(
-                            PackageDetailsIntent.SetActivitySearchText(
+                            PackageDetailsIntent.FilterActivities(
                                 it
                             )
                         )

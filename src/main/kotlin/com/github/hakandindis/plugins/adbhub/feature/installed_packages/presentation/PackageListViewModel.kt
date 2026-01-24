@@ -30,7 +30,7 @@ class PackageListViewModel(
 
     fun handleIntent(intent: PackageListIntent) {
         when (intent) {
-            is PackageListIntent.SetSearchText -> updateSearchText(intent.text)
+            is PackageListIntent.SearchPackages -> updateSearchText(intent.query)
             is PackageListIntent.SelectPackage -> selectPackage(intent.packageItem)
             is PackageListIntent.RefreshPackages -> refreshPackages(intent.deviceId, intent.includeSystemApps)
         }

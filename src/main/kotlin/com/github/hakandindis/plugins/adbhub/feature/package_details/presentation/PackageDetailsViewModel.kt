@@ -41,8 +41,8 @@ class PackageDetailsViewModel(
         when (intent) {
             is PackageDetailsIntent.LoadPackageDetails -> loadPackageDetails(intent.packageName, intent.deviceId)
             is PackageDetailsIntent.LaunchActivity -> launchActivity(intent.activityName, intent.deviceId)
-            is PackageDetailsIntent.SetPermissionSearchText -> updatePermissionSearch(intent.query)
-            is PackageDetailsIntent.SetActivitySearchText -> updateActivitySearch(intent.query)
+            is PackageDetailsIntent.FilterPermissions -> updatePermissionSearch(intent.query)
+            is PackageDetailsIntent.FilterActivities -> updateActivitySearch(intent.query)
         }
     }
 

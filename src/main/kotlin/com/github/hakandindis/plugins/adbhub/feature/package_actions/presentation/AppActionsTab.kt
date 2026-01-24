@@ -173,7 +173,7 @@ fun AppActionsTab(
                     checked = uiState.stayAwakeEnabled,
                     onCheckedChange = { enabled ->
                         packageActionsViewModel.handleIntent(
-                            PackageActionsIntent.SetStayAwake(enabled, deviceId)
+                            PackageActionsIntent.StayAwake(enabled, deviceId)
                         )
                     },
                     isLoading = uiState.isSettingStayAwake
@@ -185,7 +185,7 @@ fun AppActionsTab(
                     checked = uiState.packageEnabled,
                     onCheckedChange = { enabled ->
                         packageActionsViewModel.handleIntent(
-                            PackageActionsIntent.SetPackageEnabled(packageName, enabled, deviceId)
+                            PackageActionsIntent.PackageEnabled(packageName, enabled, deviceId)
                         )
                     },
                     isLoading = uiState.isSettingEnabled

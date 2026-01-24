@@ -85,7 +85,7 @@ fun AdbToolContent(
                 selectedPackage = selectedPackage,
                 searchText = packageSearchText,
                 onSearchChange = { text ->
-                    packageListViewModel.handleIntent(PackageListIntent.SetSearchText(text))
+                    packageListViewModel.handleIntent(PackageListIntent.SearchPackages(text))
                 },
                 onDeviceSelected = { device ->
                     deviceViewModel.handleIntent(DeviceIntent.SelectDevice(device))

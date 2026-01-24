@@ -17,10 +17,10 @@ sealed class PackageDetailsIntent {
     /**
      * Filter permissions by search query
      */
-    data class SetPermissionSearchText(val query: String) : PackageDetailsIntent()
+    data class FilterPermissions(val query: String) : PackageDetailsIntent()
 
     /**
      * Filter activities by search query
      */
-    data class SetActivitySearchText(val query: String) : PackageDetailsIntent()
+    data class FilterActivities(val query: String) : PackageDetailsIntent()
 }

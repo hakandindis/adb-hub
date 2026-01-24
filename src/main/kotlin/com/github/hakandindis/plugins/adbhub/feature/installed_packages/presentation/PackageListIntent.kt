@@ -7,9 +7,9 @@ import com.github.hakandindis.plugins.adbhub.models.ApplicationPackage
  */
 sealed class PackageListIntent {
     /**
-     * Set search text
+     * Search/filter packages by query
      */
-    data class SetSearchText(val text: String) : PackageListIntent()
+    data class SearchPackages(val query: String) : PackageListIntent()
 
     /**
      * Select a package

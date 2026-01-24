@@ -43,8 +43,8 @@ class PackageActionsViewModel(
             is PackageActionsIntent.ClearCache -> clearCache(intent.packageName, intent.deviceId)
             is PackageActionsIntent.Uninstall -> uninstall(intent.packageName, intent.deviceId)
             is PackageActionsIntent.LaunchDeepLink -> launchDeepLink(intent.deepLink, intent.deviceId)
-            is PackageActionsIntent.SetStayAwake -> setStayAwake(intent.enabled, intent.deviceId)
-            is PackageActionsIntent.SetPackageEnabled -> setPackageEnabled(
+            is PackageActionsIntent.StayAwake -> setStayAwake(intent.enabled, intent.deviceId)
+            is PackageActionsIntent.PackageEnabled -> setPackageEnabled(
                 intent.packageName,
                 intent.enabled,
                 intent.deviceId
