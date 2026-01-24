@@ -2,7 +2,6 @@ package com.github.hakandindis.plugins.adbhub.feature.package_details.presentati
 
 import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.ui.ActivityUiModel
 import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.ui.InfoItemUiModel
-import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.ui.PathItemUiModel
 import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.ui.PermissionUiModel
 
 /**
@@ -10,9 +9,12 @@ import com.github.hakandindis.plugins.adbhub.feature.package_details.presentatio
  */
 data class PackageDetailsUiState(
     val generalInfoItems: List<InfoItemUiModel> = emptyList(),
-    val pathItems: List<PathItemUiModel> = emptyList(),
     val activities: List<ActivityUiModel> = emptyList(),
     val permissions: List<PermissionUiModel> = emptyList(),
+    val permissionSearchText: String = "",
+    val filteredPermissions: List<PermissionUiModel> = emptyList(),
+    val activitySearchText: String = "",
+    val filteredActivities: List<ActivityUiModel> = emptyList(),
     val isLoading: Boolean = false,
     val error: String? = null
 )

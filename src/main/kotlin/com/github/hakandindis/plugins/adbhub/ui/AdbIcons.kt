@@ -15,6 +15,7 @@ object AdbIcons {
     // Target device
     val smartphone = AllIconsKeys.Nodes.Module
     val arrowDropDown = AllIconsKeys.Actions.Expandall
+    val refresh = AllIconsKeys.Actions.Refresh
 
     // Packages
     val search = AllIconsKeys.Actions.Find

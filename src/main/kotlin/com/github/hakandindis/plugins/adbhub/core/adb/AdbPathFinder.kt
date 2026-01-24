@@ -26,9 +26,7 @@ class AdbPathFinder {
             }
         }
 
-        // 3. Platform-specific default paths
         val defaultPaths = getDefaultPaths()
-
         return defaultPaths.firstOrNull { File(it).exists() }
     }
 
@@ -60,9 +58,6 @@ class AdbPathFinder {
         return System.getProperty("os.name").startsWith("Windows")
     }
 
-    /**
-     * Validates if ADB path exists and is executable
-     */
     fun validateAdbPath(path: String): Boolean {
         val file = File(path)
         return file.exists() && file.canExecute()

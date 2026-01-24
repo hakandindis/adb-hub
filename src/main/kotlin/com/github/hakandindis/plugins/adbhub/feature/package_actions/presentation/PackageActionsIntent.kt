@@ -12,7 +12,7 @@ sealed class PackageActionsIntent {
     data class ClearCache(val packageName: String, val deviceId: String) : PackageActionsIntent()
     data class Uninstall(val packageName: String, val deviceId: String) : PackageActionsIntent()
     data class LaunchDeepLink(val deepLink: String, val deviceId: String) : PackageActionsIntent()
-    data class SetStayAwake(val enabled: Boolean, val deviceId: String) : PackageActionsIntent()
-    data class SetPackageEnabled(val packageName: String, val enabled: Boolean, val deviceId: String) :
+    data class StayAwake(val enabled: Boolean, val deviceId: String) : PackageActionsIntent()
+    data class PackageEnabled(val packageName: String, val enabled: Boolean, val deviceId: String) :
         PackageActionsIntent()
 }

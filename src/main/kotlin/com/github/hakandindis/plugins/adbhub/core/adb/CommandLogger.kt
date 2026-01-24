@@ -17,9 +17,6 @@ class CommandLogger {
     private val _logs = MutableStateFlow<List<CommandLog>>(emptyList())
     val logs: StateFlow<List<CommandLog>> = _logs.asStateFlow()
 
-    /**
-     * Logs a command execution
-     */
     fun logCommand(
         adbPath: String,
         command: String,
@@ -44,19 +41,16 @@ class CommandLogger {
         )
 
         _logs.update { currentLogs ->
-            (currentLogs + log).takeLast(MAX_LOG_ENTRIES) // Keep only last N entries
+            (currentLogs + log).takeLast(MAX_LOG_ENTRIES)
         }
     }
 
-    /**
-     * Clears all logs
-     */
     fun clearLogs() {
         _logs.value = emptyList()
     }
 
     companion object {
-        private const val MAX_LOG_ENTRIES = 1000 // Keep last 1000 commands
+        private const val MAX_LOG_ENTRIES = 1000
 
         @Volatile
         private var INSTANCE: CommandLogger? = null

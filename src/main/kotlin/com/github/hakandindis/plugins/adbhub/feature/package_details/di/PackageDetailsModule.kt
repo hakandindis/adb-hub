@@ -14,8 +14,8 @@ object PackageDetailsModule {
     /**
      * Creates PackageDetailsViewModel dependencies
      */
-    fun createPackageDetailsDataSource(executor: AdbCommandExecutor?): PackageDetailsDataSource? {
-        return executor?.let { PackageDetailsDataSourceImpl(it) }
+    fun createPackageDetailsDataSource(executor: AdbCommandExecutor): PackageDetailsDataSource {
+        return PackageDetailsDataSourceImpl(executor)
     }
 
     fun createPackageDetailsRepository(

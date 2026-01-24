@@ -33,9 +33,6 @@ class PackageActionsViewModel(
     private val _uiState = MutableStateFlow(PackageActionsUiState())
     val uiState: StateFlow<PackageActionsUiState> = _uiState.asStateFlow()
 
-    /**
-     * Handles intents from UI
-     */
     fun handleIntent(intent: PackageActionsIntent) {
         when (intent) {
             is PackageActionsIntent.LaunchApp -> launchApp(intent.packageName, intent.deviceId)
@@ -46,8 +43,8 @@ class PackageActionsViewModel(
             is PackageActionsIntent.ClearCache -> clearCache(intent.packageName, intent.deviceId)
             is PackageActionsIntent.Uninstall -> uninstall(intent.packageName, intent.deviceId)
             is PackageActionsIntent.LaunchDeepLink -> launchDeepLink(intent.deepLink, intent.deviceId)
-            is PackageActionsIntent.SetStayAwake -> setStayAwake(intent.enabled, intent.deviceId)
-            is PackageActionsIntent.SetPackageEnabled -> setPackageEnabled(
+            is PackageActionsIntent.StayAwake -> setStayAwake(intent.enabled, intent.deviceId)
+            is PackageActionsIntent.PackageEnabled -> setPackageEnabled(
                 intent.packageName,
                 intent.enabled,
                 intent.deviceId
@@ -185,9 +182,7 @@ class PackageActionsViewModel(
     private fun launchDeepLink(deepLink: String, deviceId: String) {
         scope.launch {
             launchDeepLinkUseCase(deepLink, deviceId).fold(
-                onSuccess = {
-                    // Success - no state update needed
-                },
+                onSuccess = {},
                 onFailure = { error ->
                     logger.error("Error launching deep link $deepLink", error)
                     _uiState.update {

@@ -8,6 +8,8 @@ import com.github.hakandindis.plugins.adbhub.feature.package_details.domain.mapp
 import com.github.hakandindis.plugins.adbhub.feature.package_details.domain.mapper.GeneralInfoMapper
 import com.github.hakandindis.plugins.adbhub.feature.package_details.domain.mapper.PermissionMapper
 import com.github.hakandindis.plugins.adbhub.feature.package_details.domain.usecase.GetPackageDetailsUseCase
+import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.ui.ActivityUiModel
+import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.ui.PermissionUiModel
 import com.github.hakandindis.plugins.adbhub.models.PermissionGrantStatus
 import com.github.hakandindis.plugins.adbhub.models.PermissionStatus
 import com.intellij.openapi.Disposable
@@ -35,27 +37,56 @@ class PackageDetailsViewModel(
     private val _uiState = MutableStateFlow(PackageDetailsUiState())
     val uiState: StateFlow<PackageDetailsUiState> = _uiState.asStateFlow()
 
-    /**
-     * Handles intents from UI
-     */
     fun handleIntent(intent: PackageDetailsIntent) {
         when (intent) {
             is PackageDetailsIntent.LoadPackageDetails -> loadPackageDetails(intent.packageName, intent.deviceId)
             is PackageDetailsIntent.LaunchActivity -> launchActivity(intent.activityName, intent.deviceId)
+            is PackageDetailsIntent.FilterPermissions -> updatePermissionSearch(intent.query)
+            is PackageDetailsIntent.FilterActivities -> updateActivitySearch(intent.query)
         }
     }
 
-    /**
-     * Loads package details
-     */
+    private fun updatePermissionSearch(query: String) {
+        _uiState.update { state ->
+            state.copy(
+                permissionSearchText = query,
+                filteredPermissions = filterPermissions(state.permissions, query)
+            )
+        }
+    }
+
+    private fun updateActivitySearch(query: String) {
+        _uiState.update { state ->
+            state.copy(
+                activitySearchText = query,
+                filteredActivities = filterActivities(state.activities, query)
+            )
+        }
+    }
+
+    private fun filterPermissions(permissions: List<PermissionUiModel>, query: String): List<PermissionUiModel> {
+        return if (query.isBlank()) permissions
+        else permissions.filter { it.name.contains(query, ignoreCase = true) }
+    }
+
+    private fun filterActivities(activities: List<ActivityUiModel>, query: String): List<ActivityUiModel> {
+        return if (query.isBlank()) activities
+        else activities.filter {
+            it.name.contains(query, ignoreCase = true) || it.shortName.contains(
+                query,
+                ignoreCase = true
+            )
+        }
+    }
+
+
     private fun loadPackageDetails(packageName: String, deviceId: String) {
         scope.launch {
             _uiState.update { it.copy(isLoading = true, error = null) }
 
             getPackageDetailsUseCase(packageName, deviceId).fold(
                 onSuccess = { packageDetails ->
-                    val generalInfoItems = GeneralInfoMapper.toInfoItems(packageDetails)
-                    val pathItems = GeneralInfoMapper.toPathItems(packageDetails)
+                    val generalInfoItems = GeneralInfoMapper.toMergedInfoItems(packageDetails)
                     val activities = packageDetails.activities.map { activity ->
                         ActivityMapper.toUiModel(activity)
                     }
@@ -66,9 +97,12 @@ class PackageDetailsViewModel(
                     _uiState.update {
                         it.copy(
                             generalInfoItems = generalInfoItems,
-                            pathItems = pathItems,
                             activities = activities,
                             permissions = permissionUiModels,
+                            permissionSearchText = "",
+                            filteredPermissions = permissionUiModels,
+                            activitySearchText = "",
+                            filteredActivities = activities,
                             isLoading = false
                         )
                     }
@@ -90,7 +124,7 @@ class PackageDetailsViewModel(
      * Loads permission statuses from dumpsys output
      * TODO: Move this to a separate use case and parser
      */
-    private suspend fun loadPermissionStatuses(
+    private fun loadPermissionStatuses(
         permissions: List<String>,
         packageName: String,
         deviceId: String
@@ -111,7 +145,6 @@ class PackageDetailsViewModel(
                     )
                 }
             } else {
-                // Fallback: mark all as optional
                 permissions.map {
                     PermissionStatus(
                         permission = it,
@@ -133,25 +166,19 @@ class PackageDetailsViewModel(
         permission: String,
         dumpsysOutput: String
     ): PermissionGrantStatus {
-        // Look for granted permissions
         val grantedPattern = (ParsePatterns.GRANTED_PATTERN.pattern + permission).toRegex(RegexOption.IGNORE_CASE)
         if (grantedPattern.find(dumpsysOutput) != null) {
             return PermissionGrantStatus.GRANTED
         }
 
-        // Look for denied permissions
         val deniedPattern = (ParsePatterns.DENIED_PATTERN.pattern + permission).toRegex(RegexOption.IGNORE_CASE)
         if (deniedPattern.find(dumpsysOutput) != null) {
             return PermissionGrantStatus.DENIED
         }
 
-        // If it's in requested permissions but status is unclear, mark as optional
         return PermissionGrantStatus.OPTIONAL
     }
 
-    /**
-     * Launches an activity on the device
-     */
     private fun launchActivity(activityName: String, deviceId: String) {
         if (commandExecutor == null) {
             logger.warn("Cannot launch activity: ADB executor not available")

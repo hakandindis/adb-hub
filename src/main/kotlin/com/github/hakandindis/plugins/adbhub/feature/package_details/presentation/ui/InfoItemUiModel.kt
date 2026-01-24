@@ -5,6 +5,5 @@ package com.github.hakandindis.plugins.adbhub.feature.package_details.presentati
  */
 data class InfoItemUiModel(
     val label: String,
-    val value: String,
-    val isMonospace: Boolean = false
+    val value: String
 )
