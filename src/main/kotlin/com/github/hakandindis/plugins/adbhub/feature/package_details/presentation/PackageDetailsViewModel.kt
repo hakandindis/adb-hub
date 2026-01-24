@@ -86,8 +86,7 @@ class PackageDetailsViewModel(
 
             getPackageDetailsUseCase(packageName, deviceId).fold(
                 onSuccess = { packageDetails ->
-                    val generalInfoItems = GeneralInfoMapper.toInfoItems(packageDetails)
-                    val pathItems = GeneralInfoMapper.toPathItems(packageDetails)
+                    val generalInfoItems = GeneralInfoMapper.toMergedInfoItems(packageDetails)
                     val activities = packageDetails.activities.map { activity ->
                         ActivityMapper.toUiModel(activity)
                     }
@@ -98,7 +97,6 @@ class PackageDetailsViewModel(
                     _uiState.update {
                         it.copy(
                             generalInfoItems = generalInfoItems,
-                            pathItems = pathItems,
                             activities = activities,
                             permissions = permissionUiModels,
                             permissionSearchText = "",

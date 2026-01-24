@@ -47,7 +47,7 @@ fun DetailsContent(
             .background(AdbHubTheme.background)
     ) {
         val packageName = packageDetailsUiState.generalInfoItems
-            .firstOrNull { it.label == "Package" }?.value ?: ""
+            .firstOrNull { it.label == "Package Name" }?.value ?: ""
         packageDetailsUiState.generalInfoItems
             .firstOrNull { it.label == "App Name" }?.value ?: packageName
 
@@ -64,9 +64,7 @@ fun DetailsContent(
         ) {
             when (selectedTab) {
                 DetailsTab.GeneralInfo -> GeneralInfoTab(
-                    generalInfoItems = packageDetailsUiState.generalInfoItems,
-                    pathItems = packageDetailsUiState.pathItems,
-                    onCopyPath = onCopyPath
+                    generalInfoItems = packageDetailsUiState.generalInfoItems
                 )
 
                 DetailsTab.Permissions -> PermissionsTab(

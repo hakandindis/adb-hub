@@ -1,78 +1,44 @@
 package com.github.hakandindis.plugins.adbhub.feature.package_details.domain.mapper
 
 import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.ui.InfoItemUiModel
-import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.ui.PathItemUiModel
 import com.github.hakandindis.plugins.adbhub.models.PackageDetails
 
 /**
- * Mapper for converting PackageDetails to UI models for General Info tab
+ * Mapper for converting PackageDetails to UI models for General Info tab.
+ * Produces a single merged list: Package Name, Version Number, Version Code, paths, Install Time, SDKs, and the rest.
  */
 object GeneralInfoMapper {
     /**
-     * Converts PackageDetails to list of InfoItemUiModel for general information
+     * Converts PackageDetails to a single list of InfoItemUiModel.
+     * General fields and paths are merged in one order: Package Name, Version Number, Version Code,
+     * Installation Path, Data Path, Install Time, Min SDK, Target SDK, App Name, System App, Enabled, Last Update.
      */
-    fun toInfoItems(packageDetails: PackageDetails): List<InfoItemUiModel> {
-        return listOf(
-            InfoItemUiModel(
-                label = "App Name",
-                value = extractAppName(packageDetails.packageName)
-            ),
-            InfoItemUiModel(
-                label = "Package",
-                value = packageDetails.packageName
-            ),
-            InfoItemUiModel(
-                label = "Version Name",
-                value = packageDetails.versionName ?: "N/A"
-            ),
-            InfoItemUiModel(
-                label = "Version Code",
-                value = packageDetails.versionCode ?: "N/A"
-            ),
+    fun toMergedInfoItems(packageDetails: PackageDetails): List<InfoItemUiModel> {
+        val items = mutableListOf<InfoItemUiModel>()
+
+        items.add(InfoItemUiModel(label = "Package Name", value = packageDetails.packageName))
+        items.add(InfoItemUiModel(label = "Version Number", value = packageDetails.versionName ?: "N/A"))
+        items.add(InfoItemUiModel(label = "Version Code", value = packageDetails.versionCode ?: "N/A"))
+        items.add(InfoItemUiModel(label = "Installation Path", value = packageDetails.installLocation ?: "N/A"))
+        items.add(InfoItemUiModel(label = "Data Path", value = packageDetails.dataDirectory ?: "N/A"))
+        items.add(InfoItemUiModel(label = "Install Time", value = packageDetails.firstInstallTime ?: "N/A"))
+        items.add(
             InfoItemUiModel(
                 label = "Min SDK",
-                value = packageDetails.minSdkVersion?.let {
-                    "$it (Android ${getAndroidVersionName(it)})"
-                } ?: "N/A"
-            ),
+                value = packageDetails.minSdkVersion?.let { "$it (Android ${getAndroidVersionName(it)})" } ?: "N/A"))
+        items.add(
             InfoItemUiModel(
                 label = "Target SDK",
                 value = packageDetails.targetSdkVersion?.let {
                     "$it (Android ${getAndroidVersionName(it)})"
                 } ?: "N/A"
-            ),
-            InfoItemUiModel(
-                label = "System App",
-                value = if (packageDetails.isSystemApp) "Yes" else "No"
-            ),
-            InfoItemUiModel(
-                label = "Enabled",
-                value = if (packageDetails.isEnabled) "Yes" else "No"
-            ),
-            InfoItemUiModel(
-                label = "First Install",
-                value = packageDetails.firstInstallTime ?: "N/A"
-            ),
-            InfoItemUiModel(
-                label = "Last Update",
-                value = packageDetails.lastUpdateTime ?: "N/A"
             )
         )
-    }
 
-    /**
-     * Converts PackageDetails to list of PathItemUiModel for paths section
-     */
-    fun toPathItems(packageDetails: PackageDetails): List<PathItemUiModel> {
-        val items = mutableListOf<PathItemUiModel>()
-
-        packageDetails.installLocation?.let {
-            items.add(PathItemUiModel(label = "APK Path", path = it))
-        }
-
-        packageDetails.dataDirectory?.let {
-            items.add(PathItemUiModel(label = "Data Directory", path = it))
-        }
+        items.add(InfoItemUiModel(label = "App Name", value = extractAppName(packageDetails.packageName)))
+        items.add(InfoItemUiModel(label = "System App", value = if (packageDetails.isSystemApp) "Yes" else "No"))
+        items.add(InfoItemUiModel(label = "Enabled", value = if (packageDetails.isEnabled) "Yes" else "No"))
+        items.add(InfoItemUiModel(label = "Last Update", value = packageDetails.lastUpdateTime ?: "N/A"))
 
         return items
     }
@@ -91,6 +57,8 @@ object GeneralInfoMapper {
     private fun getAndroidVersionName(sdkVersion: String): String {
         val version = sdkVersion.toIntOrNull() ?: return "Unknown"
         return when (version) {
+            36 -> "16"
+            35 -> "15"
             34 -> "14"
             33 -> "13"
             32 -> "12L"

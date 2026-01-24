@@ -1,84 +1,46 @@
 package com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.tabs
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.components.InfoRow
-import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.components.PathCard
 import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.ui.InfoItemUiModel
-import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.ui.PathItemUiModel
-import com.github.hakandindis.plugins.adbhub.ui.AdbIcons
-import com.github.hakandindis.plugins.adbhub.ui.components.common.ListSection
+import com.github.hakandindis.plugins.adbhub.ui.theme.AdbHubTheme
+import com.github.hakandindis.plugins.adbhub.ui.theme.shapes.AdbHubShapes
 
 @Composable
 fun GeneralInfoTab(
-    generalInfoItems: List<InfoItemUiModel>,
-    pathItems: List<PathItemUiModel>,
-    onCopyPath: (String) -> Unit = {}
+    generalInfoItems: List<InfoItemUiModel>
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(24.dp)
     ) {
-        Row(
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .widthIn(max = 1280.dp),
-            horizontalArrangement = Arrangement.spacedBy(32.dp)
+                .clip(AdbHubShapes.MD)
+                .background(AdbHubTheme.surface.copy(alpha = 0.2f))
+                .border(1.dp, AdbHubTheme.border, AdbHubShapes.MD)
         ) {
-            GeneralSection(
-                generalInfoItems = generalInfoItems,
-                modifier = Modifier.weight(1f)
-            )
-            PathsSection(
-                pathItems = pathItems,
-                onCopyPath = onCopyPath,
-                modifier = Modifier.weight(1f)
-            )
-        }
-    }
-}
-
-@Composable
-private fun GeneralSection(
-    generalInfoItems: List<InfoItemUiModel>,
-    modifier: Modifier = Modifier
-) {
-    ListSection(
-        title = "GENERAL",
-        icon = AdbIcons.info,
-        modifier = modifier
-    ) {
-        LazyColumn {
-            itemsIndexed(generalInfoItems) { index, item ->
-                InfoRow(
-                    label = item.label,
-                    value = item.value,
-                    isLast = index == generalInfoItems.size - 1
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun PathsSection(
-    pathItems: List<PathItemUiModel>,
-    onCopyPath: (String) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    ListSection(
-        title = "PATHS",
-        icon = AdbIcons.folderOpen,
-        modifier = modifier
-    ) {
-        Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            pathItems.forEach { pathItem ->
-                PathCard(pathItem.label, pathItem.path, onCopyPath)
+            LazyColumn {
+                itemsIndexed(generalInfoItems) { index, item ->
+                    InfoRow(
+                        label = item.label,
+                        value = item.value,
+                        isLast = index == generalInfoItems.size - 1
+                    )
+                }
             }
         }
     }
