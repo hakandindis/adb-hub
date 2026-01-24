@@ -91,7 +91,6 @@ fun DetailsContent(
                             )
                         )
                     },
-                    packageName = packageName,
                     onActivityLaunch = onActivityLaunch
                 )
             }

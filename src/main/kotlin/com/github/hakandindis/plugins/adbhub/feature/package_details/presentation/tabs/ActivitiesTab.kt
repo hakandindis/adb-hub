@@ -33,7 +33,6 @@ fun ActivitiesTab(
     activities: List<ActivityUiModel>,
     searchText: String,
     onActivitySearchChange: (String) -> Unit = {},
-    packageName: String,
     onActivityLaunch: (String) -> Unit = {}
 ) {
     val searchState = rememberTextFieldState(searchText)
@@ -93,7 +92,6 @@ fun ActivitiesTab(
             items(activities) { activity ->
                 ActivityRow(
                     activity = activity,
-                    packageName = packageName,
                     onLaunch = {
                         if (activity.isLauncher) {
                             onActivityLaunch(activity.fullName)
@@ -108,7 +106,6 @@ fun ActivitiesTab(
 @Composable
 private fun ActivityRow(
     activity: ActivityUiModel,
-    packageName: String,
     onLaunch: () -> Unit
 ) {
     val interactionSource = remember { MutableInteractionSource() }
