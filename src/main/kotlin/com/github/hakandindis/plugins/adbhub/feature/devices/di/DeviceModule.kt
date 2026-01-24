@@ -13,8 +13,8 @@ import com.github.hakandindis.plugins.adbhub.feature.devices.domain.usecase.GetD
  */
 object DeviceModule {
 
-    fun createDeviceDataSource(executor: AdbCommandExecutor?): DeviceDataSource? {
-        return executor?.let { DeviceDataSourceImpl(it) }
+    fun createDeviceDataSource(executor: AdbCommandExecutor): DeviceDataSource {
+        return DeviceDataSourceImpl(executor)
     }
 
     fun createDeviceRepository(dataSource: DeviceDataSource): DeviceRepository {

@@ -14,13 +14,15 @@ import org.jetbrains.jewel.ui.component.Text
 
 @Composable
 fun DetailsContent(
-    packageDetailsUiState: PackageDetailsUiState?,
+    packageDetailsViewModel: PackageDetailsViewModel,
     selectedDevice: Device?,
     uid: String? = null,
     onCopyPath: (String) -> Unit = {},
     onActivityLaunch: (String) -> Unit = {}
 ) {
-    if (packageDetailsUiState == null || packageDetailsUiState.generalInfoItems.isEmpty()) {
+    val packageDetailsUiState by packageDetailsViewModel.uiState.collectAsState()
+
+    if (packageDetailsUiState.generalInfoItems.isEmpty()) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -28,7 +30,7 @@ fun DetailsContent(
             contentAlignment = Alignment.Center
         ) {
             Text(
-                if (packageDetailsUiState?.isLoading == true) {
+                if (packageDetailsUiState.isLoading) {
                     "Loading package details..."
                 } else {
                     "Select a package to view details"
@@ -48,7 +50,7 @@ fun DetailsContent(
     ) {
         val packageName = packageDetailsUiState.generalInfoItems
             .firstOrNull { it.label == "Package" }?.value ?: ""
-        val appName = packageDetailsUiState.generalInfoItems
+        packageDetailsUiState.generalInfoItems
             .firstOrNull { it.label == "App Name" }?.value ?: packageName
 
         PackageHeader(

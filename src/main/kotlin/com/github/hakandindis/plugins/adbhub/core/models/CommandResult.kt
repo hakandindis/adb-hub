@@ -9,7 +9,4 @@ data class CommandResult(
     val error: String? = null,
     val exitCode: Int,
     val isSuccess: Boolean = exitCode == 0
-) {
-    val hasError: Boolean
-        get() = !error.isNullOrBlank()
-}
+)

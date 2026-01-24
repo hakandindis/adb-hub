@@ -33,8 +33,7 @@ import org.jetbrains.jewel.ui.icon.IconKey
 fun AppActionsTab(
     packageName: String,
     deviceId: String,
-    packageActionsViewModel: PackageActionsViewModel?,
-    packageActionsUiState: PackageActionsUiState?,
+    packageActionsViewModel: PackageActionsViewModel,
     suggestedDeepLinks: List<String> = emptyList()
 ) {
     var deepLinkInput by remember { mutableStateOf("") }
@@ -42,7 +41,7 @@ fun AppActionsTab(
     LaunchedEffect(deepLinkInput) { deepLinkState.setTextAndPlaceCursorAtEnd(deepLinkInput) }
     LaunchedEffect(deepLinkState.text.toString()) { deepLinkInput = deepLinkState.text.toString() }
 
-    val uiState = packageActionsUiState ?: PackageActionsUiState()
+    val uiState by packageActionsViewModel.uiState.collectAsState()
 
     Column(
         modifier = Modifier
@@ -66,7 +65,7 @@ fun AppActionsTab(
                         label = "Launch App",
                         icon = AdbIcons.playArrow,
                         onClick = {
-                            packageActionsViewModel?.handleIntent(
+                            packageActionsViewModel.handleIntent(
                                 PackageActionsIntent.LaunchApp(packageName, deviceId)
                             )
                         },
@@ -78,7 +77,7 @@ fun AppActionsTab(
                         label = "Force Stop",
                         icon = AdbIcons.stopCircle,
                         onClick = {
-                            packageActionsViewModel?.handleIntent(
+                            packageActionsViewModel.handleIntent(
                                 PackageActionsIntent.ForceStop(packageName, deviceId)
                             )
                         },
@@ -95,7 +94,7 @@ fun AppActionsTab(
                         label = "Restart",
                         icon = AdbIcons.playArrow,
                         onClick = {
-                            packageActionsViewModel?.handleIntent(
+                            packageActionsViewModel.handleIntent(
                                 PackageActionsIntent.RestartApp(packageName, deviceId)
                             )
                         },
@@ -107,7 +106,7 @@ fun AppActionsTab(
                         label = "Uninstall",
                         icon = AdbIcons.delete,
                         onClick = {
-                            packageActionsViewModel?.handleIntent(
+                            packageActionsViewModel.handleIntent(
                                 PackageActionsIntent.Uninstall(packageName, deviceId)
                             )
                         },
@@ -136,7 +135,7 @@ fun AppActionsTab(
                         icon = AdbIcons.cleaningServices,
                         description = "Reset app state",
                         onClick = {
-                            packageActionsViewModel?.handleIntent(
+                            packageActionsViewModel.handleIntent(
                                 PackageActionsIntent.ClearData(packageName, deviceId)
                             )
                         },
@@ -148,7 +147,7 @@ fun AppActionsTab(
                         icon = AdbIcons.cleaningServices,
                         description = "Free up space",
                         onClick = {
-                            packageActionsViewModel?.handleIntent(
+                            packageActionsViewModel.handleIntent(
                                 PackageActionsIntent.ClearCache(packageName, deviceId)
                             )
                         },
@@ -173,7 +172,7 @@ fun AppActionsTab(
                     icon = AdbIcons.settings,
                     checked = uiState.stayAwakeEnabled,
                     onCheckedChange = { enabled ->
-                        packageActionsViewModel?.handleIntent(
+                        packageActionsViewModel.handleIntent(
                             PackageActionsIntent.SetStayAwake(enabled, deviceId)
                         )
                     },
@@ -185,7 +184,7 @@ fun AppActionsTab(
                     icon = AdbIcons.settings,
                     checked = uiState.packageEnabled,
                     onCheckedChange = { enabled ->
-                        packageActionsViewModel?.handleIntent(
+                        packageActionsViewModel.handleIntent(
                             PackageActionsIntent.SetPackageEnabled(packageName, enabled, deviceId)
                         )
                     },
@@ -218,7 +217,7 @@ fun AppActionsTab(
                             .clickable {
                                 val link = deepLinkState.text.toString()
                                 if (link.isNotBlank()) {
-                                    packageActionsViewModel?.handleIntent(
+                                    packageActionsViewModel.handleIntent(
                                         PackageActionsIntent.LaunchDeepLink(link, deviceId)
                                     )
                                     deepLinkState.setTextAndPlaceCursorAtEnd("")
@@ -246,7 +245,7 @@ fun AppActionsTab(
                             DeepLinkChip(
                                 link = link,
                                 onClick = {
-                                    packageActionsViewModel?.handleIntent(
+                                    packageActionsViewModel.handleIntent(
                                         PackageActionsIntent.LaunchDeepLink(link, deviceId)
                                     )
                                 }

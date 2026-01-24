@@ -12,8 +12,8 @@ import com.github.hakandindis.plugins.adbhub.feature.package_actions.domain.usec
  */
 object PackageActionsModule {
 
-    fun createPackageActionsDataSource(executor: AdbCommandExecutor?): PackageActionsDataSource? {
-        return executor?.let { PackageActionsDataSourceImpl(it) }
+    fun createPackageActionsDataSource(executor: AdbCommandExecutor): PackageActionsDataSource {
+        return PackageActionsDataSourceImpl(executor)
     }
 
     fun createPackageActionsRepository(dataSource: PackageActionsDataSource): PackageActionsRepository {

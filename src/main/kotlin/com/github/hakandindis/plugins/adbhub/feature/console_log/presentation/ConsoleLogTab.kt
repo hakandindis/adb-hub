@@ -6,6 +6,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -15,11 +16,9 @@ import org.jetbrains.jewel.ui.component.Text
 
 @Composable
 fun ConsoleLogTab(
-    consoleLogViewModel: ConsoleLogViewModel?,
-    consoleLogUiState: ConsoleLogUiState?
+    consoleLogViewModel: ConsoleLogViewModel
 ) {
-    val uiState = consoleLogViewModel?.uiState?.collectAsState()?.value ?: consoleLogUiState
-    ?: ConsoleLogUiState()
+    val uiState by consoleLogViewModel.uiState.collectAsState()
 
     Column(
         modifier = Modifier
@@ -28,7 +27,7 @@ fun ConsoleLogTab(
     ) {
         ConsoleLogToolbar(
             onClearLogs = {
-                consoleLogViewModel?.handleIntent(ConsoleLogIntent.ClearLogs)
+                consoleLogViewModel.handleIntent(ConsoleLogIntent.ClearLogs)
             },
             logCount = uiState.logs.size
         )

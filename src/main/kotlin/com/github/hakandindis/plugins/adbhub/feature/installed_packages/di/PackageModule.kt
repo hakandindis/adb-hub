@@ -13,8 +13,8 @@ import com.github.hakandindis.plugins.adbhub.feature.installed_packages.domain.u
  */
 object PackageModule {
 
-    fun createPackageDataSource(executor: AdbCommandExecutor?): PackageDataSource? {
-        return executor?.let { PackageDataSourceImpl(it) }
+    fun createPackageDataSource(executor: AdbCommandExecutor): PackageDataSource {
+        return PackageDataSourceImpl(executor)
     }
 
     fun createPackageRepository(dataSource: PackageDataSource): PackageRepository {
