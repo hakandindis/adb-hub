@@ -35,9 +35,6 @@ class PackageDetailsViewModel(
     private val _uiState = MutableStateFlow(PackageDetailsUiState())
     val uiState: StateFlow<PackageDetailsUiState> = _uiState.asStateFlow()
 
-    /**
-     * Handles intents from UI
-     */
     fun handleIntent(intent: PackageDetailsIntent) {
         when (intent) {
             is PackageDetailsIntent.LoadPackageDetails -> loadPackageDetails(intent.packageName, intent.deviceId)
@@ -45,9 +42,6 @@ class PackageDetailsViewModel(
         }
     }
 
-    /**
-     * Loads package details
-     */
     private fun loadPackageDetails(packageName: String, deviceId: String) {
         scope.launch {
             _uiState.update { it.copy(isLoading = true, error = null) }
@@ -133,25 +127,19 @@ class PackageDetailsViewModel(
         permission: String,
         dumpsysOutput: String
     ): PermissionGrantStatus {
-        // Look for granted permissions
         val grantedPattern = (ParsePatterns.GRANTED_PATTERN.pattern + permission).toRegex(RegexOption.IGNORE_CASE)
         if (grantedPattern.find(dumpsysOutput) != null) {
             return PermissionGrantStatus.GRANTED
         }
 
-        // Look for denied permissions
         val deniedPattern = (ParsePatterns.DENIED_PATTERN.pattern + permission).toRegex(RegexOption.IGNORE_CASE)
         if (deniedPattern.find(dumpsysOutput) != null) {
             return PermissionGrantStatus.DENIED
         }
 
-        // If it's in requested permissions but status is unclear, mark as optional
         return PermissionGrantStatus.OPTIONAL
     }
 
-    /**
-     * Launches an activity on the device
-     */
     private fun launchActivity(activityName: String, deviceId: String) {
         if (commandExecutor == null) {
             logger.warn("Cannot launch activity: ADB executor not available")

@@ -17,9 +17,6 @@ class CommandLogger {
     private val _logs = MutableStateFlow<List<CommandLog>>(emptyList())
     val logs: StateFlow<List<CommandLog>> = _logs.asStateFlow()
 
-    /**
-     * Logs a command execution
-     */
     fun logCommand(
         adbPath: String,
         command: String,
@@ -48,9 +45,6 @@ class CommandLogger {
         }
     }
 
-    /**
-     * Clears all logs
-     */
     fun clearLogs() {
         _logs.value = emptyList()
     }

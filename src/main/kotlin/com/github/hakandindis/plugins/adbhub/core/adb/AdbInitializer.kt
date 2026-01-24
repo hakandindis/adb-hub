@@ -22,7 +22,5 @@ class AdbInitializer(
         return executor != null || initialize()
     }
 
-    fun getAdbPath(): String? = pathFinder.findAdbPath()
-
     fun getExecutor(): AdbCommandExecutor? = executor
 }

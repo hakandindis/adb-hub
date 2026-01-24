@@ -27,8 +27,6 @@ class AdbCommandExecutor(private val adbPath: String) {
         timeoutSeconds: Long = DEFAULT_TIMEOUT_SECONDS
     ): CommandResult {
         val result = internalExecuteCommand(command, timeoutSeconds)
-
-        // Log the command execution
         commandLogger.logCommand(adbPath, command, result, deviceId = null)
 
         return result

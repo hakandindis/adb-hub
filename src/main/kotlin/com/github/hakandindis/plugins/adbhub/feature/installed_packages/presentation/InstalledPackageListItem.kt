@@ -54,7 +54,6 @@ fun InstalledPackageListItem(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        // Icon/Initialism
         Box(
             modifier = Modifier
                 .size(40.dp)
@@ -80,7 +79,6 @@ fun InstalledPackageListItem(
             }
         }
 
-        // Package name and status
         Column(
             modifier = Modifier.weight(1f),
             verticalArrangement = Arrangement.spacedBy(4.dp)

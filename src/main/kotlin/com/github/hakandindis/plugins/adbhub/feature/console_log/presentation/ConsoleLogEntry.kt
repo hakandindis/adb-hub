@@ -57,7 +57,7 @@ fun ConsoleLogEntry(log: CommandLog) {
                         ),
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(start = 78.dp) // Align with command (70dp timestamp + 8dp spacing)
+                            .padding(start = 78.dp)
                     )
                 }
             }
@@ -80,7 +80,6 @@ fun ConsoleLogEntry(log: CommandLog) {
             }
         }
 
-        // Exit code (if failed)
         if (!log.isSuccess) {
             Text(
                 text = "Exit code: ${log.exitCode}",

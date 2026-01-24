@@ -18,8 +18,6 @@ data class DeviceInfo(
     val cpuAbi: String?,
     val hardware: String?
 ) {
-    val displayName: String
-        get() = model ?: product ?: deviceId
 
     val androidInfo: String
         get() = buildString {

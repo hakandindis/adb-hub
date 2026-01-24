@@ -25,7 +25,6 @@ class ConsoleLogViewModel(
     val uiState: StateFlow<ConsoleLogUiState> = _uiState.asStateFlow()
 
     init {
-        // Observe command logger and update UI state
         commandLogger.logs
             .onEach { logs ->
                 _uiState.value = ConsoleLogUiState(

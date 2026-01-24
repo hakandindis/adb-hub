@@ -48,7 +48,6 @@ fun ConsoleLogTab(
                 )
             }
         } else {
-            // Terminal-style console output
             Column(
                 modifier = Modifier
                     .fillMaxSize()

@@ -12,9 +12,7 @@ import com.github.hakandindis.plugins.adbhub.feature.devices.domain.usecase.GetD
  * Dependency injection module for Device feature
  */
 object DeviceModule {
-    /**
-     * Creates DeviceViewModel dependencies
-     */
+
     fun createDeviceDataSource(executor: AdbCommandExecutor?): DeviceDataSource? {
         return executor?.let { DeviceDataSourceImpl(it) }
     }

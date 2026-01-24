@@ -53,9 +53,6 @@ fun DetailsContent(
 
         PackageHeader(
             packageName = packageName,
-            appName = appName,
-            versionName = packageDetailsUiState.generalInfoItems
-                .firstOrNull { it.label == "Version Name" }?.value,
             uid = uid
         )
         DetailsSubTabs(selectedTab = selectedTab, onTabSelected = { selectedTab = it })

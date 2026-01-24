@@ -9,12 +9,12 @@ import java.time.format.DateTimeFormatter
 data class CommandLog(
     val id: String,
     val timestamp: LocalDateTime,
-    val fullCommand: String, // Full command including "adb" prefix
+    val fullCommand: String,
     val output: String,
     val error: String?,
     val exitCode: Int,
     val isSuccess: Boolean,
-    val deviceId: String? = null // Device ID if command was device-specific
+    val deviceId: String? = null
 ) {
     /**
      * Formats the timestamp for display

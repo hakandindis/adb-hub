@@ -16,8 +16,6 @@ import org.jetbrains.jewel.ui.component.Text
 @Composable
 fun PackageHeader(
     packageName: String,
-    appName: String,
-    versionName: String? = null,
     uid: String? = null,
 ) {
     val packageInitials = packageName

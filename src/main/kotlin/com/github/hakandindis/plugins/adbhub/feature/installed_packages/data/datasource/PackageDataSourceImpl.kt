@@ -41,13 +41,11 @@ class PackageDataSourceImpl(
         val packages = parsePackages(result.output, deviceId)
         logger.info("Found ${packages.size} packages for device $deviceId (from ${outputLines.size} lines)")
 
-        // Log first few lines for debugging only if in debug mode
         if (logger.isDebugEnabled && outputLines.isNotEmpty()) {
             logger.debug("First ${AdbConfig.DEBUG_LINES_COUNT} lines of package list output:")
             outputLines.take(AdbConfig.DEBUG_LINES_COUNT).forEach { logger.debug("  $it") }
         }
 
-        // If we found very few packages, try without -f flag as well and merge
         if (packages.size < AdbConfig.PACKAGE_COUNT_THRESHOLD && includeSystemApps) {
             logger.info("Found very few packages, trying without -f flag to get more")
             val fallbackResult = commandExecutor.executeCommandForDevice(deviceId, AdbCommands.LIST_PACKAGES_NO_PATH)
@@ -82,7 +80,6 @@ class PackageDataSourceImpl(
         for (line in lines) {
             val trimmed = line.trim()
 
-            // Skip empty lines and lines that don't start with "package:"
             if (trimmed.isEmpty() || !trimmed.startsWith("package:")) {
                 if (trimmed.isNotEmpty()) {
                     logger.debug("Skipping line (doesn't start with 'package:'): $trimmed")
@@ -90,20 +87,14 @@ class PackageDataSourceImpl(
                 continue
             }
 
-            // Format: "package:/data/app/com.example.app-1/base.apk=com.example.app"
-            // or: "package:com.example.app" (if -f is not used, but we always use -f)
             val packageInfo = trimmed.substringAfter("package:")
 
-            // Skip if package info is empty
             if (packageInfo.isEmpty()) {
                 skippedCount++
                 continue
             }
 
-            // Check if format has "=" (path=packageName) or just packageName
-            // Note: APK paths can contain "=" in some cases, so we need to split from the right
             val parts = if (packageInfo.contains("=")) {
-                // Split from the right to handle cases where path contains "="
                 val lastEqualsIndex = packageInfo.lastIndexOf("=")
                 if (lastEqualsIndex > 0 && lastEqualsIndex < packageInfo.length - 1) {
                     listOf(
@@ -116,12 +107,9 @@ class PackageDataSourceImpl(
                     continue
                 }
             } else {
-                // If no "=", assume the whole thing is the package name
-                // This shouldn't happen with -f flag, but handle it anyway
                 listOf("", packageInfo)
             }
 
-            // Need at least package name
             if (parts.size < 2 || parts[1].isEmpty()) {
                 skippedCount++
                 logger.debug("Skipping line (invalid format): $trimmed")
@@ -131,23 +119,17 @@ class PackageDataSourceImpl(
             val apkPath = parts[0].trim()
             val packageName = parts[1].trim()
 
-            // Validate package name: must not be empty
             if (packageName.isEmpty()) {
                 skippedCount++
                 continue
             }
 
-            // Validate package name format: should contain at least one dot
-            // (valid Android package names have at least one dot, e.g., "com.example.app")
-            // But some system packages might not have dots, so we'll be lenient
-            // Only skip if it's clearly invalid (e.g., just whitespace or special chars)
             if (!packageName.matches(Regex("^[a-zA-Z][a-zA-Z0-9_.]*$"))) {
                 skippedCount++
                 logger.debug("Skipping package (invalid name format): $packageName")
                 continue
             }
 
-            // Determine if it's a system app based on path
             val isSystemApp = apkPath?.let { path ->
                 SystemPaths.SYSTEM_APP_PATHS.any { systemPath -> path.contains(systemPath) }
             } ?: false
@@ -155,11 +137,11 @@ class PackageDataSourceImpl(
             packages.add(
                 ApplicationPackage(
                     packageName = packageName,
-                    versionName = null, // Will be loaded on demand if needed
+                    versionName = null,
                     versionCode = null,
                     installLocation = apkPath.ifEmpty { null },
                     isSystemApp = isSystemApp,
-                    isEnabled = true // Default, can be checked separately if needed
+                    isEnabled = true
                 )
             )
         }

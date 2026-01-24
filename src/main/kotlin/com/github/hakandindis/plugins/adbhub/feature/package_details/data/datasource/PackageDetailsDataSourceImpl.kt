@@ -23,7 +23,6 @@ class PackageDetailsDataSourceImpl(
 
     override suspend fun getPackageDetails(packageName: String, deviceId: String): PackageDetails? {
         return try {
-            // Get dumpsys package output
             val dumpsysResult =
                 commandExecutor.executeCommandForDevice(deviceId, DumpsysCommands.getPackageDumpsys(packageName))
             if (!dumpsysResult.isSuccess) {
@@ -33,7 +32,6 @@ class PackageDetailsDataSourceImpl(
 
             val dumpsysOutput = dumpsysResult.output
 
-            // Get APK path
             val pathResult = commandExecutor.executeCommandForDevice(deviceId, PmCommands.getPackagePath(packageName))
             val installLocation = if (pathResult.isSuccess) {
                 pathResult.output.lines()
@@ -45,7 +43,6 @@ class PackageDetailsDataSourceImpl(
                 null
             }
 
-            // Parse dumpsys output using parsers
             val versionName = DumpsysParser.extractVersionName(dumpsysOutput)
             val versionCode = DumpsysParser.extractVersionCode(dumpsysOutput)
             val dataDirectory = DumpsysParser.extractDataDirectory(dumpsysOutput)
@@ -89,7 +86,6 @@ class PackageDetailsDataSourceImpl(
     ): List<PackageDetails.ServiceInfo> {
         val services = mutableListOf<PackageDetails.ServiceInfo>()
 
-        // Pattern 1: "Service #0: name=com.example/.MyService"
         val servicePattern1 = ParsePatterns.SERVICE_PATTERN_1
         servicePattern1.findAll(output).forEach { match ->
             val fullName = "${match.groupValues[1]}/${match.groupValues[2]}"
@@ -111,7 +107,6 @@ class PackageDetailsDataSourceImpl(
             }
         }
 
-        // Pattern 2: "Service [hex] com.example/.MyService"
         if (services.isEmpty()) {
             val servicePattern2 = ParsePatterns.SERVICE_PATTERN_2
             servicePattern2.findAll(output).forEach { match ->
@@ -141,7 +136,6 @@ class PackageDetailsDataSourceImpl(
     private fun extractReceivers(output: String, packageName: String): List<PackageDetails.ReceiverInfo> {
         val receivers = mutableListOf<PackageDetails.ReceiverInfo>()
 
-        // Pattern 1: "Receiver #0: name=com.example/.MyReceiver"
         val receiverPattern1 = ParsePatterns.RECEIVER_PATTERN_1
         receiverPattern1.findAll(output).forEach { match ->
             val fullName = "${match.groupValues[1]}/${match.groupValues[2]}"
@@ -163,7 +157,6 @@ class PackageDetailsDataSourceImpl(
             }
         }
 
-        // Pattern 2: "Receiver [hex] com.example/.MyReceiver"
         if (receivers.isEmpty()) {
             val receiverPattern2 = ParsePatterns.RECEIVER_PATTERN_2
             receiverPattern2.findAll(output).forEach { match ->
