@@ -8,6 +8,8 @@ import com.github.hakandindis.plugins.adbhub.feature.package_details.domain.mapp
 import com.github.hakandindis.plugins.adbhub.feature.package_details.domain.mapper.GeneralInfoMapper
 import com.github.hakandindis.plugins.adbhub.feature.package_details.domain.mapper.PermissionMapper
 import com.github.hakandindis.plugins.adbhub.feature.package_details.domain.usecase.GetPackageDetailsUseCase
+import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.ui.ActivityUiModel
+import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.ui.PermissionUiModel
 import com.github.hakandindis.plugins.adbhub.models.PermissionGrantStatus
 import com.github.hakandindis.plugins.adbhub.models.PermissionStatus
 import com.intellij.openapi.Disposable
@@ -39,8 +41,44 @@ class PackageDetailsViewModel(
         when (intent) {
             is PackageDetailsIntent.LoadPackageDetails -> loadPackageDetails(intent.packageName, intent.deviceId)
             is PackageDetailsIntent.LaunchActivity -> launchActivity(intent.activityName, intent.deviceId)
+            is PackageDetailsIntent.SetPermissionSearchText -> updatePermissionSearch(intent.query)
+            is PackageDetailsIntent.SetActivitySearchText -> updateActivitySearch(intent.query)
         }
     }
+
+    private fun updatePermissionSearch(query: String) {
+        _uiState.update { state ->
+            state.copy(
+                permissionSearchText = query,
+                filteredPermissions = filterPermissions(state.permissions, query)
+            )
+        }
+    }
+
+    private fun updateActivitySearch(query: String) {
+        _uiState.update { state ->
+            state.copy(
+                activitySearchText = query,
+                filteredActivities = filterActivities(state.activities, query)
+            )
+        }
+    }
+
+    private fun filterPermissions(permissions: List<PermissionUiModel>, query: String): List<PermissionUiModel> {
+        return if (query.isBlank()) permissions
+        else permissions.filter { it.name.contains(query, ignoreCase = true) }
+    }
+
+    private fun filterActivities(activities: List<ActivityUiModel>, query: String): List<ActivityUiModel> {
+        return if (query.isBlank()) activities
+        else activities.filter {
+            it.name.contains(query, ignoreCase = true) || it.shortName.contains(
+                query,
+                ignoreCase = true
+            )
+        }
+    }
+
 
     private fun loadPackageDetails(packageName: String, deviceId: String) {
         scope.launch {
@@ -63,6 +101,10 @@ class PackageDetailsViewModel(
                             pathItems = pathItems,
                             activities = activities,
                             permissions = permissionUiModels,
+                            permissionSearchText = "",
+                            filteredPermissions = permissionUiModels,
+                            activitySearchText = "",
+                            filteredActivities = activities,
                             isLoading = false
                         )
                     }

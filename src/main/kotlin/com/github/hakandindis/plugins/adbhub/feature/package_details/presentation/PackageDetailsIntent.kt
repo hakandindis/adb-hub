@@ -13,4 +13,14 @@ sealed class PackageDetailsIntent {
      * Launch an activity
      */
     data class LaunchActivity(val activityName: String, val deviceId: String) : PackageDetailsIntent()
+
+    /**
+     * Filter permissions by search query
+     */
+    data class SetPermissionSearchText(val query: String) : PackageDetailsIntent()
+
+    /**
+     * Filter activities by search query
+     */
+    data class SetActivitySearchText(val query: String) : PackageDetailsIntent()
 }

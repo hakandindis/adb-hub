@@ -43,7 +43,6 @@ fun AdbMainContent(
             when (selectedTab) {
                 MainTab.Details -> DetailsContent(
                     packageDetailsViewModel = packageDetailsViewModel,
-                    selectedDevice = selectedDevice,
                     uid = uid,
                     onCopyPath = onCopyPath,
                     onActivityLaunch = onActivityLaunch

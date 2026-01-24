@@ -7,7 +7,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -25,20 +26,12 @@ import org.jetbrains.jewel.ui.component.TextField
 @Composable
 fun PermissionsTab(
     permissions: List<PermissionStatus>,
+    searchText: String,
     onPermissionFilterChange: (String) -> Unit = {}
 ) {
-    var searchText by remember { mutableStateOf("") }
     val searchState = rememberTextFieldState(searchText)
     LaunchedEffect(searchText) { searchState.setTextAndPlaceCursorAtEnd(searchText) }
-    LaunchedEffect(searchState.text.toString()) {
-        searchText = searchState.text.toString(); onPermissionFilterChange(
-        searchText
-    )
-    }
-
-    val filteredPermissions = permissions.filter { perm ->
-        searchText.isBlank() || perm.permission.contains(searchText, ignoreCase = true)
-    }
+    LaunchedEffect(searchState.text.toString()) { onPermissionFilterChange(searchState.text.toString()) }
 
     Column(
         modifier = Modifier
@@ -80,7 +73,7 @@ fun PermissionsTab(
                     )
                 }
                 LazyColumn {
-                    items(filteredPermissions) { permission ->
+                    items(permissions) { permission ->
                         PermissionRow(permission)
                     }
                 }

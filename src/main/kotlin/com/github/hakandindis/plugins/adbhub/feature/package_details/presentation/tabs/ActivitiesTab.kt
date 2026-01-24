@@ -10,13 +10,15 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.github.hakandindis.plugins.adbhub.core.models.Device
 import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.ui.ActivityUiModel
 import com.github.hakandindis.plugins.adbhub.ui.AdbIcons
 import com.github.hakandindis.plugins.adbhub.ui.theme.AdbHubTheme
@@ -29,19 +31,14 @@ import org.jetbrains.jewel.ui.component.TextField
 @Composable
 fun ActivitiesTab(
     activities: List<ActivityUiModel>,
+    searchText: String,
+    onActivitySearchChange: (String) -> Unit = {},
     packageName: String,
-    selectedDevice: Device?,
     onActivityLaunch: (String) -> Unit = {}
 ) {
-    var searchText by remember { mutableStateOf("") }
     val searchState = rememberTextFieldState(searchText)
     LaunchedEffect(searchText) { searchState.setTextAndPlaceCursorAtEnd(searchText) }
-    LaunchedEffect(searchState.text.toString()) { searchText = searchState.text.toString() }
-
-    val filteredActivities = activities.filter { activity ->
-        searchText.isBlank() || activity.name.contains(searchText, ignoreCase = true) ||
-                activity.shortName.contains(searchText, ignoreCase = true)
-    }
+    LaunchedEffect(searchState.text.toString()) { onActivitySearchChange(searchState.text.toString()) }
 
     Column(
         modifier = Modifier
@@ -80,7 +77,7 @@ fun ActivitiesTab(
                         .padding(end = 8.dp)
                 ) {
                     Text(
-                        "${filteredActivities.size} Activities",
+                        "${activities.size} Activities",
                         style = JewelTheme.defaultTextStyle
                     )
                 }
@@ -93,7 +90,7 @@ fun ActivitiesTab(
                 .padding(horizontal = 24.dp, vertical = 16.dp),
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            items(filteredActivities) { activity ->
+            items(activities) { activity ->
                 ActivityRow(
                     activity = activity,
                     packageName = packageName,

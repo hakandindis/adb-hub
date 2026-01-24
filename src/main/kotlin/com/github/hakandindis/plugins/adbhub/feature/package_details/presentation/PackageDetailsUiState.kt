@@ -13,6 +13,10 @@ data class PackageDetailsUiState(
     val pathItems: List<PathItemUiModel> = emptyList(),
     val activities: List<ActivityUiModel> = emptyList(),
     val permissions: List<PermissionUiModel> = emptyList(),
+    val permissionSearchText: String = "",
+    val filteredPermissions: List<PermissionUiModel> = emptyList(),
+    val activitySearchText: String = "",
+    val filteredActivities: List<ActivityUiModel> = emptyList(),
     val isLoading: Boolean = false,
     val error: String? = null
 )

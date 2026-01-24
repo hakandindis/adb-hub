@@ -6,7 +6,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.github.hakandindis.plugins.adbhub.core.models.Device
 import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.tabs.*
 import com.github.hakandindis.plugins.adbhub.ui.theme.AdbHubTheme
 import org.jetbrains.jewel.foundation.theme.JewelTheme
@@ -15,7 +14,6 @@ import org.jetbrains.jewel.ui.component.Text
 @Composable
 fun DetailsContent(
     packageDetailsViewModel: PackageDetailsViewModel,
-    selectedDevice: Device?,
     uid: String? = null,
     onCopyPath: (String) -> Unit = {},
     onActivityLaunch: (String) -> Unit = {}
@@ -72,13 +70,28 @@ fun DetailsContent(
                 )
 
                 DetailsTab.Permissions -> PermissionsTab(
-                    permissions = packageDetailsUiState.permissions.map { it.status }
+                    permissions = packageDetailsUiState.filteredPermissions.map { it.status },
+                    searchText = packageDetailsUiState.permissionSearchText,
+                    onPermissionFilterChange = {
+                        packageDetailsViewModel.handleIntent(
+                            PackageDetailsIntent.SetPermissionSearchText(
+                                it
+                            )
+                        )
+                    }
                 )
 
                 DetailsTab.Activities -> ActivitiesTab(
-                    activities = packageDetailsUiState.activities,
+                    activities = packageDetailsUiState.filteredActivities,
+                    searchText = packageDetailsUiState.activitySearchText,
+                    onActivitySearchChange = {
+                        packageDetailsViewModel.handleIntent(
+                            PackageDetailsIntent.SetActivitySearchText(
+                                it
+                            )
+                        )
+                    },
                     packageName = packageName,
-                    selectedDevice = selectedDevice,
                     onActivityLaunch = onActivityLaunch
                 )
             }
