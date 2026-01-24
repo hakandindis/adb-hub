@@ -42,14 +42,16 @@ class DeviceViewModel(
             _uiState.update { it.copy(isLoading = true, error = null) }
             getDevicesUseCase().fold(
                 onSuccess = { devices ->
+                    val toSelect = devices.firstOrNull()
                     _uiState.update {
                         it.copy(
                             devices = devices,
                             isLoading = false,
-                            selectedDevice = it.selectedDevice ?: devices.firstOrNull { device ->
-                                device.state == DeviceState.DEVICE
-                            }
+                            selectedDevice = toSelect
                         )
+                    }
+                    if (toSelect != null && toSelect.state == DeviceState.DEVICE) {
+                        loadDeviceInfo(toSelect.id)
                     }
                 },
                 onFailure = { error ->

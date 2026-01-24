@@ -40,7 +40,7 @@ fun DevicesSection(
             .padding(12.dp)
     ) {
         Text(
-            "TARGET DEVICE",
+            "Connected Devices",
             style = JewelTheme.defaultTextStyle
         )
         Spacer(Modifier.height(8.dp))

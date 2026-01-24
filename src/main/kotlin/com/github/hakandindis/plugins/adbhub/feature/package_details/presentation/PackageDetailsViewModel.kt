@@ -124,7 +124,7 @@ class PackageDetailsViewModel(
      * Loads permission statuses from dumpsys output
      * TODO: Move this to a separate use case and parser
      */
-    private suspend fun loadPermissionStatuses(
+    private fun loadPermissionStatuses(
         permissions: List<String>,
         packageName: String,
         deviceId: String
@@ -145,7 +145,6 @@ class PackageDetailsViewModel(
                     )
                 }
             } else {
-                // Fallback: mark all as optional
                 permissions.map {
                     PermissionStatus(
                         permission = it,
