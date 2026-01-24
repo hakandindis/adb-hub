@@ -26,7 +26,8 @@ fun InfoRow(
         ) {
             Box(
                 modifier = Modifier
-                    .weight(1f)
+                    .weight(3f)
+                    .fillMaxHeight()
                     .background(AdbHubTheme.surface.copy(alpha = 0.3f))
                     .padding(12.dp),
                 contentAlignment = Alignment.CenterStart
@@ -36,15 +37,17 @@ fun InfoRow(
                     style = JewelTheme.defaultTextStyle
                 )
             }
+
             Box(
                 modifier = Modifier
                     .width(1.dp)
                     .fillMaxHeight()
                     .background(AdbHubTheme.border.copy(alpha = 0.5f))
             )
+
             Box(
                 modifier = Modifier
-                    .weight(1f)
+                    .weight(7f)
                     .padding(12.dp),
                 contentAlignment = Alignment.CenterStart
             ) {
