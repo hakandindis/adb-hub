@@ -29,16 +29,6 @@ fun InstalledPackageListItem(
         else -> "Installed"
     }
 
-    val packageInitials = packageItem.displayName
-        .takeIf { it.length >= 2 }
-        ?.take(2)
-        ?.uppercase()
-        ?: packageItem.packageName
-            .takeIf { it.length >= 2 }
-            ?.take(2)
-            ?.uppercase()
-        ?: "AP"
-
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -73,7 +63,7 @@ fun InstalledPackageListItem(
                 )
             } else {
                 Text(
-                    packageInitials,
+                    packageItem.initials,
                     style = JewelTheme.defaultTextStyle
                 )
             }

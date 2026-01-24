@@ -23,4 +23,14 @@ data class ApplicationPackage(
             return name.ifBlank { packageName }
         }
 
+    val initials: String
+        get() = displayName
+            .takeIf { it.length >= 2 }
+            ?.take(2)
+            ?.uppercase()
+            ?: packageName
+                .takeIf { it.length >= 2 }
+                ?.take(2)
+                ?.uppercase()
+            ?: "AP"
 }
