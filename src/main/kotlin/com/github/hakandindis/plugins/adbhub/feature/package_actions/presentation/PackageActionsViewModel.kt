@@ -1,6 +1,7 @@
 package com.github.hakandindis.plugins.adbhub.feature.package_actions.presentation
 
 import com.github.hakandindis.plugins.adbhub.feature.package_actions.domain.usecase.*
+import com.github.hakandindis.plugins.adbhub.service.RecentDeepLinksService
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.diagnostic.Logger
 import kotlinx.coroutines.CoroutineScope
@@ -23,6 +24,7 @@ class PackageActionsViewModel(
     private val launchDeepLinkUseCase: LaunchDeepLinkUseCase,
     private val setStayAwakeUseCase: SetStayAwakeUseCase,
     private val setPackageEnabledUseCase: SetPackageEnabledUseCase,
+    private val recentDeepLinksService: RecentDeepLinksService,
     coroutineScope: CoroutineScope
 ) : Disposable {
 
@@ -31,6 +33,10 @@ class PackageActionsViewModel(
 
     private val _uiState = MutableStateFlow(PackageActionsUiState())
     val uiState: StateFlow<PackageActionsUiState> = _uiState.asStateFlow()
+
+    init {
+        _uiState.update { it.copy(recentUris = recentDeepLinksService.getRecentUris()) }
+    }
 
     fun handleIntent(intent: PackageActionsIntent) {
         when (intent) {
@@ -165,7 +171,10 @@ class PackageActionsViewModel(
     private fun launchDeepLink(uri: String, packageName: String, deviceId: String) {
         scope.launch {
             launchDeepLinkUseCase(uri, packageName, deviceId).fold(
-                onSuccess = {},
+                onSuccess = {
+                    recentDeepLinksService.addAndTruncate(uri)
+                    _uiState.update { it.copy(recentUris = recentDeepLinksService.getRecentUris()) }
+                },
                 onFailure = { error ->
                     logger.error("Error launching deep link $uri", error)
                     _uiState.update {

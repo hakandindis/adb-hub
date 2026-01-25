@@ -13,5 +13,6 @@ data class PackageActionsUiState(
     val isSettingEnabled: Boolean = false,
     val stayAwakeEnabled: Boolean = false,
     val packageEnabled: Boolean = true,
-    val error: String? = null
+    val error: String? = null,
+    val recentUris: List<String> = emptyList()
 )

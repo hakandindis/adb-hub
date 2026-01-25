@@ -205,8 +205,54 @@ fun AppActionsTab(
                     ),
                     color = AdbHubTheme.textMuted
                 )
+                if (uiState.recentUris.isNotEmpty()) {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        "Recent Deep Links",
+                        style = JewelTheme.defaultTextStyle.copy(
+                            fontSize = JewelTheme.defaultTextStyle.fontSize * 0.9f
+                        ),
+                        color = AdbHubTheme.textMuted
+                    )
+                    Spacer(modifier = Modifier.height(6.dp))
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalArrangement = Arrangement.spacedBy(6.dp)
+                    ) {
+                        uiState.recentUris.forEach { uri ->
+                            RecentDeepLinkChip(
+                                uri = uri,
+                                onClick = { deepLinkInput = uri }
+                            )
+                        }
+                    }
+                }
             }
         }
+    }
+}
+
+@Composable
+private fun RecentDeepLinkChip(
+    uri: String,
+    onClick: () -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(AdbHubShapes.SM)
+            .background(AdbHubTheme.surface.copy(alpha = 0.5f))
+            .border(1.dp, AdbHubTheme.border.copy(alpha = 0.5f), AdbHubShapes.SM)
+            .clickable { onClick() }
+            .padding(horizontal = 10.dp, vertical = 6.dp)
+    ) {
+        Text(
+            uri,
+            style = JewelTheme.defaultTextStyle.copy(
+                fontSize = JewelTheme.defaultTextStyle.fontSize * 0.9f
+            ),
+            maxLines = 2
+        )
     }
 }
 
