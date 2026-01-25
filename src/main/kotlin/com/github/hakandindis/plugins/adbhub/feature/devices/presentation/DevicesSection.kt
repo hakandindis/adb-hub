@@ -15,6 +15,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import com.github.hakandindis.plugins.adbhub.core.models.Device
 import com.github.hakandindis.plugins.adbhub.feature.devices.presentation.ui.DeviceInfoItemUiModel
@@ -42,7 +43,8 @@ fun DevicesSection(
     ) {
         Text(
             "Connected Devices",
-            style = JewelTheme.defaultTextStyle
+            style = JewelTheme.defaultTextStyle,
+            fontSize = 16.sp,
         )
         Spacer(Modifier.height(8.dp))
 

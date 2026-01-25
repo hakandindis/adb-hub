@@ -10,6 +10,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.github.hakandindis.plugins.adbhub.models.ApplicationPackage
 import com.github.hakandindis.plugins.adbhub.ui.AdbIcons
 import org.jetbrains.jewel.foundation.theme.JewelTheme
@@ -35,6 +36,13 @@ fun InstalledPackagesSection(
             .fillMaxSize()
             .padding(12.dp)
     ) {
+        Text(
+            "Installed Packages",
+            style = JewelTheme.defaultTextStyle,
+            fontSize = 16.sp,
+        )
+        Spacer(Modifier.height(16.dp))
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
