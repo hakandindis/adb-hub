@@ -8,7 +8,7 @@ interface PackageActionsDataSource {
     suspend fun clearData(packageName: String, deviceId: String): Result<Unit>
     suspend fun clearCache(packageName: String, deviceId: String): Result<Unit>
     suspend fun uninstall(packageName: String, deviceId: String): Result<Unit>
-    suspend fun launchDeepLink(deepLink: String, deviceId: String): Result<Unit>
+    suspend fun launchDeepLink(uri: String, packageName: String, deviceId: String): Result<Unit>
     suspend fun setStayAwake(enabled: Boolean, deviceId: String): Result<Unit>
     suspend fun setPackageEnabled(packageName: String, enabled: Boolean, deviceId: String): Result<Unit>
 }

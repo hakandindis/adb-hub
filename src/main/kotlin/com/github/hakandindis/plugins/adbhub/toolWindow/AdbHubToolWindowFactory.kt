@@ -12,8 +12,10 @@ import com.github.hakandindis.plugins.adbhub.feature.package_actions.di.PackageA
 import com.github.hakandindis.plugins.adbhub.feature.package_actions.presentation.PackageActionsViewModel
 import com.github.hakandindis.plugins.adbhub.feature.package_details.di.PackageDetailsModule
 import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.PackageDetailsViewModel
+import com.github.hakandindis.plugins.adbhub.service.RecentDeepLinksService
 import com.github.hakandindis.plugins.adbhub.ui.AdbToolContent
 import com.github.hakandindis.plugins.adbhub.ui.AdbUnavailableContent
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.service
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
@@ -79,23 +81,23 @@ class AdbHubToolWindowFactory : ToolWindowFactory, DumbAware {
         val packageActionsRepository = PackageActionsModule.createPackageActionsRepository(packageActionsDataSource)
         val launchAppUseCase = PackageActionsModule.createLaunchAppUseCase(packageActionsRepository)
         val forceStopUseCase = PackageActionsModule.createForceStopUseCase(packageActionsRepository)
-        val restartAppUseCase = PackageActionsModule.createRestartAppUseCase(forceStopUseCase, launchAppUseCase)
         val clearDataUseCase = PackageActionsModule.createClearDataUseCase(packageActionsRepository)
         val clearCacheUseCase = PackageActionsModule.createClearCacheUseCase(packageActionsRepository)
         val uninstallUseCase = PackageActionsModule.createUninstallUseCase(packageActionsRepository)
         val launchDeepLinkUseCase = PackageActionsModule.createLaunchDeepLinkUseCase(packageActionsRepository)
         val setStayAwakeUseCase = PackageActionsModule.createSetStayAwakeUseCase(packageActionsRepository)
         val setPackageEnabledUseCase = PackageActionsModule.createSetPackageEnabledUseCase(packageActionsRepository)
+        val recentDeepLinksService = ApplicationManager.getApplication().service<RecentDeepLinksService>()
         val packageActionsViewModel = PackageActionsViewModel(
             launchAppUseCase = launchAppUseCase,
             forceStopUseCase = forceStopUseCase,
-            restartAppUseCase = restartAppUseCase,
             clearDataUseCase = clearDataUseCase,
             clearCacheUseCase = clearCacheUseCase,
             uninstallUseCase = uninstallUseCase,
             launchDeepLinkUseCase = launchDeepLinkUseCase,
             setStayAwakeUseCase = setStayAwakeUseCase,
             setPackageEnabledUseCase = setPackageEnabledUseCase,
+            recentDeepLinksService = recentDeepLinksService,
             coroutineScope = coroutineScope
         )
 

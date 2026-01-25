@@ -30,7 +30,6 @@ fun AdbMainContent(
     onActivityLaunch: (String) -> Unit = {}
 ) {
     var selectedTab by remember { mutableStateOf(MainTab.Details) }
-    val packageDetailsUiState by packageDetailsViewModel.uiState.collectAsState()
 
     Column(modifier = Modifier.fillMaxSize()) {
         MainTabs(selectedTab = selectedTab, onTabSelected = { selectedTab = it })
@@ -55,17 +54,12 @@ fun AdbMainContent(
                 MainTab.AppActions -> {
                     val deviceId = selectedDevice?.id ?: ""
                     if (selectedPackage != null && selectedDevice != null) {
-                        val suggestedDeepLinks = packageDetailsUiState.activities
-                            .flatMap { it.intentFilters }
-                            .flatMap { it.data }
-                            .distinct()
-                            .take(5)
-
                         AppActionsTab(
                             packageName = selectedPackage.packageName,
                             deviceId = deviceId,
                             packageActionsViewModel = packageActionsViewModel,
-                            suggestedDeepLinks = suggestedDeepLinks
+                            uid = uid,
+                            isDebuggable = null
                         )
                     } else {
                         TabPlaceholder("App Actions", "Select a package to view actions.")

@@ -1,13 +1,9 @@
 package com.github.hakandindis.plugins.adbhub.feature.package_actions.presentation
 
-import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.runtime.*
@@ -16,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.PackageHeader
 import com.github.hakandindis.plugins.adbhub.ui.AdbIcons
 import com.github.hakandindis.plugins.adbhub.ui.components.common.ListSection
 import com.github.hakandindis.plugins.adbhub.ui.theme.AdbHubTheme
@@ -34,7 +31,8 @@ fun AppActionsTab(
     packageName: String,
     deviceId: String,
     packageActionsViewModel: PackageActionsViewModel,
-    suggestedDeepLinks: List<String> = emptyList()
+    uid: String? = null,
+    isDebuggable: Boolean? = null
 ) {
     var deepLinkInput by remember { mutableStateOf("") }
     val deepLinkState = rememberTextFieldState(deepLinkInput)
@@ -49,6 +47,12 @@ fun AppActionsTab(
             .padding(24.dp),
         verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
+        PackageHeader(
+            packageName = packageName,
+            uid = uid,
+            isDebuggable = isDebuggable
+        )
+
         ListSection(
             title = "LIFECYCLE",
             icon = AdbIcons.playArrow
@@ -91,16 +95,16 @@ fun AppActionsTab(
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     ActionButton(
-                        label = "Restart",
-                        icon = AdbIcons.playArrow,
+                        label = "Clear Data",
+                        icon = AdbIcons.delete,
                         onClick = {
                             packageActionsViewModel.handleIntent(
-                                PackageActionsIntent.RestartApp(packageName, deviceId)
+                                PackageActionsIntent.ClearData(packageName, deviceId)
                             )
                         },
-                        isLoading = uiState.isRestarting,
+                        isLoading = uiState.isClearingData,
                         modifier = Modifier.weight(1f),
-                        color = AdbHubTheme.primary
+                        color = AdbHubTheme.warning
                     )
                     ActionButton(
                         label = "Uninstall",
@@ -119,142 +123,142 @@ fun AppActionsTab(
         }
 
         ListSection(
-            title = "DATA MANAGEMENT",
+            title = "DATA & STORAGE",
             icon = AdbIcons.cleaningServices
         ) {
             Column(
                 modifier = Modifier.padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                Row(
+                ActionButton(
+                    label = "Clear Cache",
+                    icon = AdbIcons.cleaningServices,
+                    onClick = {
+                        packageActionsViewModel.handleIntent(
+                            PackageActionsIntent.ClearCache(packageName, deviceId)
+                        )
+                    },
+                    isLoading = uiState.isClearingCache,
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    DataActionButton(
-                        label = "Clear Data",
-                        icon = AdbIcons.cleaningServices,
-                        description = "Reset app state",
-                        onClick = {
-                            packageActionsViewModel.handleIntent(
-                                PackageActionsIntent.ClearData(packageName, deviceId)
-                            )
-                        },
-                        isLoading = uiState.isClearingData,
-                        modifier = Modifier.weight(1f)
-                    )
-                    DataActionButton(
-                        label = "Clear Cache",
-                        icon = AdbIcons.cleaningServices,
-                        description = "Free up space",
-                        onClick = {
-                            packageActionsViewModel.handleIntent(
-                                PackageActionsIntent.ClearCache(packageName, deviceId)
-                            )
-                        },
-                        isLoading = uiState.isClearingCache,
-                        modifier = Modifier.weight(1f)
-                    )
-                }
-            }
-        }
-
-        ListSection(
-            title = "ADVANCED",
-            icon = AdbIcons.settings
-        ) {
-            Column(
-                modifier = Modifier.padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                AdvancedToggleRow(
-                    label = "Stay Awake",
-                    description = "Keep screen on while app is visible",
-                    icon = AdbIcons.settings,
-                    checked = uiState.stayAwakeEnabled,
-                    onCheckedChange = { enabled ->
-                        packageActionsViewModel.handleIntent(
-                            PackageActionsIntent.StayAwake(enabled, deviceId)
-                        )
-                    },
-                    isLoading = uiState.isSettingStayAwake
-                )
-                AdvancedToggleRow(
-                    label = "Enable App",
-                    description = "Toggle package enabled state",
-                    icon = AdbIcons.settings,
-                    checked = uiState.packageEnabled,
-                    onCheckedChange = { enabled ->
-                        packageActionsViewModel.handleIntent(
-                            PackageActionsIntent.PackageEnabled(packageName, enabled, deviceId)
-                        )
-                    },
-                    isLoading = uiState.isSettingEnabled
+                    color = AdbHubTheme.primary
                 )
             }
         }
 
         ListSection(
-            title = "DEEP LINKS",
+            title = "DEEP LINK",
             icon = AdbIcons.link
         ) {
             Column(
                 modifier = Modifier.padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                Row(modifier = Modifier.fillMaxWidth()) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(IntrinsicSize.Min),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
                     TextField(
                         state = deepLinkState,
                         modifier = Modifier
                             .weight(1f)
+                            .fillMaxHeight()
                             .clip(AdbHubShapes.SM)
                             .border(1.dp, AdbHubTheme.border, AdbHubShapes.SM),
-                        placeholder = { Text("Enter URL or Deep Link") }
+                        placeholder = { Text("scheme://host/path?query=...") }
                     )
+                    Spacer(modifier = Modifier.width(12.dp))
                     Box(
                         modifier = Modifier
                             .clip(AdbHubShapes.SM)
-                            .background(AdbHubTheme.primary)
+                            .background(AdbHubTheme.success)
                             .clickable {
-                                val link = deepLinkState.text.toString()
-                                if (link.isNotBlank()) {
+                                val uri = deepLinkState.text.toString()
+                                if (uri.isNotBlank()) {
                                     packageActionsViewModel.handleIntent(
-                                        PackageActionsIntent.LaunchDeepLink(link, deviceId)
+                                        PackageActionsIntent.LaunchDeepLink(
+                                            uri = uri,
+                                            packageName = packageName,
+                                            deviceId = deviceId
+                                        )
                                     )
                                     deepLinkState.setTextAndPlaceCursorAtEnd("")
                                     deepLinkInput = ""
                                 }
                             }
-                            .padding(horizontal = 16.dp, vertical = 12.dp)
-                            .padding(start = 12.dp)
+                            .padding(horizontal = 16.dp, vertical = 12.dp),
+                        contentAlignment = Alignment.Center
                     ) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(6.dp)
                         ) {
-                            Icon(AdbIcons.bolt, contentDescription = null, modifier = Modifier.size(14.dp))
-                            Text("Trigger", style = JewelTheme.defaultTextStyle)
+                            Icon(
+                                AdbIcons.arrowForward,
+                                contentDescription = null,
+                                modifier = Modifier.size(14.dp),
+                                tint = Color.White
+                            )
+                            Text("Send", style = JewelTheme.defaultTextStyle, color = Color.White)
                         }
                     }
                 }
-                if (suggestedDeepLinks.isNotEmpty()) {
-                    Row(
+                Text(
+                    "Triggers an implicit intent with ACTION_VIEW.",
+                    style = JewelTheme.defaultTextStyle.copy(
+                        fontSize = JewelTheme.defaultTextStyle.fontSize * 0.9f
+                    ),
+                    color = AdbHubTheme.textMuted
+                )
+                if (uiState.recentUris.isNotEmpty()) {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        "Recent Deep Links",
+                        style = JewelTheme.defaultTextStyle.copy(
+                            fontSize = JewelTheme.defaultTextStyle.fontSize * 0.9f
+                        ),
+                        color = AdbHubTheme.textMuted
+                    )
+                    Spacer(modifier = Modifier.height(6.dp))
+                    Column(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        verticalArrangement = Arrangement.spacedBy(6.dp)
                     ) {
-                        suggestedDeepLinks.forEach { link ->
-                            DeepLinkChip(
-                                link = link,
-                                onClick = {
-                                    packageActionsViewModel.handleIntent(
-                                        PackageActionsIntent.LaunchDeepLink(link, deviceId)
-                                    )
-                                }
+                        uiState.recentUris.forEach { uri ->
+                            RecentDeepLinkChip(
+                                uri = uri,
+                                onClick = { deepLinkInput = uri }
                             )
                         }
                     }
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun RecentDeepLinkChip(
+    uri: String,
+    onClick: () -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(AdbHubShapes.SM)
+            .background(AdbHubTheme.surface.copy(alpha = 0.5f))
+            .border(1.dp, AdbHubTheme.border.copy(alpha = 0.5f), AdbHubShapes.SM)
+            .clickable { onClick() }
+            .padding(horizontal = 10.dp, vertical = 6.dp)
+    ) {
+        Text(
+            uri,
+            style = JewelTheme.defaultTextStyle.copy(
+                fontSize = JewelTheme.defaultTextStyle.fontSize * 0.9f
+            ),
+            maxLines = 2
+        )
     }
 }
 
@@ -283,131 +287,5 @@ private fun ActionButton(
             Icon(icon, contentDescription = null, modifier = Modifier.size(24.dp), tint = color)
             Text(label, style = JewelTheme.defaultTextStyle, color = color)
         }
-    }
-}
-
-@Composable
-private fun DataActionButton(
-    label: String,
-    icon: IconKey,
-    description: String,
-    onClick: () -> Unit,
-    isLoading: Boolean,
-    modifier: Modifier = Modifier
-) {
-    Box(
-        modifier = modifier
-            .clip(AdbHubShapes.MD)
-            .background(AdbHubTheme.surface.copy(alpha = 0.3f))
-            .border(1.dp, AdbHubTheme.border, AdbHubShapes.MD)
-            .clickable(enabled = !isLoading) { onClick() }
-            .padding(16.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Icon(icon, contentDescription = null, modifier = Modifier.size(24.dp))
-            Text(label, style = JewelTheme.defaultTextStyle)
-            Text(
-                description,
-                style = JewelTheme.defaultTextStyle.copy(fontSize = JewelTheme.defaultTextStyle.fontSize * 0.85f)
-            )
-        }
-    }
-}
-
-@Composable
-private fun AdvancedToggleRow(
-    label: String,
-    description: String,
-    icon: IconKey,
-    checked: Boolean,
-    onCheckedChange: (Boolean) -> Unit,
-    isLoading: Boolean
-) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Row(
-            modifier = Modifier.weight(1f),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(icon, contentDescription = null, modifier = Modifier.size(20.dp))
-            Column {
-                Text(label, style = JewelTheme.defaultTextStyle)
-                Text(
-                    description,
-                    style = JewelTheme.defaultTextStyle.copy(
-                        fontSize = JewelTheme.defaultTextStyle.fontSize * 0.85f
-                    )
-                )
-            }
-        }
-        CustomToggleSwitch(
-            checked = checked,
-            onCheckedChange = { if (!isLoading) onCheckedChange(it) },
-            enabled = !isLoading
-        )
-    }
-}
-
-@Composable
-private fun CustomToggleSwitch(
-    checked: Boolean,
-    onCheckedChange: (Boolean) -> Unit,
-    enabled: Boolean = true
-) {
-    val thumbOffset by animateDpAsState(
-        targetValue = if (checked) 10.dp else (-10).dp,
-        animationSpec = tween(durationMillis = 200),
-        label = "toggle_thumb"
-    )
-
-    Box(
-        modifier = Modifier
-            .width(44.dp)
-            .height(24.dp)
-            .clip(RoundedCornerShape(12.dp))
-            .background(
-                if (checked && enabled) AdbHubTheme.primary
-                else if (!enabled) AdbHubTheme.surface.copy(alpha = 0.5f)
-                else AdbHubTheme.surface.copy(alpha = 0.6f)
-            )
-            .clickable(enabled = enabled) { onCheckedChange(!checked) }
-            .padding(2.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        Box(
-            modifier = Modifier
-                .size(20.dp)
-                .offset(x = thumbOffset)
-                .clip(CircleShape)
-                .background(
-                    if (enabled) AdbHubTheme.textMain
-                    else AdbHubTheme.textMuted
-                )
-        )
-    }
-}
-
-@Composable
-private fun DeepLinkChip(
-    link: String,
-    onClick: () -> Unit
-) {
-    Box(
-        modifier = Modifier
-            .clip(AdbHubShapes.SM)
-            .background(AdbHubTheme.surface.copy(alpha = 0.3f))
-            .border(1.dp, AdbHubTheme.border, AdbHubShapes.SM)
-            .clickable { onClick() }
-            .padding(horizontal = 12.dp, vertical = 6.dp)
-    ) {
-        Text(link, style = JewelTheme.defaultTextStyle)
     }
 }

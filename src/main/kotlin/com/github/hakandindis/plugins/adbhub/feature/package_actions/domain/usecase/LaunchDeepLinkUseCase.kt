@@ -8,7 +8,7 @@ import com.github.hakandindis.plugins.adbhub.feature.package_actions.domain.repo
 class LaunchDeepLinkUseCase(
     private val repository: PackageActionsRepository
 ) {
-    suspend operator fun invoke(deepLink: String, deviceId: String): Result<Unit> {
-        return repository.launchDeepLink(deepLink, deviceId)
+    suspend operator fun invoke(uri: String, packageName: String, deviceId: String): Result<Unit> {
+        return repository.launchDeepLink(uri, packageName, deviceId)
     }
 }

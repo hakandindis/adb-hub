@@ -50,34 +50,36 @@ fun ActivitiesTab(
                 .background(AdbHubTheme.background)
                 .padding(horizontal = 24.dp, vertical = 16.dp)
         ) {
-            Box(modifier = Modifier.fillMaxWidth()) {
-                Icon(
-                    AdbIcons.search,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(18.dp)
-                        .align(Alignment.CenterStart)
-                        .padding(start = 12.dp)
-                )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(IntrinsicSize.Min),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+
                 TextField(
                     state = searchState,
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 40.dp, end = 96.dp),
+                        .weight(1f),
                     placeholder = { Text("Search activities (e.g. MainActivity)") }
                 )
+
+                Spacer(Modifier.width(16.dp))
+
                 Box(
                     modifier = Modifier
                         .clip(AdbHubShapes.XS)
                         .background(AdbHubTheme.surface)
                         .border(1.dp, AdbHubTheme.border, AdbHubShapes.XS)
                         .padding(horizontal = 6.dp, vertical = 2.dp)
-                        .align(Alignment.CenterEnd)
                         .padding(end = 8.dp)
+                        .wrapContentWidth()
+                        .fillMaxHeight()
                 ) {
                     Text(
                         "${activities.size} Activities",
-                        style = JewelTheme.defaultTextStyle
+                        style = JewelTheme.defaultTextStyle,
+                        modifier = Modifier.align(Alignment.Center)
                     )
                 }
             }

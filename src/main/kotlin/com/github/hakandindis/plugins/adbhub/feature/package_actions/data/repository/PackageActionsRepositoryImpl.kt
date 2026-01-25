@@ -34,8 +34,8 @@ class PackageActionsRepositoryImpl(
         return dataSource.uninstall(packageName, deviceId)
     }
 
-    override suspend fun launchDeepLink(deepLink: String, deviceId: String): Result<Unit> {
-        return dataSource.launchDeepLink(deepLink, deviceId)
+    override suspend fun launchDeepLink(uri: String, packageName: String, deviceId: String): Result<Unit> {
+        return dataSource.launchDeepLink(uri, packageName, deviceId)
     }
 
     override suspend fun setStayAwake(enabled: Boolean, deviceId: String): Result<Unit> {
