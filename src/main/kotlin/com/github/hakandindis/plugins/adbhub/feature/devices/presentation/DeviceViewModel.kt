@@ -2,6 +2,7 @@ package com.github.hakandindis.plugins.adbhub.feature.devices.presentation
 
 import com.github.hakandindis.plugins.adbhub.core.models.Device
 import com.github.hakandindis.plugins.adbhub.core.models.DeviceState
+import com.github.hakandindis.plugins.adbhub.feature.devices.domain.mapper.DeviceInfoMapper
 import com.github.hakandindis.plugins.adbhub.feature.devices.domain.usecase.GetDeviceInfoUseCase
 import com.github.hakandindis.plugins.adbhub.feature.devices.domain.usecase.GetDevicesUseCase
 import com.intellij.openapi.Disposable
@@ -72,18 +73,18 @@ class DeviceViewModel(
         if (device.state == DeviceState.DEVICE) {
             loadDeviceInfo(device.id)
         } else {
-            _uiState.update { it.copy(deviceInfo = null) }
+            _uiState.update { it.copy(deviceInfoItems = emptyList()) }
         }
     }
 
     private fun loadDeviceInfo(deviceId: String) {
         scope.launch {
-            _uiState.update { it.copy(isLoading = true, error = null) }
+            _uiState.update { it.copy(deviceInfoItems = emptyList(), isLoading = true, error = null) }
             getDeviceInfoUseCase(deviceId).fold(
                 onSuccess = { info ->
                     _uiState.update {
                         it.copy(
-                            deviceInfo = info,
+                            deviceInfoItems = DeviceInfoMapper.toInfoItems(info),
                             isLoading = false
                         )
                     }
