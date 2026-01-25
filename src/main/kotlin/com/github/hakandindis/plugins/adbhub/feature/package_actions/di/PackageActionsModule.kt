@@ -28,13 +28,6 @@ object PackageActionsModule {
         return ForceStopUseCase(repository)
     }
 
-    fun createRestartAppUseCase(
-        forceStopUseCase: ForceStopUseCase,
-        launchAppUseCase: LaunchAppUseCase
-    ): RestartAppUseCase {
-        return RestartAppUseCase(forceStopUseCase, launchAppUseCase)
-    }
-
     fun createClearDataUseCase(repository: PackageActionsRepository): ClearDataUseCase {
         return ClearDataUseCase(repository)
     }

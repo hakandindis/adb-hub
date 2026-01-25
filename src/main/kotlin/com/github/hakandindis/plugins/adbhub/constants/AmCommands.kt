@@ -17,11 +17,13 @@ object AmCommands {
     }
 
     /**
-     * Starts an activity with intent action and data
-     * Usage: shell am start -a <action> -d <data>
+     * Starts an activity with intent action and data.
+     * When [packageName] is provided, adds -p to target the given package (e.g. for deep links).
+     * Usage: shell am start -a <action> -d <data> [-p <packageName>]
      */
-    fun startActivityWithAction(action: String, data: String): String {
-        return "$SHELL_PREFIX $AM $START -a $action -d \"$data\""
+    fun startActivityWithAction(action: String, data: String, packageName: String? = null): String {
+        val base = "$SHELL_PREFIX $AM $START -a $action -d \"$data\""
+        return if (packageName != null) "$base -p $packageName" else base
     }
 
     /**

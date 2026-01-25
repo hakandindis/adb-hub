@@ -79,7 +79,6 @@ class AdbHubToolWindowFactory : ToolWindowFactory, DumbAware {
         val packageActionsRepository = PackageActionsModule.createPackageActionsRepository(packageActionsDataSource)
         val launchAppUseCase = PackageActionsModule.createLaunchAppUseCase(packageActionsRepository)
         val forceStopUseCase = PackageActionsModule.createForceStopUseCase(packageActionsRepository)
-        val restartAppUseCase = PackageActionsModule.createRestartAppUseCase(forceStopUseCase, launchAppUseCase)
         val clearDataUseCase = PackageActionsModule.createClearDataUseCase(packageActionsRepository)
         val clearCacheUseCase = PackageActionsModule.createClearCacheUseCase(packageActionsRepository)
         val uninstallUseCase = PackageActionsModule.createUninstallUseCase(packageActionsRepository)
@@ -89,7 +88,6 @@ class AdbHubToolWindowFactory : ToolWindowFactory, DumbAware {
         val packageActionsViewModel = PackageActionsViewModel(
             launchAppUseCase = launchAppUseCase,
             forceStopUseCase = forceStopUseCase,
-            restartAppUseCase = restartAppUseCase,
             clearDataUseCase = clearDataUseCase,
             clearCacheUseCase = clearCacheUseCase,
             uninstallUseCase = uninstallUseCase,

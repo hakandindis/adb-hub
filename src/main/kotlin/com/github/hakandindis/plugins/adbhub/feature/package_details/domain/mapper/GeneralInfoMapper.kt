@@ -17,11 +17,9 @@ object GeneralInfoMapper {
         val items = mutableListOf<InfoItemUiModel>()
 
         items.add(InfoItemUiModel(label = "Package Name", value = packageDetails.packageName))
+        items.add(InfoItemUiModel(label = "App Name", value = extractAppName(packageDetails.packageName)))
         items.add(InfoItemUiModel(label = "Version Number", value = packageDetails.versionName ?: "N/A"))
         items.add(InfoItemUiModel(label = "Version Code", value = packageDetails.versionCode ?: "N/A"))
-        items.add(InfoItemUiModel(label = "Installation Path", value = packageDetails.installLocation ?: "N/A"))
-        items.add(InfoItemUiModel(label = "Data Path", value = packageDetails.dataDirectory ?: "N/A"))
-        items.add(InfoItemUiModel(label = "Install Time", value = packageDetails.firstInstallTime ?: "N/A"))
         items.add(
             InfoItemUiModel(
                 label = "Min SDK",
@@ -34,8 +32,9 @@ object GeneralInfoMapper {
                 } ?: "N/A"
             )
         )
-
-        items.add(InfoItemUiModel(label = "App Name", value = extractAppName(packageDetails.packageName)))
+        items.add(InfoItemUiModel(label = "Installation Path", value = packageDetails.installLocation ?: "N/A"))
+        items.add(InfoItemUiModel(label = "Data Path", value = packageDetails.dataDirectory ?: "N/A"))
+        items.add(InfoItemUiModel(label = "Install Time", value = packageDetails.firstInstallTime ?: "N/A"))
         items.add(InfoItemUiModel(label = "System App", value = if (packageDetails.isSystemApp) "Yes" else "No"))
         items.add(InfoItemUiModel(label = "Enabled", value = if (packageDetails.isEnabled) "Yes" else "No"))
         items.add(InfoItemUiModel(label = "Last Update", value = packageDetails.lastUpdateTime ?: "N/A"))

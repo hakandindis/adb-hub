@@ -17,7 +17,6 @@ import kotlinx.coroutines.launch
 class PackageActionsViewModel(
     private val launchAppUseCase: LaunchAppUseCase,
     private val forceStopUseCase: ForceStopUseCase,
-    private val restartAppUseCase: RestartAppUseCase,
     private val clearDataUseCase: ClearDataUseCase,
     private val clearCacheUseCase: ClearCacheUseCase,
     private val uninstallUseCase: UninstallUseCase,
@@ -38,11 +37,15 @@ class PackageActionsViewModel(
             is PackageActionsIntent.LaunchApp -> launchApp(intent.packageName, intent.deviceId)
             is PackageActionsIntent.LaunchActivity -> launchActivity(intent.activityName, intent.deviceId)
             is PackageActionsIntent.ForceStop -> forceStop(intent.packageName, intent.deviceId)
-            is PackageActionsIntent.RestartApp -> restartApp(intent.packageName, intent.deviceId)
             is PackageActionsIntent.ClearData -> clearData(intent.packageName, intent.deviceId)
             is PackageActionsIntent.ClearCache -> clearCache(intent.packageName, intent.deviceId)
             is PackageActionsIntent.Uninstall -> uninstall(intent.packageName, intent.deviceId)
-            is PackageActionsIntent.LaunchDeepLink -> launchDeepLink(intent.deepLink, intent.deviceId)
+            is PackageActionsIntent.LaunchDeepLink -> launchDeepLink(
+                intent.uri,
+                intent.packageName,
+                intent.deviceId
+            )
+
             is PackageActionsIntent.StayAwake -> setStayAwake(intent.enabled, intent.deviceId)
             is PackageActionsIntent.PackageEnabled -> setPackageEnabled(
                 intent.packageName,
@@ -92,26 +95,6 @@ class PackageActionsViewModel(
                         it.copy(
                             isStopping = false,
                             error = error.message ?: "Failed to force stop app"
-                        )
-                    }
-                }
-            )
-        }
-    }
-
-    private fun restartApp(packageName: String, deviceId: String) {
-        scope.launch {
-            _uiState.update { it.copy(isRestarting = true, error = null) }
-            restartAppUseCase(packageName, deviceId).fold(
-                onSuccess = {
-                    _uiState.update { it.copy(isRestarting = false) }
-                },
-                onFailure = { error ->
-                    logger.error("Error restarting app $packageName", error)
-                    _uiState.update {
-                        it.copy(
-                            isRestarting = false,
-                            error = error.message ?: "Failed to restart app"
                         )
                     }
                 }
@@ -179,12 +162,12 @@ class PackageActionsViewModel(
         }
     }
 
-    private fun launchDeepLink(deepLink: String, deviceId: String) {
+    private fun launchDeepLink(uri: String, packageName: String, deviceId: String) {
         scope.launch {
-            launchDeepLinkUseCase(deepLink, deviceId).fold(
+            launchDeepLinkUseCase(uri, packageName, deviceId).fold(
                 onSuccess = {},
                 onFailure = { error ->
-                    logger.error("Error launching deep link $deepLink", error)
+                    logger.error("Error launching deep link $uri", error)
                     _uiState.update {
                         it.copy(error = error.message ?: "Failed to launch deep link")
                     }

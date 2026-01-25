@@ -1,6 +1,7 @@
 package com.github.hakandindis.plugins.adbhub.feature.package_details.presentation
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -17,6 +18,7 @@ import org.jetbrains.jewel.ui.component.Text
 fun PackageHeader(
     packageName: String,
     uid: String? = null,
+    isDebuggable: Boolean? = null
 ) {
     val packageInitials = packageName
         .takeIf { it.length >= 2 }
@@ -51,17 +53,37 @@ fun PackageHeader(
 
             Column(
                 modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(4.dp)
+                verticalArrangement = Arrangement.spacedBy(6.dp)
             ) {
                 Text(
                     packageName,
                     style = JewelTheme.defaultTextStyle
                 )
-                uid?.let {
-                    Text(
-                        "UID: $it",
-                        style = JewelTheme.defaultTextStyle
-                    )
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    if (isDebuggable == true) {
+                        Box(
+                            modifier = Modifier
+                                .clip(AdbHubShapes.SM)
+                                .background(AdbHubTheme.success.copy(alpha = 0.2f))
+                                .border(1.dp, AdbHubTheme.success.copy(alpha = 0.5f), AdbHubShapes.SM)
+                                .padding(horizontal = 8.dp, vertical = 2.dp)
+                        ) {
+                            Text(
+                                "DEBUGGABLE",
+                                style = JewelTheme.defaultTextStyle,
+                                color = AdbHubTheme.success
+                            )
+                        }
+                    }
+                    uid?.let {
+                        Text(
+                            "UID: $it",
+                            style = JewelTheme.defaultTextStyle
+                        )
+                    }
                 }
             }
         }
