@@ -153,11 +153,17 @@ fun AppActionsTab(
                 modifier = Modifier.padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                Row(modifier = Modifier.fillMaxWidth()) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(IntrinsicSize.Min),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
                     TextField(
                         state = deepLinkState,
                         modifier = Modifier
                             .weight(1f)
+                            .fillMaxHeight()
                             .clip(AdbHubShapes.SM)
                             .border(1.dp, AdbHubTheme.border, AdbHubShapes.SM),
                         placeholder = { Text("scheme://host/path?query=...") }
