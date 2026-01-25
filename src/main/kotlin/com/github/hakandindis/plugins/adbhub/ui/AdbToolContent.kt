@@ -104,9 +104,6 @@ fun AdbToolContent(
                 selectedDevice = selectedDevice,
                 selectedPackage = selectedPackage,
                 uid = null, // TODO: Get UID from package details or device info
-                onCopyPath = { path ->
-                    // TODO: Copy to clipboard
-                },
                 onActivityLaunch = { activityName ->
                     selectedDevice?.let { device ->
                         packageDetailsViewModel.handleIntent(

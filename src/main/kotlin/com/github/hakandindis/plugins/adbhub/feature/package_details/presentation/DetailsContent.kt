@@ -15,7 +15,6 @@ import org.jetbrains.jewel.ui.component.Text
 fun DetailsContent(
     packageDetailsViewModel: PackageDetailsViewModel,
     uid: String? = null,
-    onCopyPath: (String) -> Unit = {},
     onActivityLaunch: (String) -> Unit = {}
 ) {
     val packageDetailsUiState by packageDetailsViewModel.uiState.collectAsState()
@@ -55,7 +54,9 @@ fun DetailsContent(
             packageName = packageName,
             uid = uid
         )
+
         DetailsSubTabs(selectedTab = selectedTab, onTabSelected = { selectedTab = it })
+
         Box(
             modifier = Modifier
                 .fillMaxWidth()

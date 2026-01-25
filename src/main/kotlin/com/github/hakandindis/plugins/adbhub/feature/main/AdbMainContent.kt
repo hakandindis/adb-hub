@@ -26,7 +26,6 @@ fun AdbMainContent(
     selectedDevice: Device?,
     selectedPackage: ApplicationPackage?,
     uid: String? = null,
-    onCopyPath: (String) -> Unit = {},
     onActivityLaunch: (String) -> Unit = {}
 ) {
     var selectedTab by remember { mutableStateOf(MainTab.Details) }
@@ -43,7 +42,6 @@ fun AdbMainContent(
                 MainTab.Details -> DetailsContent(
                     packageDetailsViewModel = packageDetailsViewModel,
                     uid = uid,
-                    onCopyPath = onCopyPath,
                     onActivityLaunch = onActivityLaunch
                 )
 
