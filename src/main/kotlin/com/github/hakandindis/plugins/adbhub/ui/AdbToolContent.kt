@@ -36,7 +36,7 @@ fun AdbToolContent(
     val deviceUiState by deviceViewModel.uiState.collectAsState()
     val devices = deviceUiState.devices
     val selectedDevice = deviceUiState.selectedDevice
-    val deviceInfo = deviceUiState.deviceInfo
+    val deviceInfoItems = deviceUiState.deviceInfoItems
 
     val packageListUiState by packageListViewModel.uiState.collectAsState()
     val filteredPackages = packageListUiState.filteredPackages
@@ -80,7 +80,7 @@ fun AdbToolContent(
             AdbSidebar(
                 devices = devices,
                 selectedDevice = selectedDevice,
-                deviceInfo = deviceInfo,
+                deviceInfoItems = deviceInfoItems,
                 packages = filteredPackages,
                 selectedPackage = selectedPackage,
                 searchText = packageSearchText,
@@ -104,9 +104,6 @@ fun AdbToolContent(
                 selectedDevice = selectedDevice,
                 selectedPackage = selectedPackage,
                 uid = null, // TODO: Get UID from package details or device info
-                onCopyPath = { path ->
-                    // TODO: Copy to clipboard
-                },
                 onActivityLaunch = { activityName ->
                     selectedDevice?.let { device ->
                         packageDetailsViewModel.handleIntent(

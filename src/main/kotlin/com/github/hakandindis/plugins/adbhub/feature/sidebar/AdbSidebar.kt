@@ -9,9 +9,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.github.hakandindis.plugins.adbhub.core.models.Device
 import com.github.hakandindis.plugins.adbhub.feature.devices.presentation.DevicesSection
+import com.github.hakandindis.plugins.adbhub.feature.devices.presentation.ui.DeviceInfoItemUiModel
 import com.github.hakandindis.plugins.adbhub.feature.installed_packages.presentation.InstalledPackagesSection
 import com.github.hakandindis.plugins.adbhub.models.ApplicationPackage
-import com.github.hakandindis.plugins.adbhub.models.DeviceInfo
 import com.github.hakandindis.plugins.adbhub.ui.theme.AdbHubTheme
 import com.github.hakandindis.plugins.adbhub.ui.theme.dimens.AdbHubDimens
 import org.jetbrains.jewel.ui.Orientation
@@ -21,7 +21,7 @@ import org.jetbrains.jewel.ui.component.Divider
 fun AdbSidebar(
     devices: List<Device>,
     selectedDevice: Device?,
-    deviceInfo: DeviceInfo?,
+    deviceInfoItems: List<DeviceInfoItemUiModel>,
     packages: List<ApplicationPackage>,
     selectedPackage: ApplicationPackage?,
     searchText: String,
@@ -39,7 +39,7 @@ fun AdbSidebar(
         DevicesSection(
             devices = devices,
             selectedDevice = selectedDevice,
-            deviceInfo = deviceInfo,
+            deviceInfoItems = deviceInfoItems,
             onDeviceSelected = onDeviceSelected,
             onRefreshDevices = onRefreshDevices
         )

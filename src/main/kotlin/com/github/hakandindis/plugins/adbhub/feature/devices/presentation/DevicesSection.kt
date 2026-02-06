@@ -12,11 +12,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import com.github.hakandindis.plugins.adbhub.core.models.Device
-import com.github.hakandindis.plugins.adbhub.models.DeviceInfo
+import com.github.hakandindis.plugins.adbhub.feature.devices.presentation.ui.DeviceInfoItemUiModel
 import com.github.hakandindis.plugins.adbhub.ui.AdbIcons
 import com.github.hakandindis.plugins.adbhub.ui.theme.AdbHubTheme
 import com.github.hakandindis.plugins.adbhub.ui.theme.shapes.AdbHubShapes
@@ -28,7 +30,7 @@ import org.jetbrains.jewel.ui.component.Text
 fun DevicesSection(
     devices: List<Device>,
     selectedDevice: Device?,
-    deviceInfo: DeviceInfo?,
+    deviceInfoItems: List<DeviceInfoItemUiModel>,
     onDeviceSelected: (Device) -> Unit,
     onRefreshDevices: (() -> Unit)? = null
 ) {
@@ -41,7 +43,8 @@ fun DevicesSection(
     ) {
         Text(
             "Connected Devices",
-            style = JewelTheme.defaultTextStyle
+            style = JewelTheme.defaultTextStyle,
+            fontSize = 16.sp,
         )
         Spacer(Modifier.height(8.dp))
 
@@ -145,30 +148,23 @@ fun DevicesSection(
             }
         }
 
-        if (selectedDevice != null && deviceInfo != null) {
+        if (selectedDevice != null && deviceInfoItems.isNotEmpty()) {
             Spacer(Modifier.height(12.dp))
-            Row(
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(AdbHubShapes.SM)
                     .background(AdbHubTheme.background)
                     .border(1.dp, AdbHubTheme.border.copy(alpha = 0.5f), AdbHubShapes.SM)
-                    .padding(12.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
+                    .padding(12.dp)
             ) {
-                Column(
-                    modifier = Modifier.weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(6.dp)
+                LazyColumn(
+                    modifier = Modifier.heightIn(max = 280.dp),
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
-                    DeviceDetailRow("Manufacturer", deviceInfo.manufacturer ?: "—")
-                    DeviceDetailRow("Density", deviceInfo.screenDensity ?: "—")
-                }
-                Column(
-                    modifier = Modifier.weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(6.dp)
-                ) {
-                    DeviceDetailRow("Android Ver", deviceInfo.androidInfo.takeIf { it.isNotBlank() } ?: "—")
-                    DeviceDetailRow("CPU/ABI", deviceInfo.cpuAbi ?: "—")
+                    items(deviceInfoItems, key = { it.label }) { item ->
+                        DeviceDetailRow(label = item.label, value = item.value)
+                    }
                 }
             }
         }
@@ -177,14 +173,18 @@ fun DevicesSection(
 
 @Composable
 private fun DeviceDetailRow(label: String, value: String) {
-    Column {
+    Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
         Text(
             label,
-            style = JewelTheme.defaultTextStyle
+            style = JewelTheme.defaultTextStyle.copy(
+                fontSize = JewelTheme.defaultTextStyle.fontSize * 0.85f
+            ),
+            color = AdbHubTheme.textMuted
         )
         Text(
             value,
-            style = JewelTheme.defaultTextStyle
+            style = JewelTheme.defaultTextStyle.copy(fontWeight = FontWeight.Medium),
+            color = AdbHubTheme.textMain
         )
     }
 }
