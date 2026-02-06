@@ -15,7 +15,6 @@ import com.github.hakandindis.plugins.adbhub.ui.AdbIcons
 import com.github.hakandindis.plugins.adbhub.ui.theme.AdbHubTheme
 import com.github.hakandindis.plugins.adbhub.ui.theme.dimens.AdbHubDimens
 import org.jetbrains.jewel.foundation.theme.JewelTheme
-import org.jetbrains.jewel.ui.component.Icon
 import org.jetbrains.jewel.ui.component.Text
 import org.jetbrains.jewel.ui.icon.IconKey
 
@@ -54,25 +53,14 @@ fun DetailsSubTabs(
                         .padding(horizontal = 12.dp)
                         .width(IntrinsicSize.Max)
                 ) {
-                    Row(
-                        modifier = Modifier.weight(1f),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(6.dp)
-                    ) {
-                        Icon(
-                            tab.icon,
-                            contentDescription = null,
-                            modifier = Modifier.size(14.dp),
-                            tint = tint
-                        )
-                        Text(
-                            tab.label,
-                            style = JewelTheme.defaultTextStyle,
-                            color = tint,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                    }
+                    Text(
+                        tab.label,
+                        style = JewelTheme.defaultTextStyle,
+                        color = tint,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.weight(1f)
+                    )
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
