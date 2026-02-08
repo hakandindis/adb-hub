@@ -1,17 +1,16 @@
 package com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.tabs
 
 import androidx.compose.runtime.Composable
-import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.ui.ReceiverUiModel
+import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.ui.ComponentDisplay
 
 @Composable
 fun ReceiversTab(
-    receivers: List<ReceiverUiModel>,
+    receivers: List<ComponentDisplay>,
     searchText: String,
     onReceiverSearchChange: (String) -> Unit
 ) {
-    val items = receivers.map { ComponentDisplay(name = it.name, exported = it.exported) }
     ComponentListTab(
-        items = items,
+        items = receivers,
         searchText = searchText,
         onSearchChange = onReceiverSearchChange,
         label = "Receivers",

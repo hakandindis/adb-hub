@@ -1,6 +1,8 @@
 package com.github.hakandindis.plugins.adbhub.feature.package_details.presentation
 
-import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.ui.*
+import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.ui.ComponentDisplay
+import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.ui.InfoItemUiModel
+import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.ui.PermissionSectionUiModel
 import com.github.hakandindis.plugins.adbhub.models.AppLinksInfo
 
 /**
@@ -9,18 +11,18 @@ import com.github.hakandindis.plugins.adbhub.models.AppLinksInfo
  */
 data class PackageDetailsUiState(
     val generalInfoItems: List<InfoItemUiModel> = emptyList(),
-    val activities: List<ActivityUiModel> = emptyList(),
+    val activities: List<ComponentDisplay> = emptyList(),
     val activitySearchText: String = "",
-    val filteredActivities: List<ActivityUiModel> = emptyList(),
-    val services: List<ServiceUiModel> = emptyList(),
+    val filteredActivities: List<ComponentDisplay> = emptyList(),
+    val services: List<ComponentDisplay> = emptyList(),
     val serviceSearchText: String = "",
-    val filteredServices: List<ServiceUiModel> = emptyList(),
-    val receivers: List<ReceiverUiModel> = emptyList(),
+    val filteredServices: List<ComponentDisplay> = emptyList(),
+    val receivers: List<ComponentDisplay> = emptyList(),
     val receiverSearchText: String = "",
-    val filteredReceivers: List<ReceiverUiModel> = emptyList(),
-    val contentProviders: List<ContentProviderUiModel> = emptyList(),
+    val filteredReceivers: List<ComponentDisplay> = emptyList(),
+    val contentProviders: List<ComponentDisplay> = emptyList(),
     val contentProviderSearchText: String = "",
-    val filteredContentProviders: List<ContentProviderUiModel> = emptyList(),
+    val filteredContentProviders: List<ComponentDisplay> = emptyList(),
     val permissionSections: List<PermissionSectionUiModel> = emptyList(),
     val permissionSearchText: String = "",
     val filteredPermissionSections: List<PermissionSectionUiModel> = emptyList(),
