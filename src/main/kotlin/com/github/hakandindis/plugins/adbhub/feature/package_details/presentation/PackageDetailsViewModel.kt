@@ -2,7 +2,6 @@ package com.github.hakandindis.plugins.adbhub.feature.package_details.presentati
 
 import com.github.hakandindis.plugins.adbhub.constants.AmCommands
 import com.github.hakandindis.plugins.adbhub.core.adb.AdbCommandExecutor
-import com.github.hakandindis.plugins.adbhub.feature.package_details.domain.mapper.*
 import com.github.hakandindis.plugins.adbhub.feature.package_details.domain.usecase.GetPackageDetailsUseCase
 import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.ui.*
 import com.intellij.openapi.Disposable
@@ -137,32 +136,25 @@ class PackageDetailsViewModel(
             _uiState.update { it.copy(isLoading = true, error = null) }
 
             getPackageDetailsUseCase(packageName, deviceId).fold(
-                onSuccess = { packageDetails ->
-                    val generalInfoItems = GeneralInfoMapper.toMergedInfoItems(packageDetails)
-                    val activities = packageDetails.activities.map { ActivityMapper.toUiModel(it) }
-                    val permissionSections = PermissionMapper.toUiModels(packageDetails.permissionSections)
-                    val services = ServiceMapper.toUiModels(packageDetails.services)
-                    val receivers = ReceiverMapper.toUiModels(packageDetails.receivers)
-                    val contentProviders = ContentProviderMapper.toUiModels(packageDetails.contentProviders)
-
+                onSuccess = { result ->
                     _uiState.update {
                         it.copy(
-                            generalInfoItems = generalInfoItems,
-                            activities = activities,
+                            generalInfoItems = result.generalInfoItems,
+                            activities = result.activities,
                             activitySearchText = "",
-                            filteredActivities = activities,
-                            services = services,
+                            filteredActivities = result.activities,
+                            services = result.services,
                             serviceSearchText = "",
-                            filteredServices = services,
-                            receivers = receivers,
+                            filteredServices = result.services,
+                            receivers = result.receivers,
                             receiverSearchText = "",
-                            filteredReceivers = receivers,
-                            contentProviders = contentProviders,
+                            filteredReceivers = result.receivers,
+                            contentProviders = result.contentProviders,
                             contentProviderSearchText = "",
-                            filteredContentProviders = contentProviders,
-                            permissionSections = permissionSections,
+                            filteredContentProviders = result.contentProviders,
+                            permissionSections = result.permissionSections,
                             permissionSearchText = "",
-                            filteredPermissionSections = permissionSections,
+                            filteredPermissionSections = result.permissionSections,
                             isLoading = false
                         )
                     }
