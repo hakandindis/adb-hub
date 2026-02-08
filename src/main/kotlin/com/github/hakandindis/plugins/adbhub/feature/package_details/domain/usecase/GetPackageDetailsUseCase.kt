@@ -26,8 +26,13 @@ class GetPackageDetailsUseCase(
         return repository.getPackageDetails(packageName, deviceId)
             .mapCatching { packageDetails ->
                 val appLinks = repository.getAppLinks(packageName, deviceId).getOrNull() ?: null
+                val generalInfoItems = GeneralInfoMapper.toMergedInfoItems(packageDetails)
+                val appName =
+                    generalInfoItems.firstOrNull { it.label == "App Name" }?.value ?: packageDetails.packageName
                 GetPackageDetailsResult(
-                    generalInfoItems = GeneralInfoMapper.toMergedInfoItems(packageDetails),
+                    packageName = packageDetails.packageName,
+                    appName = appName,
+                    generalInfoItems = generalInfoItems,
                     activities = packageDetails.activities.map {
                         ComponentDisplay(name = it.name, exported = it.exported, icon = AdbIcons.apps)
                     },

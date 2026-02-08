@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.dp
+import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.ui.PermissionItemDisplay
 import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.ui.PermissionItemUiModel
 import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.ui.PermissionSectionUiModel
 import com.github.hakandindis.plugins.adbhub.ui.AdbIcons
@@ -120,20 +121,20 @@ private fun PermissionRow(item: PermissionItemUiModel) {
             style = JewelTheme.defaultTextStyle,
             modifier = Modifier.weight(1f, fill = false)
         )
-        when {
-            item.permissionType.showsGrantedBadge() && item.detail == "granted=true" ->
-                GrantedBadge()
-
-            item.permissionType.showsGrantedBadge() && item.detail == "granted=false" ->
-                DeniedBadge()
-
-            item.detail != null -> Text(
-                item.detail,
-                style = JewelTheme.defaultTextStyle.copy(
-                    fontSize = JewelTheme.defaultTextStyle.fontSize * 0.9f
-                ),
-                color = AdbHubTheme.textMuted
-            )
+        when (item.permissionDisplay) {
+            is PermissionItemDisplay.GrantedBadge -> GrantedBadge()
+            is PermissionItemDisplay.DeniedBadge -> DeniedBadge()
+            is PermissionItemDisplay.DetailText -> {
+                if (item.permissionDisplay.text.isNotEmpty()) {
+                    Text(
+                        item.permissionDisplay.text,
+                        style = JewelTheme.defaultTextStyle.copy(
+                            fontSize = JewelTheme.defaultTextStyle.fontSize * 0.9f
+                        ),
+                        color = AdbHubTheme.textMuted
+                    )
+                }
+            }
         }
     }
 }

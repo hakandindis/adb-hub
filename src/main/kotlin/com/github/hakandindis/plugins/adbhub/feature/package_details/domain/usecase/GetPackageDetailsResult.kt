@@ -10,6 +10,8 @@ import com.github.hakandindis.plugins.adbhub.models.AppLinksInfo
  * All mapping from domain/data models to UI models is done in the use case.
  */
 data class GetPackageDetailsResult(
+    val packageName: String,
+    val appName: String,
     val generalInfoItems: List<InfoItemUiModel>,
     val activities: List<ComponentDisplay>,
     val permissionSections: List<PermissionSectionUiModel>,

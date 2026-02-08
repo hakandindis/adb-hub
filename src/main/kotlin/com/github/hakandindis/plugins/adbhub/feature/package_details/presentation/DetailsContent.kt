@@ -45,13 +45,8 @@ fun DetailsContent(
             .fillMaxSize()
             .background(AdbHubTheme.background)
     ) {
-        val packageName = packageDetailsUiState.generalInfoItems
-            .firstOrNull { it.label == "Package Name" }?.value ?: ""
-        packageDetailsUiState.generalInfoItems
-            .firstOrNull { it.label == "App Name" }?.value ?: packageName
-
         PackageHeader(
-            packageName = packageName,
+            packageName = packageDetailsUiState.packageName,
             uid = uid
         )
 

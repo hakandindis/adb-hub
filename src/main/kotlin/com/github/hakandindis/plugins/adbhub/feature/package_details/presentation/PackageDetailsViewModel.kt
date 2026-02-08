@@ -68,7 +68,7 @@ class PackageDetailsViewModel(
         return sections.map { section ->
             val filteredItems = section.items.filter {
                 it.name.contains(query, ignoreCase = true) ||
-                        (it.detail?.contains(query, ignoreCase = true) == true)
+                        it.detailTextForFilter.contains(query, ignoreCase = true)
             }
             section.copy(items = filteredItems)
         }.filter { it.items.isNotEmpty() }
@@ -123,6 +123,8 @@ class PackageDetailsViewModel(
                 onSuccess = { result ->
                     _uiState.update {
                         it.copy(
+                            packageName = result.packageName,
+                            appName = result.appName,
                             generalInfoItems = result.generalInfoItems,
                             activities = result.activities,
                             activitySearchText = "",

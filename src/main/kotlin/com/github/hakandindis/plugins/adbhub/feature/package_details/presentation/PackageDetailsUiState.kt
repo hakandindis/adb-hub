@@ -10,6 +10,8 @@ import com.github.hakandindis.plugins.adbhub.models.AppLinksInfo
  * Holds UI models for activities, services, receivers, content providers and their filtered/search state.
  */
 data class PackageDetailsUiState(
+    val packageName: String = "",
+    val appName: String = "",
     val generalInfoItems: List<InfoItemUiModel> = emptyList(),
     val activities: List<ComponentDisplay> = emptyList(),
     val activitySearchText: String = "",
