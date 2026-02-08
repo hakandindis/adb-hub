@@ -5,10 +5,8 @@ import com.github.hakandindis.plugins.adbhub.constants.DumpsysParseStrings
 import com.github.hakandindis.plugins.adbhub.constants.ParsePatterns
 import com.github.hakandindis.plugins.adbhub.constants.PmCommands
 import com.github.hakandindis.plugins.adbhub.core.adb.AdbCommandExecutor
-import com.github.hakandindis.plugins.adbhub.feature.package_details.data.parser.ActivitiesParser
-import com.github.hakandindis.plugins.adbhub.feature.package_details.data.parser.DumpsysParser
-import com.github.hakandindis.plugins.adbhub.feature.package_details.data.parser.PackageDetailsParser
-import com.github.hakandindis.plugins.adbhub.feature.package_details.data.parser.PermissionsParser
+import com.github.hakandindis.plugins.adbhub.feature.package_details.data.parser.*
+import com.github.hakandindis.plugins.adbhub.models.AppLinksInfo
 import com.github.hakandindis.plugins.adbhub.models.PackageDetails
 import com.intellij.openapi.diagnostic.Logger
 
@@ -319,4 +317,17 @@ class PackageDetailsDataSourceImpl(
             .sortedBy { it.name }
     }
 
+    override suspend fun getAppLinks(packageName: String, deviceId: String): AppLinksInfo? {
+        return try {
+            val result = commandExecutor.executeCommandForDevice(deviceId, PmCommands.getAppLinks(packageName))
+            if (!result.isSuccess) {
+                logger.warn("Failed to get app links for $packageName: ${result.error}")
+                return null
+            }
+            AppLinksParser.parse(result.output, packageName)
+        } catch (e: Exception) {
+            logger.error("Error getting app links for $packageName", e)
+            null
+        }
+    }
 }

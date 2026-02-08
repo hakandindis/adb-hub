@@ -1,6 +1,7 @@
 package com.github.hakandindis.plugins.adbhub.feature.package_details.domain.usecase
 
 import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.ui.*
+import com.github.hakandindis.plugins.adbhub.models.AppLinksInfo
 
 /**
  * View-ready result of loading package details.
@@ -12,5 +13,6 @@ data class GetPackageDetailsResult(
     val permissionSections: List<PermissionSectionUiModel>,
     val services: List<ServiceUiModel>,
     val receivers: List<ReceiverUiModel>,
-    val contentProviders: List<ContentProviderUiModel>
+    val contentProviders: List<ContentProviderUiModel>,
+    val appLinks: AppLinksInfo? = null
 )

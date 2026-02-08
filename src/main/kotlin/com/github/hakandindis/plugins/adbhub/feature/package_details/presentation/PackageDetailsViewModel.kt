@@ -155,6 +155,7 @@ class PackageDetailsViewModel(
                             permissionSections = result.permissionSections,
                             permissionSearchText = "",
                             filteredPermissionSections = result.permissionSections,
+                            appLinks = result.appLinks,
                             isLoading = false
                         )
                     }

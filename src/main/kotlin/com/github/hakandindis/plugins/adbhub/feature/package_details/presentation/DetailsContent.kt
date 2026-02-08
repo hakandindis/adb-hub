@@ -118,6 +118,10 @@ fun DetailsContent(
                         )
                     }
                 )
+
+                DetailsTab.AppLinks -> AppLinksTab(
+                    appLinks = packageDetailsUiState.appLinks
+                )
             }
         }
     }
