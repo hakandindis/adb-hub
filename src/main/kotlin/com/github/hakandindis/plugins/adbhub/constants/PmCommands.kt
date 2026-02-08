@@ -63,4 +63,13 @@ object PmCommands {
     fun uninstall(packageName: String): String {
         return "uninstall $packageName"
     }
+
+    /**
+     * Gets App Links (domain verification state) for a package.
+     * Usage: shell pm get-app-links <packageName>
+     * @see [Verify App Links](https://developer.android.com/training/app-links/verify-applinks)
+     */
+    fun getAppLinks(packageName: String): String {
+        return "$SHELL_PREFIX $PM get-app-links $packageName"
+    }
 }

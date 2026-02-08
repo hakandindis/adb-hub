@@ -1,6 +1,7 @@
 package com.github.hakandindis.plugins.adbhub.feature.package_details.presentation
 
 import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.ui.*
+import com.github.hakandindis.plugins.adbhub.models.AppLinksInfo
 
 /**
  * UI State for Package Details feature.
@@ -23,6 +24,7 @@ data class PackageDetailsUiState(
     val permissionSections: List<PermissionSectionUiModel> = emptyList(),
     val permissionSearchText: String = "",
     val filteredPermissionSections: List<PermissionSectionUiModel> = emptyList(),
+    val appLinks: AppLinksInfo? = null,
     val isLoading: Boolean = false,
     val error: String? = null
 )
