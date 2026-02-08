@@ -85,8 +85,7 @@ fun DetailsContent(
                         packageDetailsViewModel.handleIntent(
                             PackageDetailsIntent.FilterActivities(it)
                         )
-                    },
-                    onActivityLaunch = onActivityLaunch
+                    }
                 )
 
                 DetailsTab.Receivers -> ReceiversTab(
