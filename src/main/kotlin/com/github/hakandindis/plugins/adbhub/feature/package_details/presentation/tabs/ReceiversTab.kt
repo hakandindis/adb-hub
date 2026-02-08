@@ -1,11 +1,11 @@
 package com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.tabs
 
 import androidx.compose.runtime.Composable
-import com.github.hakandindis.plugins.adbhub.models.PackageDetails
+import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.ui.ReceiverUiModel
 
 @Composable
 fun ReceiversTab(
-    receivers: List<PackageDetails.ReceiverInfo>,
+    receivers: List<ReceiverUiModel>,
     searchText: String,
     onReceiverSearchChange: (String) -> Unit
 ) {

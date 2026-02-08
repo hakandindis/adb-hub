@@ -2,12 +2,9 @@ package com.github.hakandindis.plugins.adbhub.feature.package_details.presentati
 
 import com.github.hakandindis.plugins.adbhub.constants.AmCommands
 import com.github.hakandindis.plugins.adbhub.core.adb.AdbCommandExecutor
-import com.github.hakandindis.plugins.adbhub.feature.package_details.domain.mapper.ActivityMapper
-import com.github.hakandindis.plugins.adbhub.feature.package_details.domain.mapper.GeneralInfoMapper
-import com.github.hakandindis.plugins.adbhub.feature.package_details.domain.mapper.PermissionMapper
+import com.github.hakandindis.plugins.adbhub.feature.package_details.domain.mapper.*
 import com.github.hakandindis.plugins.adbhub.feature.package_details.domain.usecase.GetPackageDetailsUseCase
-import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.ui.ActivityUiModel
-import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.ui.PermissionSectionUiModel
+import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.ui.*
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.diagnostic.Logger
 import kotlinx.coroutines.CoroutineScope
@@ -88,7 +85,7 @@ class PackageDetailsViewModel(
         _uiState.update { state ->
             state.copy(
                 receiverSearchText = query,
-                filteredReceivers = filterComponentsByName(state.receivers, query) { it.name }
+                filteredReceivers = filterReceiverUiModels(state.receivers, query)
             )
         }
     }
@@ -97,7 +94,7 @@ class PackageDetailsViewModel(
         _uiState.update { state ->
             state.copy(
                 serviceSearchText = query,
-                filteredServices = filterComponentsByName(state.services, query) { it.name }
+                filteredServices = filterServiceUiModels(state.services, query)
             )
         }
     }
@@ -106,16 +103,32 @@ class PackageDetailsViewModel(
         _uiState.update { state ->
             state.copy(
                 contentProviderSearchText = query,
-                filteredContentProviders = filterComponentsByName(state.contentProviders, query) { it.name }
+                filteredContentProviders = filterContentProviderUiModels(state.contentProviders, query)
             )
         }
     }
 
-    private fun <T> filterComponentsByName(list: List<T>, query: String, nameSelector: (T) -> String): List<T> {
+    private fun filterReceiverUiModels(list: List<ReceiverUiModel>, query: String): List<ReceiverUiModel> {
         return if (query.isBlank()) list
         else list.filter {
-            val name = nameSelector(it)
-            name.contains(query, ignoreCase = true) || name.substringAfterLast("/").contains(query, ignoreCase = true)
+            it.name.contains(query, ignoreCase = true) || it.shortName.contains(query, ignoreCase = true)
+        }
+    }
+
+    private fun filterServiceUiModels(list: List<ServiceUiModel>, query: String): List<ServiceUiModel> {
+        return if (query.isBlank()) list
+        else list.filter {
+            it.name.contains(query, ignoreCase = true) || it.shortName.contains(query, ignoreCase = true)
+        }
+    }
+
+    private fun filterContentProviderUiModels(
+        list: List<ContentProviderUiModel>,
+        query: String
+    ): List<ContentProviderUiModel> {
+        return if (query.isBlank()) list
+        else list.filter {
+            it.name.contains(query, ignoreCase = true) || it.shortName.contains(query, ignoreCase = true)
         }
     }
 
@@ -128,6 +141,9 @@ class PackageDetailsViewModel(
                     val generalInfoItems = GeneralInfoMapper.toMergedInfoItems(packageDetails)
                     val activities = packageDetails.activities.map { ActivityMapper.toUiModel(it) }
                     val permissionSections = PermissionMapper.toUiModels(packageDetails.permissionSections)
+                    val services = ServiceMapper.toUiModels(packageDetails.services)
+                    val receivers = ReceiverMapper.toUiModels(packageDetails.receivers)
+                    val contentProviders = ContentProviderMapper.toUiModels(packageDetails.contentProviders)
 
                     _uiState.update {
                         it.copy(
@@ -135,15 +151,15 @@ class PackageDetailsViewModel(
                             activities = activities,
                             activitySearchText = "",
                             filteredActivities = activities,
-                            services = packageDetails.services,
+                            services = services,
                             serviceSearchText = "",
-                            filteredServices = packageDetails.services,
-                            receivers = packageDetails.receivers,
+                            filteredServices = services,
+                            receivers = receivers,
                             receiverSearchText = "",
-                            filteredReceivers = packageDetails.receivers,
-                            contentProviders = packageDetails.contentProviders,
+                            filteredReceivers = receivers,
+                            contentProviders = contentProviders,
                             contentProviderSearchText = "",
-                            filteredContentProviders = packageDetails.contentProviders,
+                            filteredContentProviders = contentProviders,
                             permissionSections = permissionSections,
                             permissionSearchText = "",
                             filteredPermissionSections = permissionSections,

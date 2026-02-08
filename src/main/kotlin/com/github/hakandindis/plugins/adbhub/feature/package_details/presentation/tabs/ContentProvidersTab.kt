@@ -1,11 +1,11 @@
 package com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.tabs
 
 import androidx.compose.runtime.Composable
-import com.github.hakandindis.plugins.adbhub.models.PackageDetails
+import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.ui.ContentProviderUiModel
 
 @Composable
 fun ContentProvidersTab(
-    contentProviders: List<PackageDetails.ProviderInfo>,
+    contentProviders: List<ContentProviderUiModel>,
     searchText: String,
     onContentProviderSearchChange: (String) -> Unit
 ) {
