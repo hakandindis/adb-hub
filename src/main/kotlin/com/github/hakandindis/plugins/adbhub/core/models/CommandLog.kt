@@ -24,17 +24,6 @@ data class CommandLog(
     }
 
     /**
-     * Gets the display command (without device ID for cleaner display)
-     */
-    fun getDisplayCommand(): String {
-        return if (deviceId != null && fullCommand.startsWith("adb -s $deviceId")) {
-            fullCommand.replace("adb -s $deviceId", "adb")
-        } else {
-            fullCommand
-        }
-    }
-
-    /**
      * Gets the full output including error if present
      */
     fun getFullOutput(): String {
