@@ -1,26 +1,29 @@
 package com.github.hakandindis.plugins.adbhub.feature.package_details.domain.mapper
 
-import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.ui.PermissionUiModel
-import com.github.hakandindis.plugins.adbhub.models.PermissionStatus
+import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.ui.PermissionItemUiModel
+import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.ui.PermissionSectionUiModel
+import com.github.hakandindis.plugins.adbhub.models.PermissionSection
 
 /**
- * Mapper for converting PermissionStatus to UI models
+ * Mapper for converting PermissionSection to UI models
  */
 object PermissionMapper {
-    /**
-     * Converts PermissionStatus to PermissionUiModel
-     */
-    fun toUiModel(permission: PermissionStatus): PermissionUiModel {
-        return PermissionUiModel(
-            name = permission.permission,
-            status = permission
+
+    fun toUiModel(section: PermissionSection): PermissionSectionUiModel {
+        return PermissionSectionUiModel(
+            sectionType = section.sectionType,
+            sectionTitle = section.sectionTitle,
+            items = section.items.map {
+                PermissionItemUiModel(
+                    name = it.name,
+                    detail = it.detail,
+                    permissionType = section.sectionType
+                )
+            }
         )
     }
 
-    /**
-     * Converts list of PermissionStatus to list of PermissionUiModel
-     */
-    fun toUiModels(permissions: List<PermissionStatus>): List<PermissionUiModel> {
-        return permissions.map { toUiModel(it) }
+    fun toUiModels(sections: List<PermissionSection>): List<PermissionSectionUiModel> {
+        return sections.map { toUiModel(it) }
     }
 }

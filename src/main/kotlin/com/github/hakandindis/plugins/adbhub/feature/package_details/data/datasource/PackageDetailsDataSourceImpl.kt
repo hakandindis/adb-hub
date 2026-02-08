@@ -46,7 +46,7 @@ class PackageDetailsDataSourceImpl(
             val versionName = DumpsysParser.extractVersionName(dumpsysOutput)
             val versionCode = DumpsysParser.extractVersionCode(dumpsysOutput)
             val dataDirectory = DumpsysParser.extractDataDirectory(dumpsysOutput)
-            val permissions = PermissionsParser.extractPermissions(dumpsysOutput)
+            val permissionSections = PermissionsParser.parsePermissionSections(dumpsysOutput)
             val activities = ActivitiesParser.extractActivities(dumpsysOutput, packageName)
             val services = extractServices(dumpsysOutput, packageName)
             val receivers = extractReceivers(dumpsysOutput, packageName)
@@ -63,7 +63,7 @@ class PackageDetailsDataSourceImpl(
                 versionCode = versionCode,
                 installLocation = installLocation,
                 dataDirectory = dataDirectory,
-                permissions = permissions,
+                permissionSections = permissionSections,
                 activities = activities,
                 services = services,
                 receivers = receivers,

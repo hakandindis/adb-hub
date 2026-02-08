@@ -7,6 +7,13 @@ object DumpsysParseStrings {
     // Section headers
     const val REQUESTED_PERMISSIONS = "requested permissions:"
     const val GRANTED_PERMISSIONS = "granted permissions:"
+    const val DECLARED_PERMISSIONS = "declared permissions:"
+    const val INSTALL_PERMISSIONS = "install permissions:"
+    const val RUNTIME_PERMISSIONS = "runtime permissions:"
+
+    /** Section headers that follow runtime permissions in dumpsys; parsing must stop before these */
+    const val ENABLED_COMPONENTS_HEADER = "enabledComponents"
+    const val DISABLED_COMPONENTS_HEADER = "disabledComponents"
 
     // Package property keys
     const val PACKAGE_PREFIX = "package:"
