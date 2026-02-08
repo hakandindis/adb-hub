@@ -2,6 +2,7 @@ package com.github.hakandindis.plugins.adbhub.feature.package_details.data.repos
 
 import com.github.hakandindis.plugins.adbhub.feature.package_details.data.datasource.PackageDetailsDataSource
 import com.github.hakandindis.plugins.adbhub.feature.package_details.domain.repository.PackageDetailsRepository
+import com.github.hakandindis.plugins.adbhub.models.AppLinksInfo
 import com.github.hakandindis.plugins.adbhub.models.PackageDetails
 import com.intellij.openapi.diagnostic.Logger
 
@@ -24,6 +25,15 @@ class PackageDetailsRepositoryImpl(
             }
         } catch (e: Exception) {
             logger.error("Error getting package details for $packageName", e)
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun getAppLinks(packageName: String, deviceId: String): Result<AppLinksInfo?> {
+        return try {
+            Result.success(packageDetailsDataSource.getAppLinks(packageName, deviceId))
+        } catch (e: Exception) {
+            logger.error("Error getting app links for $packageName", e)
             Result.failure(e)
         }
     }

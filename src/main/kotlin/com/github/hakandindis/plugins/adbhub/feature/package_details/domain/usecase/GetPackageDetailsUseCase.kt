@@ -22,6 +22,7 @@ class GetPackageDetailsUseCase(
     ): Result<GetPackageDetailsResult> {
         return repository.getPackageDetails(packageName, deviceId)
             .mapCatching { packageDetails ->
+                val appLinks = repository.getAppLinks(packageName, deviceId).getOrNull() ?: null
                 GetPackageDetailsResult(
                     generalInfoItems = GeneralInfoMapper.toMergedInfoItems(packageDetails),
                     activities = packageDetails.activities.map { ActivityMapper.toUiModel(it) },
@@ -30,7 +31,8 @@ class GetPackageDetailsUseCase(
                         .sortedBy { it.sectionType.priority },
                     services = ServiceMapper.toUiModels(packageDetails.services),
                     receivers = ReceiverMapper.toUiModels(packageDetails.receivers),
-                    contentProviders = ContentProviderMapper.toUiModels(packageDetails.contentProviders)
+                    contentProviders = ContentProviderMapper.toUiModels(packageDetails.contentProviders),
+                    appLinks = appLinks
                 )
             }
     }
