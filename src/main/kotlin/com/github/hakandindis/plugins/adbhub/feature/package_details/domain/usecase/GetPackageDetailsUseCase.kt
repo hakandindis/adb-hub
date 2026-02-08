@@ -25,7 +25,9 @@ class GetPackageDetailsUseCase(
                 GetPackageDetailsResult(
                     generalInfoItems = GeneralInfoMapper.toMergedInfoItems(packageDetails),
                     activities = packageDetails.activities.map { ActivityMapper.toUiModel(it) },
-                    permissionSections = PermissionMapper.toUiModels(packageDetails.permissionSections),
+                    permissionSections = PermissionMapper
+                        .toUiModels(packageDetails.permissionSections)
+                        .sortedBy { it.sectionType.priority },
                     services = ServiceMapper.toUiModels(packageDetails.services),
                     receivers = ReceiverMapper.toUiModels(packageDetails.receivers),
                     contentProviders = ContentProviderMapper.toUiModels(packageDetails.contentProviders)
