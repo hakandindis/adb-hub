@@ -6,6 +6,21 @@ import com.github.hakandindis.plugins.adbhub.constants.ParsePatterns
  * Parser for extracting basic package information from dumpsys output
  */
 object DumpsysParser {
+
+    /**
+     * Extracts the substring between startMarker and the first occurrence of any endMarker (after start).
+     * Used to isolate Activity/Receiver/Service Resolver Table sections.
+     */
+    fun extractSection(output: String, startMarker: String, endMarkers: List<String>): String {
+        val startIdx = output.indexOf(startMarker).takeIf { it >= 0 } ?: return ""
+        val searchFrom = startIdx + startMarker.length
+        val endIdx = endMarkers
+            .mapNotNull { output.indexOf(it, searchFrom).takeIf { it > 0 } }
+            .minOrNull()
+            ?: output.length
+        return output.substring(searchFrom, endIdx)
+    }
+
     /**
      * Extracts version name from dumpsys output
      */

@@ -39,6 +39,9 @@ class PackageDetailsViewModel(
             is PackageDetailsIntent.LaunchActivity -> launchActivity(intent.activityName, intent.deviceId)
             is PackageDetailsIntent.FilterPermissions -> updatePermissionSearch(intent.query)
             is PackageDetailsIntent.FilterActivities -> updateActivitySearch(intent.query)
+            is PackageDetailsIntent.FilterReceivers -> updateReceiverSearch(intent.query)
+            is PackageDetailsIntent.FilterServices -> updateServiceSearch(intent.query)
+            is PackageDetailsIntent.FilterContentProviders -> updateContentProviderSearch(intent.query)
         }
     }
 
@@ -81,6 +84,41 @@ class PackageDetailsViewModel(
         }
     }
 
+    private fun updateReceiverSearch(query: String) {
+        _uiState.update { state ->
+            state.copy(
+                receiverSearchText = query,
+                filteredReceivers = filterComponentsByName(state.receivers, query) { it.name }
+            )
+        }
+    }
+
+    private fun updateServiceSearch(query: String) {
+        _uiState.update { state ->
+            state.copy(
+                serviceSearchText = query,
+                filteredServices = filterComponentsByName(state.services, query) { it.name }
+            )
+        }
+    }
+
+    private fun updateContentProviderSearch(query: String) {
+        _uiState.update { state ->
+            state.copy(
+                contentProviderSearchText = query,
+                filteredContentProviders = filterComponentsByName(state.contentProviders, query) { it.name }
+            )
+        }
+    }
+
+    private fun <T> filterComponentsByName(list: List<T>, query: String, nameSelector: (T) -> String): List<T> {
+        return if (query.isBlank()) list
+        else list.filter {
+            val name = nameSelector(it)
+            name.contains(query, ignoreCase = true) || name.substringAfterLast("/").contains(query, ignoreCase = true)
+        }
+    }
+
     private fun loadPackageDetails(packageName: String, deviceId: String) {
         scope.launch {
             _uiState.update { it.copy(isLoading = true, error = null) }
@@ -95,11 +133,20 @@ class PackageDetailsViewModel(
                         it.copy(
                             generalInfoItems = generalInfoItems,
                             activities = activities,
+                            activitySearchText = "",
+                            filteredActivities = activities,
+                            services = packageDetails.services,
+                            serviceSearchText = "",
+                            filteredServices = packageDetails.services,
+                            receivers = packageDetails.receivers,
+                            receiverSearchText = "",
+                            filteredReceivers = packageDetails.receivers,
+                            contentProviders = packageDetails.contentProviders,
+                            contentProviderSearchText = "",
+                            filteredContentProviders = packageDetails.contentProviders,
                             permissionSections = permissionSections,
                             permissionSearchText = "",
                             filteredPermissionSections = permissionSections,
-                            activitySearchText = "",
-                            filteredActivities = activities,
                             isLoading = false
                         )
                     }
