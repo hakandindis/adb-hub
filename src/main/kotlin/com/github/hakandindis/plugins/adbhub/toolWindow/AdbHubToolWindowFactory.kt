@@ -16,14 +16,8 @@ import com.intellij.openapi.wm.ToolWindow
 import com.intellij.openapi.wm.ToolWindowFactory
 import org.jetbrains.jewel.bridge.addComposeTab
 
-/**
- * Factory for creating ADB Tool Window
- */
 class AdbHubToolWindowFactory : ToolWindowFactory, DumbAware {
 
-    /**
-     * Tool window should be available even when no project is open
-     */
     override fun shouldBeAvailable(project: Project) = true
 
     override fun createToolWindowContent(project: Project, toolWindow: ToolWindow) {

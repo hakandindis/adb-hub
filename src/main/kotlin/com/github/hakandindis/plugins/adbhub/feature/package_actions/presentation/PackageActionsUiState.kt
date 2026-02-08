@@ -1,8 +1,5 @@
 package com.github.hakandindis.plugins.adbhub.feature.package_actions.presentation
 
-/**
- * UI State for Package Actions feature
- */
 data class PackageActionsUiState(
     val isLaunching: Boolean = false,
     val isStopping: Boolean = false,

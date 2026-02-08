@@ -15,9 +15,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-/**
- * ViewModel for Device feature (MVI pattern)
- */
 class DeviceViewModel(
     private val getDevicesUseCase: GetDevicesUseCase,
     private val getDeviceInfoUseCase: GetDeviceInfoUseCase,

@@ -2,9 +2,6 @@ package com.github.hakandindis.plugins.adbhub.feature.package_actions.domain.use
 
 import com.github.hakandindis.plugins.adbhub.feature.package_actions.domain.repository.PackageActionsRepository
 
-/**
- * Use case for launching an app
- */
 class LaunchAppUseCase(
     private val repository: PackageActionsRepository
 ) {

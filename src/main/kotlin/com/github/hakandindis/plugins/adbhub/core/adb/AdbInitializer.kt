@@ -1,8 +1,5 @@
 package com.github.hakandindis.plugins.adbhub.core.adb
 
-/**
- * Initializes and manages ADB infrastructure
- */
 class AdbInitializer(
     private val pathFinder: AdbPathFinder
 ) {

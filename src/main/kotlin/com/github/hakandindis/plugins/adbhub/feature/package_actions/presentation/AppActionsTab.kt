@@ -23,9 +23,6 @@ import org.jetbrains.jewel.ui.component.Text
 import org.jetbrains.jewel.ui.component.TextField
 import org.jetbrains.jewel.ui.icon.IconKey
 
-/**
- * App Actions tab component
- */
 @Composable
 fun AppActionsTab(
     packageName: String,

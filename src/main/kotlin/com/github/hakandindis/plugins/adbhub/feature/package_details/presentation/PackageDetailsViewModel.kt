@@ -15,9 +15,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-/**
- * ViewModel for Package Details feature (MVI pattern)
- */
 class PackageDetailsViewModel(
     private val getPackageDetailsUseCase: GetPackageDetailsUseCase,
     private val commandExecutor: AdbCommandExecutor?,

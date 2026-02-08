@@ -2,9 +2,6 @@ package com.github.hakandindis.plugins.adbhub.feature.package_actions.domain.use
 
 import com.github.hakandindis.plugins.adbhub.feature.package_actions.domain.repository.PackageActionsRepository
 
-/**
- * Use case for launching a deep link
- */
 class LaunchDeepLinkUseCase(
     private val repository: PackageActionsRepository
 ) {

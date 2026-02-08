@@ -4,19 +4,11 @@ import com.github.hakandindis.plugins.adbhub.constants.DumpsysParseStrings
 import com.github.hakandindis.plugins.adbhub.constants.ParsePatterns
 import com.github.hakandindis.plugins.adbhub.models.PackageDetails
 
-/**
- * Parser for extracting activities and intent filters from dumpsys output
- */
 object ActivitiesParser {
-    /**
-     * Extracts activities from dumpsys output.
-     * Supports: (1) Activity Resolver Table format (hexId package/Class filter),
-     * (2) Legacy "Activity #0: name=package/Class", (3) fallback packageName/Class in activity block.
-     */
+
     fun extractActivities(output: String, packageName: String): List<PackageDetails.ActivityInfo> {
         val activities = mutableListOf<PackageDetails.ActivityInfo>()
 
-        // Resolver table format: "d2af05a com.Slack/slack.features.home.HomeActivity filter c02cf68"
         val activitySection = DumpsysParser.extractSection(
             output,
             DumpsysParseStrings.ACTIVITY_RESOLVER_TABLE,
@@ -54,19 +46,15 @@ object ActivitiesParser {
             return activities.distinctBy { it.name }.sortedBy { it.name }
         }
 
-        // Pattern 1: "Activity #0: name=com.example/.MainActivity"
         val activityPattern1 = ParsePatterns.ACTIVITY_PATTERN_1
         activityPattern1.findAll(output).forEach { match ->
             val fullName = "${match.groupValues[1]}/${match.groupValues[2]}"
             if (fullName.startsWith(packageName)) {
-                // Expand context window to capture more intent filter information
                 val contextStart = (match.range.first - 1000).coerceAtLeast(0)
-                // Find the end of this activity section (next Activity or major section)
                 val nextActivityMatch = activityPattern1.findAll(output, match.range.last + 1).firstOrNull()
                 val contextEnd = if (nextActivityMatch != null) {
                     nextActivityMatch.range.first
                 } else {
-                    // Look for next major section (Service, Receiver, etc.)
                     val nextSection = listOf(
                         "Service\\s+#?\\d+:",
                         "Receiver\\s+#?\\d+:",
@@ -82,7 +70,6 @@ object ActivitiesParser {
                 val exported = ParsePatterns.EXPORTED_TRUE in context || ParsePatterns.EXPORTED_TRUE_ALT in context
                 val enabled = !(ParsePatterns.ENABLED_FALSE in context || ParsePatterns.ENABLED_FALSE_ALT in context)
 
-                // Extract intent filters
                 val intentFilters = extractIntentFilters(context, fullName)
 
                 activities.add(
@@ -96,20 +83,16 @@ object ActivitiesParser {
             }
         }
 
-        // Pattern 2: "Activity [hex] com.example/.MainActivity"
         if (activities.isEmpty()) {
             val activityPattern2 = ParsePatterns.ACTIVITY_PATTERN_2
             activityPattern2.findAll(output).forEach { match ->
                 val fullName = "${match.groupValues[1]}/${match.groupValues[2]}"
                 if (fullName.startsWith(packageName)) {
-                    // Expand context window to capture more intent filter information
                     val contextStart = (match.range.first - 1000).coerceAtLeast(0)
-                    // Find the end of this activity section (next Activity or major section)
                     val nextActivityMatch = activityPattern2.findAll(output, match.range.last + 1).firstOrNull()
                     val contextEnd = if (nextActivityMatch != null) {
                         nextActivityMatch.range.first
                     } else {
-                        // Look for next major section (Service, Receiver, etc.)
                         val nextSection = listOf(
                             "Service\\s+#?\\d+:",
                             "Receiver\\s+#?\\d+:",
@@ -139,9 +122,6 @@ object ActivitiesParser {
             }
         }
 
-        // Pattern 3: Simple pattern for packageName/ActivityName — only within the Activity block
-        // (dumpsys has Activity #0..., then Service #0..., Receiver #0..., Provider #0...;
-        //  we must not match Service/Receiver/Provider class names as activities)
         if (activities.isEmpty()) {
             val activityBlock = extractActivityBlockOnly(output)
             val altPattern = "$packageName/([a-zA-Z0-9_.$]+)".toRegex()
@@ -161,11 +141,6 @@ object ActivitiesParser {
         return activities.distinctBy { it.name }.sortedBy { it.name }
     }
 
-    /**
-     * Returns the substring of dumpsys output that contains only Activity entries.
-     * Prefers "Activity Resolver Table:" up to "Receiver Resolver Table:"; otherwise
-     * from first "Activity #" or "Activity [hex]" up to first Service/Receiver/Provider line.
-     */
     private fun extractActivityBlockOnly(output: String): String {
         val resolverBlock = DumpsysParser.extractSection(
             output,
@@ -191,16 +166,12 @@ object ActivitiesParser {
         return if (end > start) output.substring(start, end) else output.substring(start)
     }
 
-    /**
-     * Extracts intent filters from activity context
-     */
     fun extractIntentFilters(
         context: String,
         activityName: String
     ): List<PackageDetails.ActivityInfo.IntentFilter> {
         val filters = mutableListOf<PackageDetails.ActivityInfo.IntentFilter>()
 
-        // Look for intent filter sections - try multiple patterns
         val filterPatterns = listOf(
             ParsePatterns.FILTER_PATTERN_1,
             ParsePatterns.FILTER_PATTERN_2
@@ -212,21 +183,16 @@ object ActivitiesParser {
         }
 
         if (filterMatches.isEmpty()) {
-            // Fallback: try to extract from activity resolver table format
-            // Look for lines with Action: and Category: near the activity name
             val activityShortName = activityName.substringAfterLast("/")
             val activitySection = context.lines().joinToString("\n")
             if (activityShortName in activitySection) {
-                // Try to find actions and categories in the context
                 val actions = mutableListOf<String>()
                 val categories = mutableListOf<String>()
 
-                // Pattern 1: Action: "android.intent.action.MAIN"
                 ParsePatterns.ACTION_PATTERN_1.findAll(context).forEach { match ->
                     actions.add(match.groupValues[1])
                 }
 
-                // Pattern 2: Action: android.intent.action.MAIN (without quotes)
                 ParsePatterns.ACTION_PATTERN_2.findAll(context).forEach { match ->
                     val action = match.groupValues[1]
                     if (action !in actions && action.contains("intent.action")) {
@@ -234,12 +200,10 @@ object ActivitiesParser {
                     }
                 }
 
-                // Pattern 1: Category: "android.intent.category.LAUNCHER"
                 ParsePatterns.CATEGORY_PATTERN_1.findAll(context).forEach { match ->
                     categories.add(match.groupValues[1])
                 }
 
-                // Pattern 2: Category: android.intent.category.LAUNCHER (without quotes)
                 ParsePatterns.CATEGORY_PATTERN_2.findAll(context).forEach { match ->
                     val category = match.groupValues[1]
                     if (category !in categories && category.contains("intent.category")) {
@@ -260,7 +224,6 @@ object ActivitiesParser {
             return filters
         }
 
-        // Sort matches by position
         filterMatches.sortedBy { it.range.first }.forEach { filterMatch ->
             val filterStart = filterMatch.range.first
             val nextFilterStart = filterPatterns.mapNotNull { pattern ->
@@ -268,7 +231,6 @@ object ActivitiesParser {
             }.minOrNull() ?: context.length
             val filterSection = context.substring(filterStart, nextFilterStart)
 
-            // Extract actions - try multiple patterns
             val actions = mutableSetOf<String>()
             val actionPatterns = listOf(
                 ParsePatterns.ACTION_PATTERN_1,
@@ -283,7 +245,6 @@ object ActivitiesParser {
                 }
             }
 
-            // Extract categories - try multiple patterns
             val categories = mutableSetOf<String>()
             val categoryPatterns = listOf(
                 ParsePatterns.CATEGORY_PATTERN_1,
@@ -298,7 +259,6 @@ object ActivitiesParser {
                 }
             }
 
-            // Extract data
             val data = mutableListOf<String>()
             val dataPatterns = listOf(
                 ParsePatterns.DATA_PATTERN_1,

@@ -5,10 +5,6 @@ import com.github.hakandindis.plugins.adbhub.feature.package_details.presentatio
 import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.ui.PermissionSectionUiModel
 import com.github.hakandindis.plugins.adbhub.models.AppLinksInfo
 
-/**
- * UI State for Package Details feature.
- * Holds UI models for activities, services, receivers, content providers and their filtered/search state.
- */
 data class PackageDetailsUiState(
     val packageName: String = "",
     val appName: String = "",

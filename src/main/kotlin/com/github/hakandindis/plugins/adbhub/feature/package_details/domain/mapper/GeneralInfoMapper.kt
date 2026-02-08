@@ -3,16 +3,8 @@ package com.github.hakandindis.plugins.adbhub.feature.package_details.domain.map
 import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.ui.InfoItemUiModel
 import com.github.hakandindis.plugins.adbhub.models.PackageDetails
 
-/**
- * Mapper for converting PackageDetails to UI models for General Info tab.
- * Produces a single merged list: Package Name, Version Number, Version Code, paths, Install Time, SDKs, and the rest.
- */
 object GeneralInfoMapper {
-    /**
-     * Converts PackageDetails to a single list of InfoItemUiModel.
-     * General fields and paths are merged in one order: Package Name, Version Number, Version Code,
-     * Installation Path, Data Path, Install Time, Min SDK, Target SDK, App Name, System App, Enabled, Last Update.
-     */
+
     fun toMergedInfoItems(packageDetails: PackageDetails): List<InfoItemUiModel> {
         val items = mutableListOf<InfoItemUiModel>()
 
@@ -42,17 +34,11 @@ object GeneralInfoMapper {
         return items
     }
 
-    /**
-     * Extracts app name from package name
-     */
     private fun extractAppName(packageName: String): String {
         return packageName.substringAfterLast(".").takeIf { it.isNotEmpty() }
             ?: packageName
     }
 
-    /**
-     * Gets Android version name from SDK version
-     */
     private fun getAndroidVersionName(sdkVersion: String): String {
         val version = sdkVersion.toIntOrNull() ?: return "Unknown"
         return when (version) {

@@ -18,10 +18,6 @@ import com.github.hakandindis.plugins.adbhub.ui.theme.shapes.AdbHubShapes
 import org.jetbrains.jewel.foundation.theme.JewelTheme
 import org.jetbrains.jewel.ui.component.Text
 
-/**
- * Domain verification states that indicate success (verified for the app).
- * @see [Verify App Links](https://developer.android.com/training/app-links/verify-applinks)
- */
 private val SUCCESS_STATES = setOf(
     "verified",
     "approved",

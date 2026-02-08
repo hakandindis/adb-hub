@@ -6,9 +6,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.*
 
-/**
- * ViewModel for Console Log feature (MVI pattern)
- */
 class ConsoleLogViewModel(
     private val commandLogger: CommandLogger,
     coroutineScope: CoroutineScope
@@ -35,9 +32,6 @@ class ConsoleLogViewModel(
             .launchIn(scope)
     }
 
-    /**
-     * Handles intents from UI
-     */
     fun handleIntent(intent: ConsoleLogIntent) {
         when (intent) {
             is ConsoleLogIntent.ClearLogs -> clearLogs()

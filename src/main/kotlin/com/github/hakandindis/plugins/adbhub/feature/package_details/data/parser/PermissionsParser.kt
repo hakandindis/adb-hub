@@ -1,23 +1,14 @@
 package com.github.hakandindis.plugins.adbhub.feature.package_details.data.parser
 
 import com.github.hakandindis.plugins.adbhub.constants.DumpsysParseStrings
-import com.github.hakandindis.plugins.adbhub.feature.package_details.data.parser.PermissionsParser.parsePermissionSections
 import com.github.hakandindis.plugins.adbhub.models.PermissionItem
 import com.github.hakandindis.plugins.adbhub.models.PermissionSection
 import com.github.hakandindis.plugins.adbhub.models.PermissionSectionType
 
-/**
- * Parser for extracting permission sections from dumpsys package output.
- * Parses: declared permissions, requested permissions, install permissions, runtime permissions.
- */
 object PermissionsParser {
 
-    private const val SECTION_INDENT = "      " // 6 spaces in dumpsys output
+    private const val SECTION_INDENT = "      "
 
-    /**
-     * Parses all permission sections from dumpsys package output.
-     * Returns sections in order: Declared, Requested, Install, Runtime (when present).
-     */
     fun parsePermissionSections(output: String): List<PermissionSection> {
         val sections = mutableListOf<PermissionSection>()
 
@@ -111,7 +102,6 @@ object PermissionsParser {
         )
     }
 
-    /** Keeps only granted=true or granted=false; strips flags and other parts */
     private fun normalizeRuntimePermissionDetail(raw: String): String? {
         return when {
             raw.contains("granted=true") -> "granted=true"
@@ -120,10 +110,6 @@ object PermissionsParser {
         }
     }
 
-    /**
-     * Extracts a flat list of permission names from "requested permissions" section (legacy).
-     * Prefer [parsePermissionSections] for full structured data.
-     */
     fun extractPermissions(output: String): List<String> {
         val sections = parsePermissionSections(output)
         return sections.flatMap { it.items.map { item -> item.name } }.distinct().sorted()

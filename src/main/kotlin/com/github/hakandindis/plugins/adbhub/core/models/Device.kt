@@ -1,8 +1,5 @@
 package com.github.hakandindis.plugins.adbhub.core.models
 
-/**
- * Represents an Android device connected via ADB
- */
 data class Device(
     val id: String,
     val state: DeviceState,

@@ -9,10 +9,6 @@ import kotlinx.coroutines.flow.update
 import java.time.LocalDateTime
 import java.util.*
 
-/**
- * Service for logging ADB command executions
- * Singleton service that maintains a log of all executed commands
- */
 class CommandLogger {
     private val _logs = MutableStateFlow<List<CommandLog>>(emptyList())
     val logs: StateFlow<List<CommandLog>> = _logs.asStateFlow()

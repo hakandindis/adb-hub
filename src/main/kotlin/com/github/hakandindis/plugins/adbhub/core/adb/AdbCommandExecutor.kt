@@ -5,9 +5,6 @@ import com.intellij.execution.configurations.GeneralCommandLine
 import com.intellij.execution.process.CapturingProcessHandler
 import java.io.File
 
-/**
- * Service for executing ADB commands
- */
 class AdbCommandExecutor(private val adbPath: String) {
 
     companion object {
@@ -16,12 +13,6 @@ class AdbCommandExecutor(private val adbPath: String) {
 
     private val commandLogger = CommandLogger.getInstance()
 
-    /**
-     * Executes an ADB command
-     * @param command ADB command (without 'adb' prefix)
-     * @param timeoutSeconds Timeout in seconds
-     * @return CommandResult with output and exit code
-     */
     fun executeCommand(
         command: String,
         timeoutSeconds: Long = DEFAULT_TIMEOUT_SECONDS
@@ -32,12 +23,6 @@ class AdbCommandExecutor(private val adbPath: String) {
         return result
     }
 
-    /**
-     * Executes an ADB command with device selection
-     * @param deviceId Device ID (serial number)
-     * @param command ADB command (without 'adb' prefix)
-     * @param timeoutSeconds Timeout in seconds
-     */
     fun executeCommandForDevice(
         deviceId: String,
         command: String,
@@ -51,9 +36,6 @@ class AdbCommandExecutor(private val adbPath: String) {
         return result
     }
 
-    /**
-     * Internal method to execute command without logging
-     */
     private fun internalExecuteCommand(
         command: String,
         timeoutSeconds: Long = DEFAULT_TIMEOUT_SECONDS

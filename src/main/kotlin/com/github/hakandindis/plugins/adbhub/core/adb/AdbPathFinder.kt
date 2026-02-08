@@ -2,15 +2,8 @@ package com.github.hakandindis.plugins.adbhub.core.adb
 
 import java.io.File
 
-/**
- * Service for finding ADB executable path
- */
 class AdbPathFinder {
 
-    /**
-     * Finds the ADB executable path
-     * @return ADB path or null if not found
-     */
     fun findAdbPath(): String? {
         System.getenv("ANDROID_HOME")?.let {
             val adb = File(it, "platform-tools/adb")

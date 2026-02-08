@@ -1,8 +1,5 @@
 package com.github.hakandindis.plugins.adbhub.models
 
-/**
- * Detailed information about an Android package/application
- */
 data class PackageDetails(
     val packageName: String,
     val versionName: String? = null,

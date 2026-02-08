@@ -2,10 +2,6 @@ package com.github.hakandindis.plugins.adbhub.service
 
 import com.intellij.openapi.components.*
 
-/**
- * Application-level service that persists recently executed deep link URIs.
- * Used to show "Recent Deep Links" and auto-fill the URI field on click.
- */
 @State(
     name = "AdbHubRecentDeepLinks",
     storages = [
