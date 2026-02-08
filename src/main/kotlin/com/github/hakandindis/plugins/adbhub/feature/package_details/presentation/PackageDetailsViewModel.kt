@@ -39,79 +39,6 @@ class PackageDetailsViewModel(
         }
     }
 
-    private fun updatePermissionSearch(query: String) {
-        _uiState.update { state ->
-            state.copy(
-                permissionSearchText = query,
-                filteredPermissionSections = filterPermissionSections(state.permissionSections, query)
-            )
-        }
-    }
-
-    private fun updateActivitySearch(query: String) {
-        _uiState.update { state ->
-            state.copy(
-                activitySearchText = query,
-                filteredActivities = filterActivities(state.activities, query)
-            )
-        }
-    }
-
-    private fun filterPermissionSections(
-        sections: List<PermissionSectionUiModel>,
-        query: String
-    ): List<PermissionSectionUiModel> {
-        if (query.isBlank()) return sections
-        return sections.map { section ->
-            val filteredItems = section.items.filter {
-                it.name.contains(query, ignoreCase = true) ||
-                        it.detailTextForFilter.contains(query, ignoreCase = true)
-            }
-            section.copy(items = filteredItems)
-        }.filter { it.items.isNotEmpty() }
-    }
-
-    private fun filterActivities(activities: List<ComponentDisplay>, query: String): List<ComponentDisplay> {
-        return if (query.isBlank()) activities
-        else activities.filter {
-            it.name.contains(query, ignoreCase = true) || it.shortName.contains(query, ignoreCase = true)
-        }
-    }
-
-    private fun updateReceiverSearch(query: String) {
-        _uiState.update { state ->
-            state.copy(
-                receiverSearchText = query,
-                filteredReceivers = filterComponents(state.receivers, query)
-            )
-        }
-    }
-
-    private fun updateServiceSearch(query: String) {
-        _uiState.update { state ->
-            state.copy(
-                serviceSearchText = query,
-                filteredServices = filterComponents(state.services, query)
-            )
-        }
-    }
-
-    private fun updateContentProviderSearch(query: String) {
-        _uiState.update { state ->
-            state.copy(
-                contentProviderSearchText = query,
-                filteredContentProviders = filterComponents(state.contentProviders, query)
-            )
-        }
-    }
-
-    private fun filterComponents(list: List<ComponentDisplay>, query: String): List<ComponentDisplay> {
-        return if (query.isBlank()) list
-        else list.filter {
-            it.name.contains(query, ignoreCase = true) || it.shortName.contains(query, ignoreCase = true)
-        }
-    }
-
     private fun loadPackageDetails(packageName: String, deviceId: String) {
         scope.launch {
             _uiState.update { it.copy(isLoading = true, error = null) }
@@ -172,6 +99,72 @@ class PackageDetailsViewModel(
             } catch (e: Exception) {
                 logger.error("Error launching activity $activityName", e)
             }
+        }
+    }
+
+    private fun updatePermissionSearch(query: String) {
+        _uiState.update { state ->
+            state.copy(
+                permissionSearchText = query,
+                filteredPermissionSections = filterPermissionSections(state.permissionSections, query)
+            )
+        }
+    }
+
+    private fun filterPermissionSections(
+        sections: List<PermissionSectionUiModel>,
+        query: String
+    ): List<PermissionSectionUiModel> {
+        if (query.isBlank()) return sections
+        return sections.map { section ->
+            val filteredItems = section.items.filter {
+                it.name.contains(query, ignoreCase = true) ||
+                        it.detailTextForFilter.contains(query, ignoreCase = true)
+            }
+            section.copy(items = filteredItems)
+        }.filter { it.items.isNotEmpty() }
+    }
+
+    private fun updateActivitySearch(query: String) {
+        _uiState.update { state ->
+            state.copy(
+                activitySearchText = query,
+                filteredActivities = filterComponents(state.activities, query)
+            )
+        }
+    }
+
+    private fun updateReceiverSearch(query: String) {
+        _uiState.update { state ->
+            state.copy(
+                receiverSearchText = query,
+                filteredReceivers = filterComponents(state.receivers, query)
+            )
+        }
+    }
+
+    private fun updateServiceSearch(query: String) {
+        _uiState.update { state ->
+            state.copy(
+                serviceSearchText = query,
+                filteredServices = filterComponents(state.services, query)
+            )
+        }
+    }
+
+    private fun updateContentProviderSearch(query: String) {
+        _uiState.update { state ->
+            state.copy(
+                contentProviderSearchText = query,
+                filteredContentProviders = filterComponents(state.contentProviders, query)
+            )
+        }
+    }
+
+    private fun filterComponents(list: List<ComponentDisplay>, query: String): List<ComponentDisplay> {
+        return if (query.isBlank()) list
+        else list.filter {
+            it.name.contains(query, ignoreCase = true) || it.shortName.contains(query, ignoreCase = true)
         }
     }
 
