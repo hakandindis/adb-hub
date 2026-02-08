@@ -9,7 +9,7 @@ data class PackageDetails(
     val versionCode: String? = null,
     val installLocation: String? = null,
     val dataDirectory: String? = null,
-    val permissions: List<String> = emptyList(),
+    val permissionSections: List<PermissionSection> = emptyList(),
     val activities: List<ActivityInfo> = emptyList(),
     val services: List<ServiceInfo> = emptyList(),
     val receivers: List<ReceiverInfo> = emptyList(),

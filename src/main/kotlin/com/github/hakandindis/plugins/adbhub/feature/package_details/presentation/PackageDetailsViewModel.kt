@@ -1,17 +1,13 @@
 package com.github.hakandindis.plugins.adbhub.feature.package_details.presentation
 
 import com.github.hakandindis.plugins.adbhub.constants.AmCommands
-import com.github.hakandindis.plugins.adbhub.constants.DumpsysCommands
-import com.github.hakandindis.plugins.adbhub.constants.ParsePatterns
 import com.github.hakandindis.plugins.adbhub.core.adb.AdbCommandExecutor
 import com.github.hakandindis.plugins.adbhub.feature.package_details.domain.mapper.ActivityMapper
 import com.github.hakandindis.plugins.adbhub.feature.package_details.domain.mapper.GeneralInfoMapper
 import com.github.hakandindis.plugins.adbhub.feature.package_details.domain.mapper.PermissionMapper
 import com.github.hakandindis.plugins.adbhub.feature.package_details.domain.usecase.GetPackageDetailsUseCase
 import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.ui.ActivityUiModel
-import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.ui.PermissionUiModel
-import com.github.hakandindis.plugins.adbhub.models.PermissionGrantStatus
-import com.github.hakandindis.plugins.adbhub.models.PermissionStatus
+import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.ui.PermissionSectionUiModel
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.diagnostic.Logger
 import kotlinx.coroutines.CoroutineScope
@@ -50,7 +46,7 @@ class PackageDetailsViewModel(
         _uiState.update { state ->
             state.copy(
                 permissionSearchText = query,
-                filteredPermissions = filterPermissions(state.permissions, query)
+                filteredPermissionSections = filterPermissionSections(state.permissionSections, query)
             )
         }
     }
@@ -64,21 +60,26 @@ class PackageDetailsViewModel(
         }
     }
 
-    private fun filterPermissions(permissions: List<PermissionUiModel>, query: String): List<PermissionUiModel> {
-        return if (query.isBlank()) permissions
-        else permissions.filter { it.name.contains(query, ignoreCase = true) }
+    private fun filterPermissionSections(
+        sections: List<PermissionSectionUiModel>,
+        query: String
+    ): List<PermissionSectionUiModel> {
+        if (query.isBlank()) return sections
+        return sections.map { section ->
+            val filteredItems = section.items.filter {
+                it.name.contains(query, ignoreCase = true) ||
+                        (it.detail?.contains(query, ignoreCase = true) == true)
+            }
+            section.copy(items = filteredItems)
+        }.filter { it.items.isNotEmpty() }
     }
 
     private fun filterActivities(activities: List<ActivityUiModel>, query: String): List<ActivityUiModel> {
         return if (query.isBlank()) activities
         else activities.filter {
-            it.name.contains(query, ignoreCase = true) || it.shortName.contains(
-                query,
-                ignoreCase = true
-            )
+            it.name.contains(query, ignoreCase = true) || it.shortName.contains(query, ignoreCase = true)
         }
     }
-
 
     private fun loadPackageDetails(packageName: String, deviceId: String) {
         scope.launch {
@@ -87,20 +88,16 @@ class PackageDetailsViewModel(
             getPackageDetailsUseCase(packageName, deviceId).fold(
                 onSuccess = { packageDetails ->
                     val generalInfoItems = GeneralInfoMapper.toMergedInfoItems(packageDetails)
-                    val activities = packageDetails.activities.map { activity ->
-                        ActivityMapper.toUiModel(activity)
-                    }
-
-                    val permissionStatuses = loadPermissionStatuses(packageDetails.permissions, packageName, deviceId)
-                    val permissionUiModels = PermissionMapper.toUiModels(permissionStatuses)
+                    val activities = packageDetails.activities.map { ActivityMapper.toUiModel(it) }
+                    val permissionSections = PermissionMapper.toUiModels(packageDetails.permissionSections)
 
                     _uiState.update {
                         it.copy(
                             generalInfoItems = generalInfoItems,
                             activities = activities,
-                            permissions = permissionUiModels,
+                            permissionSections = permissionSections,
                             permissionSearchText = "",
-                            filteredPermissions = permissionUiModels,
+                            filteredPermissionSections = permissionSections,
                             activitySearchText = "",
                             filteredActivities = activities,
                             isLoading = false
@@ -118,65 +115,6 @@ class PackageDetailsViewModel(
                 }
             )
         }
-    }
-
-    /**
-     * Loads permission statuses from dumpsys output
-     * TODO: Move this to a separate use case and parser
-     */
-    private fun loadPermissionStatuses(
-        permissions: List<String>,
-        packageName: String,
-        deviceId: String
-    ): List<PermissionStatus> {
-        if (commandExecutor == null || permissions.isEmpty()) {
-            return emptyList()
-        }
-
-        return try {
-            val result =
-                commandExecutor.executeCommandForDevice(deviceId, DumpsysCommands.getPackageDumpsys(packageName))
-            if (result.isSuccess) {
-                permissions.map { permission ->
-                    val status = determinePermissionStatus(permission, result.output)
-                    PermissionStatus(
-                        permission = permission,
-                        status = status
-                    )
-                }
-            } else {
-                permissions.map {
-                    PermissionStatus(
-                        permission = it,
-                        status = PermissionGrantStatus.OPTIONAL
-                    )
-                }
-            }
-        } catch (e: Exception) {
-            logger.error("Error loading permission statuses for $packageName", e)
-            emptyList()
-        }
-    }
-
-    /**
-     * Determines permission status from dumpsys output
-     * TODO: Move this to PermissionsParser
-     */
-    private fun determinePermissionStatus(
-        permission: String,
-        dumpsysOutput: String
-    ): PermissionGrantStatus {
-        val grantedPattern = (ParsePatterns.GRANTED_PATTERN.pattern + permission).toRegex(RegexOption.IGNORE_CASE)
-        if (grantedPattern.find(dumpsysOutput) != null) {
-            return PermissionGrantStatus.GRANTED
-        }
-
-        val deniedPattern = (ParsePatterns.DENIED_PATTERN.pattern + permission).toRegex(RegexOption.IGNORE_CASE)
-        if (deniedPattern.find(dumpsysOutput) != null) {
-            return PermissionGrantStatus.DENIED
-        }
-
-        return PermissionGrantStatus.OPTIONAL
     }
 
     private fun launchActivity(activityName: String, deviceId: String) {

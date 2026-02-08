@@ -69,13 +69,11 @@ fun DetailsContent(
                 )
 
                 DetailsTab.Permissions -> PermissionsTab(
-                    permissions = packageDetailsUiState.filteredPermissions.map { it.status },
+                    permissionSections = packageDetailsUiState.filteredPermissionSections,
                     searchText = packageDetailsUiState.permissionSearchText,
                     onPermissionFilterChange = {
                         packageDetailsViewModel.handleIntent(
-                            PackageDetailsIntent.FilterPermissions(
-                                it
-                            )
+                            PackageDetailsIntent.FilterPermissions(it)
                         )
                     }
                 )
