@@ -167,9 +167,6 @@ private fun ComponentRow(display: ComponentDisplay) {
                         ".${display.shortName}",
                         style = JewelTheme.defaultTextStyle
                     )
-                    if (display.exported) {
-                        TagBadge("EXPORTED", AdbHubTheme.textMuted)
-                    }
                 }
                 Text(
                     display.name,
@@ -177,18 +174,5 @@ private fun ComponentRow(display: ComponentDisplay) {
                 )
             }
         }
-    }
-}
-
-@Composable
-private fun TagBadge(text: String, color: Color) {
-    Box(
-        modifier = Modifier
-            .clip(AdbHubShapes.XS)
-            .background(color.copy(alpha = 0.1f))
-            .border(1.dp, color.copy(alpha = 0.2f), AdbHubShapes.XS)
-            .padding(horizontal = 6.dp, vertical = 2.dp)
-    ) {
-        Text(text, style = JewelTheme.defaultTextStyle, color = color)
     }
 }
