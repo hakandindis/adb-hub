@@ -32,8 +32,7 @@ import org.jetbrains.jewel.ui.component.TextField
 fun ActivitiesTab(
     activities: List<ActivityUiModel>,
     searchText: String,
-    onActivitySearchChange: (String) -> Unit = {},
-    onActivityLaunch: (String) -> Unit = {}
+    onActivitySearchChange: (String) -> Unit = {}
 ) {
     val searchState = rememberTextFieldState(searchText)
     LaunchedEffect(searchText) { searchState.setTextAndPlaceCursorAtEnd(searchText) }
@@ -92,24 +91,14 @@ fun ActivitiesTab(
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             items(activities) { activity ->
-                ActivityRow(
-                    activity = activity,
-                    onLaunch = {
-                        if (activity.isLauncher) {
-                            onActivityLaunch(activity.fullName)
-                        }
-                    }
-                )
+                ActivityRow(activity = activity)
             }
         }
     }
 }
 
 @Composable
-private fun ActivityRow(
-    activity: ActivityUiModel,
-    onLaunch: () -> Unit
-) {
+private fun ActivityRow(activity: ActivityUiModel) {
     val interactionSource = remember { MutableInteractionSource() }
     val isHovered by interactionSource.collectIsHoveredAsState()
 
@@ -123,115 +112,39 @@ private fun ActivityRow(
                         .background(AdbHubTheme.surface)
                         .border(1.dp, AdbHubTheme.border, AdbHubShapes.SM)
                 else
-                    Modifier
-                        .border(
-                            1.dp,
-                            Color.Transparent,
-                            AdbHubShapes.SM
-                        )
+                    Modifier.border(1.dp, Color.Transparent, AdbHubShapes.SM)
             )
             .clickable(interactionSource = interactionSource, indication = null) { }
             .padding(10.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        Row(
-            modifier = Modifier.weight(1f),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        Box(
+            modifier = Modifier
+                .size(36.dp)
+                .clip(AdbHubShapes.SM)
+                .background(AdbHubTheme.whiteOverlay5)
+                .border(1.dp, AdbHubTheme.whiteOverlay10, AdbHubShapes.SM),
+            contentAlignment = Alignment.Center
         ) {
-            Box(
-                modifier = Modifier
-                    .size(36.dp)
-                    .clip(AdbHubShapes.SM)
-                    .background(
-                        if (activity.isLauncher) AdbHubTheme.primary.copy(alpha = 0.1f)
-                        else AdbHubTheme.whiteOverlay5
-                    )
-                    .border(
-                        1.dp,
-                        if (activity.isLauncher) AdbHubTheme.primary.copy(alpha = 0.2f)
-                        else AdbHubTheme.whiteOverlay10,
-                        AdbHubShapes.SM
-                    ),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    AdbIcons.android,
-                    contentDescription = null,
-                    modifier = Modifier.size(20.dp)
-                )
-            }
-            Column(
-                modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        ".${activity.shortName}",
-                        style = JewelTheme.defaultTextStyle
-                    )
-                    if (activity.isLauncher) {
-                        TagBadge("MAIN", AdbHubTheme.primary)
-                        TagBadge("LAUNCHER", AdbHubTheme.textMuted)
-                    }
-                    if (activity.isExported) {
-                        TagBadge("EXPORTED", AdbHubTheme.textMuted)
-                    }
-                    activity.intentFilters.forEach { filter ->
-                        filter.actions.forEach { action ->
-                            if (action.contains("VIEW", ignoreCase = true)) {
-                                TagBadge("VIEW", Color(0xFF818CF8))
-                            }
-                        }
-                    }
-                }
-                Text(
-                    activity.fullName,
-                    style = JewelTheme.defaultTextStyle
-                )
-            }
+            Icon(
+                AdbIcons.android,
+                contentDescription = null,
+                modifier = Modifier.size(20.dp)
+            )
         }
-        if (activity.isLauncher) {
-            Box(
-                modifier = Modifier
-                    .clip(AdbHubShapes.XS)
-                    .background(AdbHubTheme.background)
-                    .border(1.dp, AdbHubTheme.border, AdbHubShapes.XS)
-                    .clickable { onLaunch() }
-                    .padding(horizontal = 12.dp, vertical = 6.dp)
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(6.dp)
-                ) {
-                    Icon(AdbIcons.playArrow, contentDescription = null, modifier = Modifier.size(14.dp))
-                    Text("Launch", style = JewelTheme.defaultTextStyle)
-                }
-            }
+        Column(
+            modifier = Modifier.weight(1f),
+            verticalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            Text(
+                ".${activity.shortName}",
+                style = JewelTheme.defaultTextStyle
+            )
+            Text(
+                activity.fullName,
+                style = JewelTheme.defaultTextStyle
+            )
         }
-    }
-}
-
-@Composable
-private fun TagBadge(
-    text: String,
-    color: Color
-) {
-    Box(
-        modifier = Modifier
-            .clip(AdbHubShapes.XS)
-            .background(color.copy(alpha = 0.1f))
-            .border(1.dp, color.copy(alpha = 0.2f), AdbHubShapes.XS)
-            .padding(horizontal = 6.dp, vertical = 2.dp)
-    ) {
-        Text(
-            text,
-            style = JewelTheme.defaultTextStyle,
-            color = color
-        )
     }
 }
