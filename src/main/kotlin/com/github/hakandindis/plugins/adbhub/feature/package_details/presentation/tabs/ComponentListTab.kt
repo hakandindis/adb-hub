@@ -18,8 +18,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.github.hakandindis.plugins.adbhub.ui.AdbIcons
+import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.ui.ComponentDisplay
 import com.github.hakandindis.plugins.adbhub.ui.theme.AdbHubTheme
 import com.github.hakandindis.plugins.adbhub.ui.theme.shapes.AdbHubShapes
 import org.jetbrains.jewel.foundation.theme.JewelTheme
@@ -28,18 +29,8 @@ import org.jetbrains.jewel.ui.component.Text
 import org.jetbrains.jewel.ui.component.TextField
 
 /**
- * Display model for a component row (receiver, service, or content provider).
- */
-data class ComponentDisplay(
-    val name: String,
-    val exported: Boolean
-) {
-    val shortName: String get() = name.substringAfterLast("/", name)
-}
-
-/**
- * Shared tab content for Receivers, Services, and Content Providers.
- * Same layout as ActivitiesTab: search bar + count badge, list of rows with icon, shortName, EXPORTED badge, fullName.
+ * Shared tab content for Activities, Receivers, Services, and Content Providers.
+ * Same layout as ActivitiesTab: search bar + count badge, list of rows with icon (no background), bold shortName, muted fullName.
  */
 @Composable
 fun ComponentListTab(
@@ -129,50 +120,28 @@ private fun ComponentRow(display: ComponentDisplay) {
             )
             .clickable(interactionSource = interactionSource, indication = null) { }
             .padding(10.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        Row(
+        Icon(
+            display.icon,
+            contentDescription = null,
+            modifier = Modifier.size(20.dp)
+        )
+        Column(
             modifier = Modifier.weight(1f),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            Box(
-                modifier = Modifier
-                    .size(36.dp)
-                    .clip(AdbHubShapes.SM)
-                    .background(AdbHubTheme.whiteOverlay5)
-                    .border(
-                        1.dp,
-                        AdbHubTheme.whiteOverlay10,
-                        AdbHubShapes.SM
-                    ),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    AdbIcons.android,
-                    contentDescription = null,
-                    modifier = Modifier.size(20.dp)
-                )
-            }
-            Column(
-                modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        ".${display.shortName}",
-                        style = JewelTheme.defaultTextStyle
-                    )
-                }
-                Text(
-                    display.name,
-                    style = JewelTheme.defaultTextStyle
-                )
-            }
+            Text(
+                ".${display.shortName}",
+                style = JewelTheme.defaultTextStyle.copy(fontWeight = FontWeight.Bold),
+                color = AdbHubTheme.textMain
+            )
+            Text(
+                display.name,
+                style = JewelTheme.defaultTextStyle,
+                color = AdbHubTheme.textMuted
+            )
         }
     }
 }

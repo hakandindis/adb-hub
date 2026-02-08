@@ -1,17 +1,16 @@
 package com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.tabs
 
 import androidx.compose.runtime.Composable
-import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.ui.ContentProviderUiModel
+import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.ui.ComponentDisplay
 
 @Composable
 fun ContentProvidersTab(
-    contentProviders: List<ContentProviderUiModel>,
+    contentProviders: List<ComponentDisplay>,
     searchText: String,
     onContentProviderSearchChange: (String) -> Unit
 ) {
-    val items = contentProviders.map { ComponentDisplay(name = it.name, exported = it.exported) }
     ComponentListTab(
-        items = items,
+        items = contentProviders,
         searchText = searchText,
         onSearchChange = onContentProviderSearchChange,
         label = "Content Providers",

@@ -1,7 +1,10 @@
 package com.github.hakandindis.plugins.adbhub.feature.package_details.domain.usecase
 
-import com.github.hakandindis.plugins.adbhub.feature.package_details.domain.mapper.*
+import com.github.hakandindis.plugins.adbhub.feature.package_details.domain.mapper.GeneralInfoMapper
+import com.github.hakandindis.plugins.adbhub.feature.package_details.domain.mapper.PermissionMapper
 import com.github.hakandindis.plugins.adbhub.feature.package_details.domain.repository.PackageDetailsRepository
+import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.ui.ComponentDisplay
+import com.github.hakandindis.plugins.adbhub.ui.AdbIcons
 
 /**
  * Use case for getting package details.
@@ -25,13 +28,21 @@ class GetPackageDetailsUseCase(
                 val appLinks = repository.getAppLinks(packageName, deviceId).getOrNull() ?: null
                 GetPackageDetailsResult(
                     generalInfoItems = GeneralInfoMapper.toMergedInfoItems(packageDetails),
-                    activities = packageDetails.activities.map { ActivityMapper.toUiModel(it) },
+                    activities = packageDetails.activities.map {
+                        ComponentDisplay(name = it.name, exported = it.exported, icon = AdbIcons.apps)
+                    },
                     permissionSections = PermissionMapper
                         .toUiModels(packageDetails.permissionSections)
                         .sortedBy { it.sectionType.priority },
-                    services = ServiceMapper.toUiModels(packageDetails.services),
-                    receivers = ReceiverMapper.toUiModels(packageDetails.receivers),
-                    contentProviders = ContentProviderMapper.toUiModels(packageDetails.contentProviders),
+                    services = packageDetails.services.map {
+                        ComponentDisplay(name = it.name, exported = it.exported, icon = AdbIcons.bolt)
+                    },
+                    receivers = packageDetails.receivers.map {
+                        ComponentDisplay(name = it.name, exported = it.exported, icon = AdbIcons.link)
+                    },
+                    contentProviders = packageDetails.contentProviders.map {
+                        ComponentDisplay(name = it.name, exported = it.exported, icon = AdbIcons.folder)
+                    },
                     appLinks = appLinks
                 )
             }

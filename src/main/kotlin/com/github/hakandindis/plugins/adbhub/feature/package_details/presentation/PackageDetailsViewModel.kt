@@ -3,7 +3,8 @@ package com.github.hakandindis.plugins.adbhub.feature.package_details.presentati
 import com.github.hakandindis.plugins.adbhub.constants.AmCommands
 import com.github.hakandindis.plugins.adbhub.core.adb.AdbCommandExecutor
 import com.github.hakandindis.plugins.adbhub.feature.package_details.domain.usecase.GetPackageDetailsUseCase
-import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.ui.*
+import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.ui.ComponentDisplay
+import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.ui.PermissionSectionUiModel
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.diagnostic.Logger
 import kotlinx.coroutines.CoroutineScope
@@ -73,7 +74,7 @@ class PackageDetailsViewModel(
         }.filter { it.items.isNotEmpty() }
     }
 
-    private fun filterActivities(activities: List<ActivityUiModel>, query: String): List<ActivityUiModel> {
+    private fun filterActivities(activities: List<ComponentDisplay>, query: String): List<ComponentDisplay> {
         return if (query.isBlank()) activities
         else activities.filter {
             it.name.contains(query, ignoreCase = true) || it.shortName.contains(query, ignoreCase = true)
@@ -84,7 +85,7 @@ class PackageDetailsViewModel(
         _uiState.update { state ->
             state.copy(
                 receiverSearchText = query,
-                filteredReceivers = filterReceiverUiModels(state.receivers, query)
+                filteredReceivers = filterComponents(state.receivers, query)
             )
         }
     }
@@ -93,7 +94,7 @@ class PackageDetailsViewModel(
         _uiState.update { state ->
             state.copy(
                 serviceSearchText = query,
-                filteredServices = filterServiceUiModels(state.services, query)
+                filteredServices = filterComponents(state.services, query)
             )
         }
     }
@@ -102,29 +103,12 @@ class PackageDetailsViewModel(
         _uiState.update { state ->
             state.copy(
                 contentProviderSearchText = query,
-                filteredContentProviders = filterContentProviderUiModels(state.contentProviders, query)
+                filteredContentProviders = filterComponents(state.contentProviders, query)
             )
         }
     }
 
-    private fun filterReceiverUiModels(list: List<ReceiverUiModel>, query: String): List<ReceiverUiModel> {
-        return if (query.isBlank()) list
-        else list.filter {
-            it.name.contains(query, ignoreCase = true) || it.shortName.contains(query, ignoreCase = true)
-        }
-    }
-
-    private fun filterServiceUiModels(list: List<ServiceUiModel>, query: String): List<ServiceUiModel> {
-        return if (query.isBlank()) list
-        else list.filter {
-            it.name.contains(query, ignoreCase = true) || it.shortName.contains(query, ignoreCase = true)
-        }
-    }
-
-    private fun filterContentProviderUiModels(
-        list: List<ContentProviderUiModel>,
-        query: String
-    ): List<ContentProviderUiModel> {
+    private fun filterComponents(list: List<ComponentDisplay>, query: String): List<ComponentDisplay> {
         return if (query.isBlank()) list
         else list.filter {
             it.name.contains(query, ignoreCase = true) || it.shortName.contains(query, ignoreCase = true)
