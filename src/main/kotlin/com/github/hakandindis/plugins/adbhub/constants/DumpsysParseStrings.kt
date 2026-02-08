@@ -29,6 +29,15 @@ object DumpsysParseStrings {
     const val FIRST_INSTALL_TIME = "firstInstallTime="
     const val LAST_UPDATE_TIME = "lastUpdateTime="
 
+    // Resolver table section headers (dumpsys package output format)
+    const val ACTIVITY_RESOLVER_TABLE = "Activity Resolver Table:"
+    const val RECEIVER_RESOLVER_TABLE = "Receiver Resolver Table:"
+    const val SERVICE_RESOLVER_TABLE = "Service Resolver Table:"
+    const val REGISTERED_CONTENT_PROVIDERS = "Registered ContentProviders:"
+    const val CONTENT_PROVIDER_AUTHORITIES = "ContentProvider Authorities:"
+    const val DOMAIN_VERIFICATION_STATUS = "Domain verification status:"
+    const val PACKAGES_SECTION = "Packages:"
+
     // Component prefixes
     const val ACTIVITY_PREFIX = "Activity"
     const val SERVICE_PREFIX = "Service"

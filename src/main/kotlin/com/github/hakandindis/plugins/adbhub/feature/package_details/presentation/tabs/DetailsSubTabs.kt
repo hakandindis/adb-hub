@@ -21,7 +21,10 @@ import org.jetbrains.jewel.ui.icon.IconKey
 enum class DetailsTab(val label: String, val icon: IconKey) {
     GeneralInfo("General Info", AdbIcons.info),
     Permissions("Permissions", AdbIcons.settings),
-    Activities("Activities", AdbIcons.apps)
+    Activities("Activities", AdbIcons.apps),
+    Receivers("Receivers", AdbIcons.link),
+    Services("Services", AdbIcons.bolt),
+    ContentProviders("Content Providers", AdbIcons.folder)
 }
 
 @Composable

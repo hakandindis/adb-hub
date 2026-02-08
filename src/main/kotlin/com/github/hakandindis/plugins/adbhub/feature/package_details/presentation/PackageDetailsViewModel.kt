@@ -2,12 +2,8 @@ package com.github.hakandindis.plugins.adbhub.feature.package_details.presentati
 
 import com.github.hakandindis.plugins.adbhub.constants.AmCommands
 import com.github.hakandindis.plugins.adbhub.core.adb.AdbCommandExecutor
-import com.github.hakandindis.plugins.adbhub.feature.package_details.domain.mapper.ActivityMapper
-import com.github.hakandindis.plugins.adbhub.feature.package_details.domain.mapper.GeneralInfoMapper
-import com.github.hakandindis.plugins.adbhub.feature.package_details.domain.mapper.PermissionMapper
 import com.github.hakandindis.plugins.adbhub.feature.package_details.domain.usecase.GetPackageDetailsUseCase
-import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.ui.ActivityUiModel
-import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.ui.PermissionSectionUiModel
+import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.ui.*
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.diagnostic.Logger
 import kotlinx.coroutines.CoroutineScope
@@ -39,6 +35,9 @@ class PackageDetailsViewModel(
             is PackageDetailsIntent.LaunchActivity -> launchActivity(intent.activityName, intent.deviceId)
             is PackageDetailsIntent.FilterPermissions -> updatePermissionSearch(intent.query)
             is PackageDetailsIntent.FilterActivities -> updateActivitySearch(intent.query)
+            is PackageDetailsIntent.FilterReceivers -> updateReceiverSearch(intent.query)
+            is PackageDetailsIntent.FilterServices -> updateServiceSearch(intent.query)
+            is PackageDetailsIntent.FilterContentProviders -> updateContentProviderSearch(intent.query)
         }
     }
 
@@ -81,25 +80,81 @@ class PackageDetailsViewModel(
         }
     }
 
+    private fun updateReceiverSearch(query: String) {
+        _uiState.update { state ->
+            state.copy(
+                receiverSearchText = query,
+                filteredReceivers = filterReceiverUiModels(state.receivers, query)
+            )
+        }
+    }
+
+    private fun updateServiceSearch(query: String) {
+        _uiState.update { state ->
+            state.copy(
+                serviceSearchText = query,
+                filteredServices = filterServiceUiModels(state.services, query)
+            )
+        }
+    }
+
+    private fun updateContentProviderSearch(query: String) {
+        _uiState.update { state ->
+            state.copy(
+                contentProviderSearchText = query,
+                filteredContentProviders = filterContentProviderUiModels(state.contentProviders, query)
+            )
+        }
+    }
+
+    private fun filterReceiverUiModels(list: List<ReceiverUiModel>, query: String): List<ReceiverUiModel> {
+        return if (query.isBlank()) list
+        else list.filter {
+            it.name.contains(query, ignoreCase = true) || it.shortName.contains(query, ignoreCase = true)
+        }
+    }
+
+    private fun filterServiceUiModels(list: List<ServiceUiModel>, query: String): List<ServiceUiModel> {
+        return if (query.isBlank()) list
+        else list.filter {
+            it.name.contains(query, ignoreCase = true) || it.shortName.contains(query, ignoreCase = true)
+        }
+    }
+
+    private fun filterContentProviderUiModels(
+        list: List<ContentProviderUiModel>,
+        query: String
+    ): List<ContentProviderUiModel> {
+        return if (query.isBlank()) list
+        else list.filter {
+            it.name.contains(query, ignoreCase = true) || it.shortName.contains(query, ignoreCase = true)
+        }
+    }
+
     private fun loadPackageDetails(packageName: String, deviceId: String) {
         scope.launch {
             _uiState.update { it.copy(isLoading = true, error = null) }
 
             getPackageDetailsUseCase(packageName, deviceId).fold(
-                onSuccess = { packageDetails ->
-                    val generalInfoItems = GeneralInfoMapper.toMergedInfoItems(packageDetails)
-                    val activities = packageDetails.activities.map { ActivityMapper.toUiModel(it) }
-                    val permissionSections = PermissionMapper.toUiModels(packageDetails.permissionSections)
-
+                onSuccess = { result ->
                     _uiState.update {
                         it.copy(
-                            generalInfoItems = generalInfoItems,
-                            activities = activities,
-                            permissionSections = permissionSections,
-                            permissionSearchText = "",
-                            filteredPermissionSections = permissionSections,
+                            generalInfoItems = result.generalInfoItems,
+                            activities = result.activities,
                             activitySearchText = "",
-                            filteredActivities = activities,
+                            filteredActivities = result.activities,
+                            services = result.services,
+                            serviceSearchText = "",
+                            filteredServices = result.services,
+                            receivers = result.receivers,
+                            receiverSearchText = "",
+                            filteredReceivers = result.receivers,
+                            contentProviders = result.contentProviders,
+                            contentProviderSearchText = "",
+                            filteredContentProviders = result.contentProviders,
+                            permissionSections = result.permissionSections,
+                            permissionSearchText = "",
+                            filteredPermissionSections = result.permissionSections,
                             isLoading = false
                         )
                     }

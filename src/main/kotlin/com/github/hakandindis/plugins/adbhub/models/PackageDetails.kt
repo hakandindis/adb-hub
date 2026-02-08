@@ -13,6 +13,7 @@ data class PackageDetails(
     val activities: List<ActivityInfo> = emptyList(),
     val services: List<ServiceInfo> = emptyList(),
     val receivers: List<ReceiverInfo> = emptyList(),
+    val contentProviders: List<ProviderInfo> = emptyList(),
     val isSystemApp: Boolean = false,
     val isEnabled: Boolean = true,
     val firstInstallTime: String? = null,
@@ -40,6 +41,12 @@ data class PackageDetails(
     )
 
     data class ReceiverInfo(
+        val name: String,
+        val exported: Boolean = false,
+        val enabled: Boolean = true
+    )
+
+    data class ProviderInfo(
         val name: String,
         val exported: Boolean = false,
         val enabled: Boolean = true

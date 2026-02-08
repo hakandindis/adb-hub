@@ -1,5 +1,6 @@
 package com.github.hakandindis.plugins.adbhub.feature.package_details.data.parser
 
+import com.github.hakandindis.plugins.adbhub.constants.DumpsysParseStrings
 import com.github.hakandindis.plugins.adbhub.constants.ParsePatterns
 import com.github.hakandindis.plugins.adbhub.models.PackageDetails
 
@@ -8,10 +9,50 @@ import com.github.hakandindis.plugins.adbhub.models.PackageDetails
  */
 object ActivitiesParser {
     /**
-     * Extracts activities from dumpsys output
+     * Extracts activities from dumpsys output.
+     * Supports: (1) Activity Resolver Table format (hexId package/Class filter),
+     * (2) Legacy "Activity #0: name=package/Class", (3) fallback packageName/Class in activity block.
      */
     fun extractActivities(output: String, packageName: String): List<PackageDetails.ActivityInfo> {
         val activities = mutableListOf<PackageDetails.ActivityInfo>()
+
+        // Resolver table format: "d2af05a com.Slack/slack.features.home.HomeActivity filter c02cf68"
+        val activitySection = DumpsysParser.extractSection(
+            output,
+            DumpsysParseStrings.ACTIVITY_RESOLVER_TABLE,
+            listOf(DumpsysParseStrings.RECEIVER_RESOLVER_TABLE)
+        )
+        if (activitySection.isNotEmpty()) {
+            val resolverPattern = ParsePatterns.RESOLVER_TABLE_COMPONENT
+            val matches = resolverPattern.findAll(activitySection).toList()
+            matches.forEach { match ->
+                val pkg = match.groupValues[1]
+                val className = match.groupValues[2]
+                if (pkg == packageName) {
+                    val fullName = "$pkg/$className"
+                    val contextStart = match.range.first
+                    val nextMatch = matches.firstOrNull { it.range.first > contextStart }
+                    val contextEnd = nextMatch?.range?.first ?: activitySection.length
+                    val context = activitySection.substring(contextStart, contextEnd)
+                    val exported = ParsePatterns.EXPORTED_TRUE in context || ParsePatterns.EXPORTED_TRUE_ALT in context
+                    val enabled =
+                        !(ParsePatterns.ENABLED_FALSE in context || ParsePatterns.ENABLED_FALSE_ALT in context)
+                    val intentFilters = extractIntentFilters(context, fullName)
+                    activities.add(
+                        PackageDetails.ActivityInfo(
+                            name = fullName,
+                            exported = exported,
+                            enabled = enabled,
+                            intentFilters = intentFilters
+                        )
+                    )
+                }
+            }
+        }
+
+        if (activities.isNotEmpty()) {
+            return activities.distinctBy { it.name }.sortedBy { it.name }
+        }
 
         // Pattern 1: "Activity #0: name=com.example/.MainActivity"
         val activityPattern1 = ParsePatterns.ACTIVITY_PATTERN_1
@@ -98,11 +139,13 @@ object ActivitiesParser {
             }
         }
 
-        // Pattern 3: Simple pattern for packageName/ActivityName
+        // Pattern 3: Simple pattern for packageName/ActivityName — only within the Activity block
+        // (dumpsys has Activity #0..., then Service #0..., Receiver #0..., Provider #0...;
+        //  we must not match Service/Receiver/Provider class names as activities)
         if (activities.isEmpty()) {
-            val activitySection = output.substringAfter("Activity", "")
+            val activityBlock = extractActivityBlockOnly(output)
             val altPattern = "$packageName/([a-zA-Z0-9_.$]+)".toRegex()
-            altPattern.findAll(activitySection).forEach { match ->
+            altPattern.findAll(activityBlock).forEach { match ->
                 val activityName = match.groupValues[1]
                 activities.add(
                     PackageDetails.ActivityInfo(
@@ -116,6 +159,36 @@ object ActivitiesParser {
         }
 
         return activities.distinctBy { it.name }.sortedBy { it.name }
+    }
+
+    /**
+     * Returns the substring of dumpsys output that contains only Activity entries.
+     * Prefers "Activity Resolver Table:" up to "Receiver Resolver Table:"; otherwise
+     * from first "Activity #" or "Activity [hex]" up to first Service/Receiver/Provider line.
+     */
+    private fun extractActivityBlockOnly(output: String): String {
+        val resolverBlock = DumpsysParser.extractSection(
+            output,
+            DumpsysParseStrings.ACTIVITY_RESOLVER_TABLE,
+            listOf(DumpsysParseStrings.RECEIVER_RESOLVER_TABLE)
+        )
+        if (resolverBlock.isNotEmpty()) return resolverBlock
+
+        val activityStartPattern =
+            Regex("Activity\\s+#?\\d+:\\s*name=|Activity\\s+[a-f0-9]+\\s+", RegexOption.IGNORE_CASE)
+        val otherComponentPattern = Regex(
+            "(Service|Receiver|Provider)\\s+#?\\d+:\\s*name=|(Service|Receiver|Provider)\\s+[a-f0-9]+\\s+",
+            RegexOption.IGNORE_CASE
+        )
+
+        val firstActivity = activityStartPattern.find(output) ?: return ""
+        val start = firstActivity.range.first
+
+        val firstOther =
+            otherComponentPattern.findAll(output, start + 1).firstOrNull() ?: return output.substring(start)
+        val end = firstOther.range.first
+
+        return if (end > start) output.substring(start, end) else output.substring(start)
     }
 
     /**

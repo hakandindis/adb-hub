@@ -30,6 +30,17 @@ object ParsePatterns {
         "Receiver\\s+#?\\d+:\\s*name=([a-zA-Z0-9_.]+)/([a-zA-Z0-9_.$]+)".toRegex(RegexOption.IGNORE_CASE)
     val RECEIVER_PATTERN_2 =
         "Receiver\\s+[a-f0-9]+\\s+([a-zA-Z0-9_.]+)/([a-zA-Z0-9_.$]+)".toRegex(RegexOption.IGNORE_CASE)
+    val PROVIDER_PATTERN_1 =
+        "Provider\\s+#?\\d+:\\s*name=([a-zA-Z0-9_.]+)/([a-zA-Z0-9_.$]+)".toRegex(RegexOption.IGNORE_CASE)
+    val PROVIDER_PATTERN_2 =
+        "Provider\\s+[a-f0-9]+\\s+([a-zA-Z0-9_.]+)/([a-zA-Z0-9_.$]+)".toRegex(RegexOption.IGNORE_CASE)
+
+    /** Matches resolver table lines: "d2af05a com.Slack/slack.features.home.HomeActivity filter c02cf68" */
+    val RESOLVER_TABLE_COMPONENT =
+        "[a-f0-9]+\\s+([a-zA-Z0-9_.]+)/([a-zA-Z0-9_.\$]+)\\s+filter".toRegex()
+
+    /** Matches Registered ContentProviders lines: "  com.Slack/com.google.mlkit...:" or "Provider{... com.Slack/...}" */
+    val REGISTERED_PROVIDER_LINE = "\\s*([a-zA-Z0-9_.]+)/([a-zA-Z0-9_.\$]+)\\s*[:}]".toRegex()
 
     // Intent filter patterns
     val FILTER_PATTERN_1 = "Filter\\s+#\\d+".toRegex(RegexOption.IGNORE_CASE)

@@ -83,12 +83,40 @@ fun DetailsContent(
                     searchText = packageDetailsUiState.activitySearchText,
                     onActivitySearchChange = {
                         packageDetailsViewModel.handleIntent(
-                            PackageDetailsIntent.FilterActivities(
-                                it
-                            )
+                            PackageDetailsIntent.FilterActivities(it)
                         )
                     },
                     onActivityLaunch = onActivityLaunch
+                )
+
+                DetailsTab.Receivers -> ReceiversTab(
+                    receivers = packageDetailsUiState.filteredReceivers,
+                    searchText = packageDetailsUiState.receiverSearchText,
+                    onReceiverSearchChange = {
+                        packageDetailsViewModel.handleIntent(
+                            PackageDetailsIntent.FilterReceivers(it)
+                        )
+                    }
+                )
+
+                DetailsTab.Services -> ServicesTab(
+                    services = packageDetailsUiState.filteredServices,
+                    searchText = packageDetailsUiState.serviceSearchText,
+                    onServiceSearchChange = {
+                        packageDetailsViewModel.handleIntent(
+                            PackageDetailsIntent.FilterServices(it)
+                        )
+                    }
+                )
+
+                DetailsTab.ContentProviders -> ContentProvidersTab(
+                    contentProviders = packageDetailsUiState.filteredContentProviders,
+                    searchText = packageDetailsUiState.contentProviderSearchText,
+                    onContentProviderSearchChange = {
+                        packageDetailsViewModel.handleIntent(
+                            PackageDetailsIntent.FilterContentProviders(it)
+                        )
+                    }
                 )
             }
         }
