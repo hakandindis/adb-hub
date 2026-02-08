@@ -32,7 +32,7 @@ fun ConsoleLogEntry(log: CommandLog) {
             )
 
             Text(
-                text = "\$ ${log.getDisplayCommand()}",
+                text = "\$ ${log.fullCommand}",
                 style = JewelTheme.defaultTextStyle.copy(
                     color = AdbHubTheme.consoleCommand,
                     fontWeight = FontWeight.Normal
