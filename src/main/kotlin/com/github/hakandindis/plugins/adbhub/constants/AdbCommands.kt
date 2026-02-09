@@ -1,8 +1,5 @@
 package com.github.hakandindis.plugins.adbhub.constants
 
-/**
- * ADB command constants
- */
 object AdbCommands {
     const val DEVICES = "devices -l"
     const val LIST_PACKAGES = "shell pm list packages -f"

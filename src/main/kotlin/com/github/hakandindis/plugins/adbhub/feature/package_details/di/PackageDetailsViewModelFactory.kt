@@ -13,12 +13,10 @@ class PackageDetailsViewModelFactory(
 ) {
 
     fun create(executor: AdbCommandExecutor): PackageDetailsViewModel {
-        val packageDetailsDataSource = PackageDetailsModule.createPackageDetailsDataSource(executor)
-        val packageDetailsRepository = PackageDetailsModule.createPackageDetailsRepository(packageDetailsDataSource)
+        val packageDetailsRepository = PackageDetailsModule.createPackageDetailsRepository(executor)
         val getPackageDetailsUseCase = PackageDetailsModule.createGetPackageDetailsUseCase(packageDetailsRepository)
         return PackageDetailsViewModel(
             getPackageDetailsUseCase = getPackageDetailsUseCase,
-            commandExecutor = executor,
             coroutineScope = coroutineScope
         )
     }

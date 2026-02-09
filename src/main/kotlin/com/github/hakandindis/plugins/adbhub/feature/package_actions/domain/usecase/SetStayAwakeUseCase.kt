@@ -2,9 +2,6 @@ package com.github.hakandindis.plugins.adbhub.feature.package_actions.domain.use
 
 import com.github.hakandindis.plugins.adbhub.feature.package_actions.domain.repository.PackageActionsRepository
 
-/**
- * Use case for setting stay awake mode
- */
 class SetStayAwakeUseCase(
     private val repository: PackageActionsRepository
 ) {

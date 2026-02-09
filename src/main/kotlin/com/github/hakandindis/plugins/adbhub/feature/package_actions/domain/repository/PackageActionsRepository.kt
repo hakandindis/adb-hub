@@ -1,8 +1,5 @@
 package com.github.hakandindis.plugins.adbhub.feature.package_actions.domain.repository
 
-/**
- * Repository interface for package actions operations
- */
 interface PackageActionsRepository {
     suspend fun launchApp(packageName: String, deviceId: String): Result<Unit>
     suspend fun launchActivity(activityName: String, deviceId: String): Result<Unit>

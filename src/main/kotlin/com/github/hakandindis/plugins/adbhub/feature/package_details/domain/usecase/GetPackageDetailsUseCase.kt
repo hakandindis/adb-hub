@@ -6,19 +6,9 @@ import com.github.hakandindis.plugins.adbhub.feature.package_details.domain.repo
 import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.ui.ComponentDisplay
 import com.github.hakandindis.plugins.adbhub.ui.AdbIcons
 
-/**
- * Use case for getting package details.
- * Fetches raw data from the repository and maps it to view-ready UI models.
- */
 class GetPackageDetailsUseCase(
     private val repository: PackageDetailsRepository
 ) {
-    /**
-     * Executes the use case.
-     * @param packageName Package name
-     * @param deviceId Device ID (serial number)
-     * @return Result containing view-ready [GetPackageDetailsResult] or error
-     */
     suspend operator fun invoke(
         packageName: String,
         deviceId: String
@@ -26,8 +16,13 @@ class GetPackageDetailsUseCase(
         return repository.getPackageDetails(packageName, deviceId)
             .mapCatching { packageDetails ->
                 val appLinks = repository.getAppLinks(packageName, deviceId).getOrNull() ?: null
+                val generalInfoItems = GeneralInfoMapper.toMergedInfoItems(packageDetails)
+                val appName =
+                    generalInfoItems.firstOrNull { it.label == "App Name" }?.value ?: packageDetails.packageName
                 GetPackageDetailsResult(
-                    generalInfoItems = GeneralInfoMapper.toMergedInfoItems(packageDetails),
+                    packageName = packageDetails.packageName,
+                    appName = appName,
+                    generalInfoItems = generalInfoItems,
                     activities = packageDetails.activities.map {
                         ComponentDisplay(name = it.name, exported = it.exported, icon = AdbIcons.apps)
                     },

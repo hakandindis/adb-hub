@@ -16,8 +16,7 @@ class PackageActionsViewModelFactory(
 ) {
 
     fun create(executor: AdbCommandExecutor): PackageActionsViewModel {
-        val packageActionsDataSource = PackageActionsModule.createPackageActionsDataSource(executor)
-        val packageActionsRepository = PackageActionsModule.createPackageActionsRepository(packageActionsDataSource)
+        val packageActionsRepository = PackageActionsModule.createPackageActionsRepository(executor)
         val launchAppUseCase = PackageActionsModule.createLaunchAppUseCase(packageActionsRepository)
         val forceStopUseCase = PackageActionsModule.createForceStopUseCase(packageActionsRepository)
         val clearDataUseCase = PackageActionsModule.createClearDataUseCase(packageActionsRepository)

@@ -2,9 +2,6 @@ package com.github.hakandindis.plugins.adbhub.feature.installed_packages.present
 
 import com.github.hakandindis.plugins.adbhub.models.ApplicationPackage
 
-/**
- * UI State for Package List feature
- */
 data class PackageListUiState(
     val packages: List<ApplicationPackage> = emptyList(),
     val filteredPackages: List<ApplicationPackage> = emptyList(),

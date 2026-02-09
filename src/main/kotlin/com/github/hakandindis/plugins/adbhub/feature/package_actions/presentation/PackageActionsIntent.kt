@@ -1,8 +1,5 @@
 package com.github.hakandindis.plugins.adbhub.feature.package_actions.presentation
 
-/**
- * Intent actions for Package Actions feature (MVI pattern)
- */
 sealed class PackageActionsIntent {
     data class LaunchApp(val packageName: String, val deviceId: String) : PackageActionsIntent()
     data class LaunchActivity(val activityName: String, val deviceId: String) : PackageActionsIntent()

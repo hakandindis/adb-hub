@@ -2,17 +2,6 @@ package com.github.hakandindis.plugins.adbhub.feature.package_details.data.parse
 
 import com.github.hakandindis.plugins.adbhub.models.AppLinksInfo
 
-/**
- * Parses output of `adb shell pm get-app-links PACKAGE_NAME`.
- *
- * Example output:
- *   com.Slack:
- *     ID: 131b8c28-48f0-46de-9769-d8e374fb0f54
- *     Signatures: [33:53:36:19:75:6E:...]
- *     Domain verification state:
- *       join.slack-gov.com: verified
- *       app.slack-gov.com: verified
- */
 object AppLinksParser {
 
     private const val ID_PREFIX = "ID:"

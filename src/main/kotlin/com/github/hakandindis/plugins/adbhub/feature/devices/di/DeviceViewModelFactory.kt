@@ -13,8 +13,7 @@ class DeviceViewModelFactory(
 ) {
 
     fun create(executor: AdbCommandExecutor): DeviceViewModel {
-        val deviceDataSource = DeviceModule.createDeviceDataSource(executor)
-        val deviceRepository = DeviceModule.createDeviceRepository(deviceDataSource)
+        val deviceRepository = DeviceModule.createDeviceRepository(executor)
         val getDevicesUseCase = DeviceModule.createGetDevicesUseCase(deviceRepository)
         val getDeviceInfoUseCase = DeviceModule.createGetDeviceInfoUseCase(deviceRepository)
         return DeviceViewModel(

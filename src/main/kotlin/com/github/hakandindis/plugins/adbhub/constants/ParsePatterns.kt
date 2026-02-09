@@ -1,10 +1,6 @@
 package com.github.hakandindis.plugins.adbhub.constants
 
-/**
- * Regex patterns used for parsing ADB command output
- */
 object ParsePatterns {
-    // Package version patterns
     val VERSION_NAME = "versionName=(\\S+)".toRegex()
     val VERSION_CODE = "versionCode=(\\d+)".toRegex()
     val TARGET_SDK = "targetSdk=(\\d+)".toRegex()
@@ -13,11 +9,9 @@ object ParsePatterns {
     val MIN_SDK_VERSION = "minSdkVersion=(\\d+)".toRegex()
     val DATA_DIR = "dataDir=(\\S+)".toRegex()
 
-    // Time patterns
     val FIRST_INSTALL_TIME = "firstInstallTime=(\\d+)".toRegex()
     val LAST_UPDATE_TIME = "lastUpdateTime=(\\d+)".toRegex()
 
-    // Component patterns
     val ACTIVITY_PATTERN_1 =
         "Activity\\s+#?\\d+:\\s*name=([a-zA-Z0-9_.]+)/([a-zA-Z0-9_.$]+)".toRegex(RegexOption.IGNORE_CASE)
     val ACTIVITY_PATTERN_2 =
@@ -35,14 +29,11 @@ object ParsePatterns {
     val PROVIDER_PATTERN_2 =
         "Provider\\s+[a-f0-9]+\\s+([a-zA-Z0-9_.]+)/([a-zA-Z0-9_.$]+)".toRegex(RegexOption.IGNORE_CASE)
 
-    /** Matches resolver table lines: "d2af05a com.Slack/slack.features.home.HomeActivity filter c02cf68" */
     val RESOLVER_TABLE_COMPONENT =
         "[a-f0-9]+\\s+([a-zA-Z0-9_.]+)/([a-zA-Z0-9_.\$]+)\\s+filter".toRegex()
 
-    /** Matches Registered ContentProviders lines: "  com.Slack/com.google.mlkit...:" or "Provider{... com.Slack/...}" */
     val REGISTERED_PROVIDER_LINE = "\\s*([a-zA-Z0-9_.]+)/([a-zA-Z0-9_.\$]+)\\s*[:}]".toRegex()
 
-    // Intent filter patterns
     val FILTER_PATTERN_1 = "Filter\\s+#\\d+".toRegex(RegexOption.IGNORE_CASE)
     val FILTER_PATTERN_2 = "Intent\\s+Filter\\s+#\\d+".toRegex(RegexOption.IGNORE_CASE)
     val ACTION_PATTERN_1 = "Action:\\s*\"([^\"]+)\"".toRegex(RegexOption.IGNORE_CASE)
@@ -52,11 +43,9 @@ object ParsePatterns {
     val DATA_PATTERN_1 = "Data:\\s*\"([^\"]+)\"".toRegex(RegexOption.IGNORE_CASE)
     val DATA_PATTERN_2 = "Data:\\s*([a-zA-Z0-9_.:/]+)".toRegex(RegexOption.IGNORE_CASE)
 
-    // Permission patterns
     val PERMISSION_LINE = "([a-zA-Z][a-zA-Z0-9_.]*permission[a-zA-Z0-9_.]*)".toRegex()
     val PERMISSION_FULL = "([a-zA-Z][a-zA-Z0-9_.]*\\.permission\\.[a-zA-Z0-9_]+)".toRegex()
 
-    // Enabled/Exported patterns
     val ENABLED_PATTERN = "enabled[=:]\\s*(true|false)".toRegex(RegexOption.IGNORE_CASE)
     val EXPORTED_TRUE = "exported=true"
     val EXPORTED_TRUE_ALT = "exported: true"
@@ -67,7 +56,6 @@ object ParsePatterns {
     val ENABLED_FALSE = "enabled=false"
     val ENABLED_FALSE_ALT = "enabled: false"
 
-    // Grant patterns
     val GRANTED_PATTERN = "granted=true.*?".toRegex(RegexOption.IGNORE_CASE)
     val DENIED_PATTERN = "granted=false.*?".toRegex(RegexOption.IGNORE_CASE)
 }

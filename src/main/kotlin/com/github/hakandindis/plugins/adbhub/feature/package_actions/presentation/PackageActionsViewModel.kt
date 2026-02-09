@@ -12,9 +12,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-/**
- * ViewModel for Package Actions feature (MVI pattern)
- */
 class PackageActionsViewModel(
     private val launchAppUseCase: LaunchAppUseCase,
     private val forceStopUseCase: ForceStopUseCase,

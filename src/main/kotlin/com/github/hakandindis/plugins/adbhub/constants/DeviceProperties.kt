@@ -1,8 +1,5 @@
 package com.github.hakandindis.plugins.adbhub.constants
 
-/**
- * Android device property constants
- */
 object DeviceProperties {
     const val MODEL = "ro.product.model"
     const val MANUFACTURER = "ro.product.manufacturer"

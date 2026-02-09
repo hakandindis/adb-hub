@@ -1,8 +1,5 @@
 package com.github.hakandindis.plugins.adbhub.models
 
-/**
- * Detailed information about an Android device
- */
 data class DeviceInfo(
     val deviceId: String,
     val model: String?,

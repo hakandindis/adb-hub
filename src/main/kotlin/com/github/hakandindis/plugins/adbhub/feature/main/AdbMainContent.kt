@@ -25,8 +25,7 @@ fun AdbMainContent(
     consoleLogViewModel: ConsoleLogViewModel,
     selectedDevice: Device?,
     selectedPackage: ApplicationPackage?,
-    uid: String? = null,
-    onActivityLaunch: (String) -> Unit = {}
+    uid: String? = null
 ) {
     var selectedTab by remember { mutableStateOf(MainTab.Details) }
 
@@ -41,8 +40,7 @@ fun AdbMainContent(
             when (selectedTab) {
                 MainTab.Details -> DetailsContent(
                     packageDetailsViewModel = packageDetailsViewModel,
-                    uid = uid,
-                    onActivityLaunch = onActivityLaunch
+                    uid = uid
                 )
 
                 MainTab.ConsoleLog -> ConsoleLogTab(
@@ -57,7 +55,6 @@ fun AdbMainContent(
                             deviceId = deviceId,
                             packageActionsViewModel = packageActionsViewModel,
                             uid = uid,
-                            isDebuggable = null
                         )
                     } else {
                         TabPlaceholder("App Actions", "Select a package to view actions.")

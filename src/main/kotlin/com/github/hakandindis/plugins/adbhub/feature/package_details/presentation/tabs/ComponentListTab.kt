@@ -28,10 +28,6 @@ import org.jetbrains.jewel.ui.component.Icon
 import org.jetbrains.jewel.ui.component.Text
 import org.jetbrains.jewel.ui.component.TextField
 
-/**
- * Shared tab content for Activities, Receivers, Services, and Content Providers.
- * Same layout as ActivitiesTab: search bar + count badge, list of rows with icon (no background), bold shortName, muted fullName.
- */
 @Composable
 fun ComponentListTab(
     items: List<ComponentDisplay>,

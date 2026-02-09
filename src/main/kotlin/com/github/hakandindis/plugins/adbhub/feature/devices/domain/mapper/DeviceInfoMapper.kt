@@ -3,9 +3,6 @@ package com.github.hakandindis.plugins.adbhub.feature.devices.domain.mapper
 import com.github.hakandindis.plugins.adbhub.feature.devices.presentation.ui.DeviceInfoItemUiModel
 import com.github.hakandindis.plugins.adbhub.models.DeviceInfo
 
-/**
- * Mapper for converting DeviceInfo to UI models (label-value list)
- */
 object DeviceInfoMapper {
 
     private const val PLACEHOLDER = "—"

@@ -14,8 +14,7 @@ import org.jetbrains.jewel.ui.component.Text
 @Composable
 fun DetailsContent(
     packageDetailsViewModel: PackageDetailsViewModel,
-    uid: String? = null,
-    onActivityLaunch: (String) -> Unit = {}
+    uid: String? = null
 ) {
     val packageDetailsUiState by packageDetailsViewModel.uiState.collectAsState()
 
@@ -45,13 +44,8 @@ fun DetailsContent(
             .fillMaxSize()
             .background(AdbHubTheme.background)
     ) {
-        val packageName = packageDetailsUiState.generalInfoItems
-            .firstOrNull { it.label == "Package Name" }?.value ?: ""
-        packageDetailsUiState.generalInfoItems
-            .firstOrNull { it.label == "App Name" }?.value ?: packageName
-
         PackageHeader(
-            packageName = packageName,
+            packageName = packageDetailsUiState.packageName,
             uid = uid
         )
 

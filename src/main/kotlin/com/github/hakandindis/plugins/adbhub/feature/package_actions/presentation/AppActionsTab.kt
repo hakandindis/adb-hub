@@ -23,16 +23,12 @@ import org.jetbrains.jewel.ui.component.Text
 import org.jetbrains.jewel.ui.component.TextField
 import org.jetbrains.jewel.ui.icon.IconKey
 
-/**
- * App Actions tab component
- */
 @Composable
 fun AppActionsTab(
     packageName: String,
     deviceId: String,
     packageActionsViewModel: PackageActionsViewModel,
     uid: String? = null,
-    isDebuggable: Boolean? = null
 ) {
     var deepLinkInput by remember { mutableStateOf("") }
     val deepLinkState = rememberTextFieldState(deepLinkInput)
@@ -50,7 +46,6 @@ fun AppActionsTab(
         PackageHeader(
             packageName = packageName,
             uid = uid,
-            isDebuggable = isDebuggable
         )
 
         ListSection(

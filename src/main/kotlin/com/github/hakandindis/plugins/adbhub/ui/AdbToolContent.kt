@@ -103,14 +103,7 @@ fun AdbToolContent(
                 consoleLogViewModel = consoleLogViewModel,
                 selectedDevice = selectedDevice,
                 selectedPackage = selectedPackage,
-                uid = null, // TODO: Get UID from package details or device info
-                onActivityLaunch = { activityName ->
-                    selectedDevice?.let { device ->
-                        packageDetailsViewModel.handleIntent(
-                            PackageDetailsIntent.LaunchActivity(activityName, device.id)
-                        )
-                    }
-                }
+                uid = null // TODO: Get UID from package details or device info
             )
         }
     }

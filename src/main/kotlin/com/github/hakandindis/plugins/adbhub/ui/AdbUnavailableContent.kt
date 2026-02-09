@@ -13,11 +13,6 @@ import com.github.hakandindis.plugins.adbhub.ui.theme.AdbHubTheme
 import org.jetbrains.jewel.foundation.theme.JewelTheme
 import org.jetbrains.jewel.ui.component.Text
 
-/**
- * Shown when ADB is not available (executor is null after initialization).
- * Plugin window opens, initialization runs, and this is displayed when
- * viewModels cannot be created due to missing ADB.
- */
 @Composable
 fun AdbUnavailableContent() {
     Column(

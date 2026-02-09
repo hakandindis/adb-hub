@@ -1,8 +1,5 @@
 package com.github.hakandindis.plugins.adbhub.core.models
 
-/**
- * Result of an ADB command execution
- */
 data class CommandResult(
     val command: String,
     val output: String,

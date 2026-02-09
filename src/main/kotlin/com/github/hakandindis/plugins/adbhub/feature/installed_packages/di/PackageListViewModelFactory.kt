@@ -13,8 +13,7 @@ class PackageListViewModelFactory(
 ) {
 
     fun create(executor: AdbCommandExecutor): PackageListViewModel {
-        val packageDataSource = PackageModule.createPackageDataSource(executor)
-        val packageRepository = PackageModule.createPackageRepository(packageDataSource)
+        val packageRepository = PackageModule.createPackageRepository(executor)
         val getPackagesUseCase = PackageModule.createGetPackagesUseCase(packageRepository)
         val filterPackagesUseCase = PackageModule.createFilterPackagesUseCase()
         return PackageListViewModel(
