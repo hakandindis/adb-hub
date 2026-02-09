@@ -1,6 +1,5 @@
 package com.github.hakandindis.plugins.adbhub.feature.package_details.presentation
 
-import com.github.hakandindis.plugins.adbhub.core.adb.AdbCommandExecutor
 import com.github.hakandindis.plugins.adbhub.feature.package_details.domain.usecase.GetPackageDetailsUseCase
 import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.ui.ComponentDisplay
 import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.ui.PermissionSectionUiModel
@@ -16,7 +15,6 @@ import kotlinx.coroutines.launch
 
 class PackageDetailsViewModel(
     private val getPackageDetailsUseCase: GetPackageDetailsUseCase,
-    private val commandExecutor: AdbCommandExecutor?,
     coroutineScope: CoroutineScope
 ) : Disposable {
 

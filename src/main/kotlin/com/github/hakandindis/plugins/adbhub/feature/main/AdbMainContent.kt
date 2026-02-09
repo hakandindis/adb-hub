@@ -55,7 +55,6 @@ fun AdbMainContent(
                             deviceId = deviceId,
                             packageActionsViewModel = packageActionsViewModel,
                             uid = uid,
-                            isDebuggable = null
                         )
                     } else {
                         TabPlaceholder("App Actions", "Select a package to view actions.")

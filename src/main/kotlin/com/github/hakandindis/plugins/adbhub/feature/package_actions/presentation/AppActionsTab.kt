@@ -29,7 +29,6 @@ fun AppActionsTab(
     deviceId: String,
     packageActionsViewModel: PackageActionsViewModel,
     uid: String? = null,
-    isDebuggable: Boolean? = null
 ) {
     var deepLinkInput by remember { mutableStateOf("") }
     val deepLinkState = rememberTextFieldState(deepLinkInput)
@@ -47,7 +46,6 @@ fun AppActionsTab(
         PackageHeader(
             packageName = packageName,
             uid = uid,
-            isDebuggable = isDebuggable
         )
 
         ListSection(

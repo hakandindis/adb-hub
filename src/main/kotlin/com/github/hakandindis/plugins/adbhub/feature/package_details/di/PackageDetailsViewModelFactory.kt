@@ -17,7 +17,6 @@ class PackageDetailsViewModelFactory(
         val getPackageDetailsUseCase = PackageDetailsModule.createGetPackageDetailsUseCase(packageDetailsRepository)
         return PackageDetailsViewModel(
             getPackageDetailsUseCase = getPackageDetailsUseCase,
-            commandExecutor = executor,
             coroutineScope = coroutineScope
         )
     }
