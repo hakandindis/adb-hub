@@ -14,8 +14,7 @@ import org.jetbrains.jewel.ui.component.Text
 @Composable
 fun DetailsContent(
     packageDetailsViewModel: PackageDetailsViewModel,
-    uid: String? = null,
-    onActivityLaunch: (String) -> Unit = {}
+    uid: String? = null
 ) {
     val packageDetailsUiState by packageDetailsViewModel.uiState.collectAsState()
 

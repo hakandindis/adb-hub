@@ -1,6 +1,5 @@
 package com.github.hakandindis.plugins.adbhub.feature.package_details.presentation
 
-import com.github.hakandindis.plugins.adbhub.constants.AmCommands
 import com.github.hakandindis.plugins.adbhub.core.adb.AdbCommandExecutor
 import com.github.hakandindis.plugins.adbhub.feature.package_details.domain.usecase.GetPackageDetailsUseCase
 import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.ui.ComponentDisplay
@@ -30,7 +29,6 @@ class PackageDetailsViewModel(
     fun handleIntent(intent: PackageDetailsIntent) {
         when (intent) {
             is PackageDetailsIntent.LoadPackageDetails -> loadPackageDetails(intent.packageName, intent.deviceId)
-            is PackageDetailsIntent.LaunchActivity -> launchActivity(intent.activityName, intent.deviceId)
             is PackageDetailsIntent.FilterPermissions -> updatePermissionSearch(intent.query)
             is PackageDetailsIntent.FilterActivities -> updateActivitySearch(intent.query)
             is PackageDetailsIntent.FilterReceivers -> updateReceiverSearch(intent.query)
@@ -80,25 +78,6 @@ class PackageDetailsViewModel(
                     }
                 }
             )
-        }
-    }
-
-    private fun launchActivity(activityName: String, deviceId: String) {
-        if (commandExecutor == null) {
-            logger.warn("Cannot launch activity: ADB executor not available")
-            return
-        }
-
-        scope.launch {
-            try {
-                val command = AmCommands.startActivity(activityName)
-                val result = commandExecutor.executeCommandForDevice(deviceId, command)
-                if (!result.isSuccess) {
-                    logger.error("Failed to launch activity $activityName: ${result.error}")
-                }
-            } catch (e: Exception) {
-                logger.error("Error launching activity $activityName", e)
-            }
         }
     }
 
