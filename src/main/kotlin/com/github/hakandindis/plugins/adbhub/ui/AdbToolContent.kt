@@ -10,7 +10,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.github.hakandindis.plugins.adbhub.core.models.Device
-import com.github.hakandindis.plugins.adbhub.core.models.DeviceState
 import com.github.hakandindis.plugins.adbhub.core.selection.SelectionManager
 import com.github.hakandindis.plugins.adbhub.feature.console_log.presentation.ConsoleLogViewModel
 import com.github.hakandindis.plugins.adbhub.feature.devices.presentation.DeviceIntent
@@ -19,7 +18,6 @@ import com.github.hakandindis.plugins.adbhub.feature.installed_packages.presenta
 import com.github.hakandindis.plugins.adbhub.feature.installed_packages.presentation.PackageListViewModel
 import com.github.hakandindis.plugins.adbhub.feature.main.AdbMainContent
 import com.github.hakandindis.plugins.adbhub.feature.package_actions.presentation.PackageActionsViewModel
-import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.PackageDetailsIntent
 import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.PackageDetailsViewModel
 import com.github.hakandindis.plugins.adbhub.feature.sidebar.AdbSidebar
 import com.github.hakandindis.plugins.adbhub.models.ApplicationPackage
@@ -50,10 +48,6 @@ fun AdbToolContent(
         deviceViewModel.handleIntent(DeviceIntent.RefreshDevices)
     }
 
-    val hasValidSelection = selectedPackage != null &&
-            selectedDevice != null &&
-            selectedDevice.state == DeviceState.DEVICE
-
     val onSearchChange = remember(packageListViewModel) {
         { text: String ->
             packageListViewModel.handleIntent(PackageListIntent.SearchPackages(text))
@@ -70,19 +64,6 @@ fun AdbToolContent(
     val onPackageSelected = remember(packageListViewModel) {
         { packageItem: ApplicationPackage ->
             packageListViewModel.handleIntent(PackageListIntent.SelectPackage(packageItem))
-        }
-    }
-
-    LaunchedEffect(selectedPackage, selectedDevice) {
-        if (hasValidSelection) {
-            packageDetailsViewModel.handleIntent(
-                PackageDetailsIntent.LoadPackageDetails(
-                    selectedPackage.packageName,
-                    selectedDevice.id
-                )
-            )
-        } else {
-            packageDetailsViewModel.handleIntent(PackageDetailsIntent.ClearDetails)
         }
     }
 
