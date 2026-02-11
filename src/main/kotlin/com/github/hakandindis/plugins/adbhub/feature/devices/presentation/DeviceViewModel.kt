@@ -2,6 +2,7 @@ package com.github.hakandindis.plugins.adbhub.feature.devices.presentation
 
 import com.github.hakandindis.plugins.adbhub.core.models.Device
 import com.github.hakandindis.plugins.adbhub.core.models.DeviceState
+import com.github.hakandindis.plugins.adbhub.core.selection.SelectionManager
 import com.github.hakandindis.plugins.adbhub.feature.devices.domain.mapper.DeviceInfoMapper
 import com.github.hakandindis.plugins.adbhub.feature.devices.domain.usecase.GetDeviceInfoUseCase
 import com.github.hakandindis.plugins.adbhub.feature.devices.domain.usecase.GetDevicesUseCase
@@ -9,15 +10,13 @@ import com.intellij.openapi.Disposable
 import com.intellij.openapi.diagnostic.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class DeviceViewModel(
     private val getDevicesUseCase: GetDevicesUseCase,
     private val getDeviceInfoUseCase: GetDeviceInfoUseCase,
+    private val selectionManager: SelectionManager,
     coroutineScope: CoroutineScope
 ) : Disposable {
 
@@ -26,6 +25,21 @@ class DeviceViewModel(
 
     private val _uiState = MutableStateFlow(DeviceUiState())
     val uiState: StateFlow<DeviceUiState> = _uiState.asStateFlow()
+
+    init {
+        scope.launch {
+            selectionManager.selectionState.collectLatest { state ->
+                when (val device = state.selectedDevice) {
+                    null -> _uiState.update { it.copy(deviceInfoItems = emptyList()) }
+                    else -> if (device.state == DeviceState.DEVICE) {
+                        loadDeviceInfo(device.id)
+                    } else {
+                        _uiState.update { it.copy(deviceInfoItems = emptyList()) }
+                    }
+                }
+            }
+        }
+    }
 
     fun handleIntent(intent: DeviceIntent) {
         when (intent) {
@@ -44,13 +58,10 @@ class DeviceViewModel(
                     _uiState.update {
                         it.copy(
                             devices = devices,
-                            isLoading = false,
-                            selectedDevice = toSelect
+                            isLoading = false
                         )
                     }
-                    if (toSelect != null && toSelect.state == DeviceState.DEVICE) {
-                        loadDeviceInfo(toSelect.id)
-                    }
+                    selectionManager.selectDevice(toSelect)
                 },
                 onFailure = { error ->
                     logger.error("Error refreshing devices", error)
@@ -66,12 +77,7 @@ class DeviceViewModel(
     }
 
     private fun selectDevice(device: Device) {
-        _uiState.update { it.copy(selectedDevice = device) }
-        if (device.state == DeviceState.DEVICE) {
-            loadDeviceInfo(device.id)
-        } else {
-            _uiState.update { it.copy(deviceInfoItems = emptyList()) }
-        }
+        selectionManager.selectDevice(device)
     }
 
     private fun loadDeviceInfo(deviceId: String) {

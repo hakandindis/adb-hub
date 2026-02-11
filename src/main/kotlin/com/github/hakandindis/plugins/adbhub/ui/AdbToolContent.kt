@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.github.hakandindis.plugins.adbhub.core.models.Device
 import com.github.hakandindis.plugins.adbhub.core.models.DeviceState
+import com.github.hakandindis.plugins.adbhub.core.selection.SelectionManager
 import com.github.hakandindis.plugins.adbhub.feature.console_log.presentation.ConsoleLogViewModel
 import com.github.hakandindis.plugins.adbhub.feature.devices.presentation.DeviceIntent
 import com.github.hakandindis.plugins.adbhub.feature.devices.presentation.DeviceViewModel
@@ -30,12 +31,15 @@ fun AdbToolContent(
     packageListViewModel: PackageListViewModel,
     packageDetailsViewModel: PackageDetailsViewModel,
     packageActionsViewModel: PackageActionsViewModel,
-    consoleLogViewModel: ConsoleLogViewModel
+    consoleLogViewModel: ConsoleLogViewModel,
+    selectionManager: SelectionManager
 ) {
     val deviceUiState by deviceViewModel.uiState.collectAsState()
     val devices = deviceUiState.devices
-    val selectedDevice = deviceUiState.selectedDevice
     val deviceInfoItems = deviceUiState.deviceInfoItems
+
+    val selectionState by selectionManager.selectionState.collectAsState()
+    val selectedDevice = selectionState.selectedDevice
 
     val packageListUiState by packageListViewModel.uiState.collectAsState()
     val filteredPackages = packageListUiState.filteredPackages
