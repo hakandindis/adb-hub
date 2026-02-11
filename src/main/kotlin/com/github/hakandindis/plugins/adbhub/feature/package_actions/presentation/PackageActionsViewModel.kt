@@ -38,7 +38,6 @@ class PackageActionsViewModel(
     fun handleIntent(intent: PackageActionsIntent) {
         when (intent) {
             is PackageActionsIntent.LaunchApp -> launchApp(intent.packageName, intent.deviceId)
-            is PackageActionsIntent.LaunchActivity -> launchActivity(intent.activityName, intent.deviceId)
             is PackageActionsIntent.ForceStop -> forceStop(intent.packageName, intent.deviceId)
             is PackageActionsIntent.ClearData -> clearData(intent.packageName, intent.deviceId)
             is PackageActionsIntent.ClearCache -> clearCache(intent.packageName, intent.deviceId)
@@ -75,13 +74,6 @@ class PackageActionsViewModel(
                     }
                 }
             )
-        }
-    }
-
-    private fun launchActivity(activityName: String, deviceId: String) {
-        scope.launch {
-            // Activity launch is handled by PackageDetailsViewModel
-            // This is kept for consistency but may not be used
         }
     }
 

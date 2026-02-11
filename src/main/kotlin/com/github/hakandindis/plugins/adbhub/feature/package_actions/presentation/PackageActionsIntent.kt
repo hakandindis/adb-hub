@@ -2,7 +2,6 @@ package com.github.hakandindis.plugins.adbhub.feature.package_actions.presentati
 
 sealed class PackageActionsIntent {
     data class LaunchApp(val packageName: String, val deviceId: String) : PackageActionsIntent()
-    data class LaunchActivity(val activityName: String, val deviceId: String) : PackageActionsIntent()
     data class ForceStop(val packageName: String, val deviceId: String) : PackageActionsIntent()
     data class ClearData(val packageName: String, val deviceId: String) : PackageActionsIntent()
     data class ClearCache(val packageName: String, val deviceId: String) : PackageActionsIntent()
