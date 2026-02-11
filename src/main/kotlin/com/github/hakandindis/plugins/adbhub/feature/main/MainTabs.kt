@@ -20,9 +20,9 @@ import org.jetbrains.jewel.ui.component.Text
 import org.jetbrains.jewel.ui.icon.IconKey
 
 enum class MainTab(val label: String, val icon: IconKey) {
-    Details("Details", AdbIcons.info),
-    AppActions("App Actions", AdbIcons.bolt),
-    ConsoleLog("Console Log", AdbIcons.terminal)
+    Details("Details", AdbIcons.details),
+    AppActions("App Actions", AdbIcons.actionsTarget),
+    ConsoleLog("Console Log", AdbIcons.consoleLog)
 }
 
 @Composable
