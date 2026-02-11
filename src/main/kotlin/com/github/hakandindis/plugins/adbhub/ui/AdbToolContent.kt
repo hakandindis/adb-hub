@@ -6,14 +6,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.github.hakandindis.plugins.adbhub.core.adb.AdbInitializer
-import com.github.hakandindis.plugins.adbhub.core.models.DeviceState
+import com.github.hakandindis.plugins.adbhub.core.models.Device
+import com.github.hakandindis.plugins.adbhub.core.selection.SelectionManager
 import com.github.hakandindis.plugins.adbhub.feature.console_log.presentation.ConsoleLogViewModel
 import com.github.hakandindis.plugins.adbhub.feature.devices.presentation.DeviceIntent
 import com.github.hakandindis.plugins.adbhub.feature.devices.presentation.DeviceViewModel
@@ -21,55 +18,52 @@ import com.github.hakandindis.plugins.adbhub.feature.installed_packages.presenta
 import com.github.hakandindis.plugins.adbhub.feature.installed_packages.presentation.PackageListViewModel
 import com.github.hakandindis.plugins.adbhub.feature.main.AdbMainContent
 import com.github.hakandindis.plugins.adbhub.feature.package_actions.presentation.PackageActionsViewModel
-import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.PackageDetailsIntent
 import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.PackageDetailsViewModel
 import com.github.hakandindis.plugins.adbhub.feature.sidebar.AdbSidebar
+import com.github.hakandindis.plugins.adbhub.models.ApplicationPackage
 import com.github.hakandindis.plugins.adbhub.ui.theme.AdbHubTheme
 
 @Composable
 fun AdbToolContent(
-    adbInitializer: AdbInitializer,
     deviceViewModel: DeviceViewModel,
     packageListViewModel: PackageListViewModel,
     packageDetailsViewModel: PackageDetailsViewModel,
     packageActionsViewModel: PackageActionsViewModel,
-    consoleLogViewModel: ConsoleLogViewModel
+    consoleLogViewModel: ConsoleLogViewModel,
+    selectionManager: SelectionManager
 ) {
     val deviceUiState by deviceViewModel.uiState.collectAsState()
     val devices = deviceUiState.devices
-    val selectedDevice = deviceUiState.selectedDevice
     val deviceInfoItems = deviceUiState.deviceInfoItems
+
+    val selectionState by selectionManager.selectionState.collectAsState()
+    val selectedDevice = selectionState.selectedDevice
+    val selectedPackage = selectionState.selectedPackage
 
     val packageListUiState by packageListViewModel.uiState.collectAsState()
     val filteredPackages = packageListUiState.filteredPackages
-    val selectedPackage = packageListUiState.selectedPackage
     val packageSearchText = packageListUiState.searchText
 
-    LaunchedEffect(deviceViewModel) {
+    LaunchedEffect(Unit) {
         deviceViewModel.handleIntent(DeviceIntent.RefreshDevices)
     }
 
-    LaunchedEffect(selectedDevice) {
-        selectedDevice?.let { device ->
-            if (device.state == DeviceState.DEVICE) {
-                packageListViewModel.handleIntent(
-                    PackageListIntent.RefreshPackages(device.id, includeSystemApps = true)
-                )
-            }
+    val onSearchChange = remember(packageListViewModel) {
+        { text: String ->
+            packageListViewModel.handleIntent(PackageListIntent.SearchPackages(text))
         }
     }
-
-    adbInitializer.isAdbAvailable()
-
-    LaunchedEffect(selectedPackage, selectedDevice) {
-        selectedPackage?.let { packageItem ->
-            selectedDevice?.let { device ->
-                if (device.state == DeviceState.DEVICE) {
-                    packageDetailsViewModel.handleIntent(
-                        PackageDetailsIntent.LoadPackageDetails(packageItem.packageName, device.id)
-                    )
-                }
-            }
+    val onDeviceSelected = remember(deviceViewModel) {
+        { device: Device ->
+            deviceViewModel.handleIntent(DeviceIntent.SelectDevice(device))
+        }
+    }
+    val onRefreshDevices = remember(deviceViewModel) {
+        { deviceViewModel.handleIntent(DeviceIntent.RefreshDevices) }
+    }
+    val onPackageSelected = remember(packageListViewModel) {
+        { packageItem: ApplicationPackage ->
+            packageListViewModel.handleIntent(PackageListIntent.SelectPackage(packageItem))
         }
     }
 
@@ -87,18 +81,10 @@ fun AdbToolContent(
                 packages = filteredPackages,
                 selectedPackage = selectedPackage,
                 searchText = packageSearchText,
-                onSearchChange = { text ->
-                    packageListViewModel.handleIntent(PackageListIntent.SearchPackages(text))
-                },
-                onDeviceSelected = { device ->
-                    deviceViewModel.handleIntent(DeviceIntent.SelectDevice(device))
-                },
-                onRefreshDevices = {
-                    deviceViewModel.handleIntent(DeviceIntent.RefreshDevices)
-                },
-                onPackageSelected = { packageItem ->
-                    packageListViewModel.handleIntent(PackageListIntent.SelectPackage(packageItem))
-                }
+                onSearchChange = onSearchChange,
+                onDeviceSelected = onDeviceSelected,
+                onRefreshDevices = onRefreshDevices,
+                onPackageSelected = onPackageSelected
             )
             AdbMainContent(
                 packageDetailsViewModel = packageDetailsViewModel,

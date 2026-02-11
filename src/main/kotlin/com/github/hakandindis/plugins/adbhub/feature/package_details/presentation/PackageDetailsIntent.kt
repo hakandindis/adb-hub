@@ -2,6 +2,7 @@ package com.github.hakandindis.plugins.adbhub.feature.package_details.presentati
 
 sealed class PackageDetailsIntent {
     data class LoadPackageDetails(val packageName: String, val deviceId: String) : PackageDetailsIntent()
+    object ClearDetails : PackageDetailsIntent()
     data class FilterPermissions(val query: String) : PackageDetailsIntent()
     data class FilterActivities(val query: String) : PackageDetailsIntent()
     data class FilterReceivers(val query: String) : PackageDetailsIntent()

@@ -1,6 +1,7 @@
 package com.github.hakandindis.plugins.adbhub.toolWindow
 
 import com.github.hakandindis.plugins.adbhub.core.di.AdbModule
+import com.github.hakandindis.plugins.adbhub.core.selection.SelectionManager
 import com.github.hakandindis.plugins.adbhub.feature.console_log.di.ConsoleLogViewModelFactory
 import com.github.hakandindis.plugins.adbhub.feature.devices.di.DeviceViewModelFactory
 import com.github.hakandindis.plugins.adbhub.feature.installed_packages.di.PackageListViewModelFactory
@@ -32,6 +33,7 @@ class AdbHubToolWindowFactory : ToolWindowFactory, DumbAware {
             return
         }
 
+        val selectionManager = project.service<SelectionManager>()
         val deviceViewModel = project.service<DeviceViewModelFactory>().create(executor)
         val packageListViewModel = project.service<PackageListViewModelFactory>().create(executor)
         val packageDetailsViewModel = project.service<PackageDetailsViewModelFactory>().create(executor)
@@ -46,12 +48,12 @@ class AdbHubToolWindowFactory : ToolWindowFactory, DumbAware {
 
         toolWindow.addComposeTab(focusOnClickInside = true) {
             AdbToolContent(
-                adbInitializer = adbInitializer,
                 deviceViewModel = deviceViewModel,
                 packageListViewModel = packageListViewModel,
                 packageDetailsViewModel = packageDetailsViewModel,
                 packageActionsViewModel = packageActionsViewModel,
-                consoleLogViewModel = consoleLogViewModel
+                consoleLogViewModel = consoleLogViewModel,
+                selectionManager = selectionManager
             )
         }
     }

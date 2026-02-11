@@ -1,21 +1,20 @@
 package com.github.hakandindis.plugins.adbhub.feature.installed_packages.presentation
 
+import com.github.hakandindis.plugins.adbhub.core.models.DeviceState
+import com.github.hakandindis.plugins.adbhub.core.selection.SelectionManager
 import com.github.hakandindis.plugins.adbhub.feature.installed_packages.domain.usecase.FilterPackagesUseCase
 import com.github.hakandindis.plugins.adbhub.feature.installed_packages.domain.usecase.GetPackagesUseCase
-import com.github.hakandindis.plugins.adbhub.models.ApplicationPackage
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.diagnostic.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class PackageListViewModel(
     private val getPackagesUseCase: GetPackagesUseCase,
     private val filterPackagesUseCase: FilterPackagesUseCase,
+    private val selectionManager: SelectionManager,
     coroutineScope: CoroutineScope
 ) : Disposable {
 
@@ -25,10 +24,24 @@ class PackageListViewModel(
     private val _uiState = MutableStateFlow(PackageListUiState())
     val uiState: StateFlow<PackageListUiState> = _uiState.asStateFlow()
 
+    init {
+        scope.launch {
+            selectionManager.selectionState
+                .distinctUntilChangedBy { it.selectedDevice }
+                .collectLatest { state ->
+                    state.selectedDevice?.let { device ->
+                        if (device.state == DeviceState.DEVICE) {
+                            refreshPackages(device.id, includeSystemApps = true)
+                        }
+                    }
+                }
+        }
+    }
+
     fun handleIntent(intent: PackageListIntent) {
         when (intent) {
             is PackageListIntent.SearchPackages -> updateSearchText(intent.query)
-            is PackageListIntent.SelectPackage -> selectPackage(intent.packageItem)
+            is PackageListIntent.SelectPackage -> selectionManager.selectPackage(intent.packageItem)
             is PackageListIntent.RefreshPackages -> refreshPackages(intent.deviceId, intent.includeSystemApps)
         }
     }
@@ -44,10 +57,6 @@ class PackageListViewModel(
                 filteredPackages = filtered
             )
         }
-    }
-
-    private fun selectPackage(packageItem: ApplicationPackage) {
-        _uiState.update { it.copy(selectedPackage = packageItem) }
     }
 
     private fun refreshPackages(deviceId: String, includeSystemApps: Boolean) {

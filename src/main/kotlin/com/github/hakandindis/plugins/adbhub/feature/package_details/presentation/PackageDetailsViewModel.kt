@@ -1,5 +1,6 @@
 package com.github.hakandindis.plugins.adbhub.feature.package_details.presentation
 
+import com.github.hakandindis.plugins.adbhub.core.selection.SelectionManager
 import com.github.hakandindis.plugins.adbhub.feature.package_details.domain.usecase.GetPackageDetailsUseCase
 import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.ui.ComponentDisplay
 import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.ui.PermissionSectionUiModel
@@ -7,14 +8,12 @@ import com.intellij.openapi.Disposable
 import com.intellij.openapi.diagnostic.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class PackageDetailsViewModel(
     private val getPackageDetailsUseCase: GetPackageDetailsUseCase,
+    private val selectionManager: SelectionManager,
     coroutineScope: CoroutineScope
 ) : Disposable {
 
@@ -24,9 +23,27 @@ class PackageDetailsViewModel(
     private val _uiState = MutableStateFlow(PackageDetailsUiState())
     val uiState: StateFlow<PackageDetailsUiState> = _uiState.asStateFlow()
 
+    init {
+        scope.launch {
+            selectionManager.selectionState.collectLatest { state ->
+                if (state.hasValidSelection) {
+                    handleIntent(
+                        PackageDetailsIntent.LoadPackageDetails(
+                            state.selectedPackage!!.packageName,
+                            state.selectedDevice!!.id
+                        )
+                    )
+                } else {
+                    handleIntent(PackageDetailsIntent.ClearDetails)
+                }
+            }
+        }
+    }
+
     fun handleIntent(intent: PackageDetailsIntent) {
         when (intent) {
             is PackageDetailsIntent.LoadPackageDetails -> loadPackageDetails(intent.packageName, intent.deviceId)
+            is PackageDetailsIntent.ClearDetails -> _uiState.value = PackageDetailsUiState()
             is PackageDetailsIntent.FilterPermissions -> updatePermissionSearch(intent.query)
             is PackageDetailsIntent.FilterActivities -> updateActivitySearch(intent.query)
             is PackageDetailsIntent.FilterReceivers -> updateReceiverSearch(intent.query)

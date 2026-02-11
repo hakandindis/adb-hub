@@ -27,5 +27,8 @@
     <extensions defaultExtensionNs="com.intellij">
         <toolWindow id="ADB Hub" factoryClass="com.github.hakandindis.plugins.adbhub.toolWindow.AdbHubToolWindowFactory"
                     icon="AllIcons.Toolwindows.ToolWindowPalette"/>
+        <projectService
+                serviceImplementation="com.github.hakandindis.plugins.adbhub.core.selection.SelectionManagerImpl"
+                serviceInterface="com.github.hakandindis.plugins.adbhub.core.selection.SelectionManager"/>
     </extensions>
 </idea-plugin>
