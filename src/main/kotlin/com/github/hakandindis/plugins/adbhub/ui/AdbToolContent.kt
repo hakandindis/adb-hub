@@ -40,25 +40,14 @@ fun AdbToolContent(
 
     val selectionState by selectionManager.selectionState.collectAsState()
     val selectedDevice = selectionState.selectedDevice
+    val selectedPackage = selectionState.selectedPackage
 
     val packageListUiState by packageListViewModel.uiState.collectAsState()
     val filteredPackages = packageListUiState.filteredPackages
-    val selectedPackage = packageListUiState.selectedPackage
     val packageSearchText = packageListUiState.searchText
 
     LaunchedEffect(Unit) {
         deviceViewModel.handleIntent(DeviceIntent.RefreshDevices)
-    }
-
-    LaunchedEffect(selectedDevice) {
-        packageListViewModel.handleIntent(PackageListIntent.ClearSelection)
-        selectedDevice?.let { device ->
-            if (device.state == DeviceState.DEVICE) {
-                packageListViewModel.handleIntent(
-                    PackageListIntent.RefreshPackages(device.id, includeSystemApps = true)
-                )
-            }
-        }
     }
 
     val hasValidSelection = selectedPackage != null &&
