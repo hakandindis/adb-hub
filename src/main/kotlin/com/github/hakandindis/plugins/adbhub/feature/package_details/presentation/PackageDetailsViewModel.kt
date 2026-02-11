@@ -27,6 +27,7 @@ class PackageDetailsViewModel(
     fun handleIntent(intent: PackageDetailsIntent) {
         when (intent) {
             is PackageDetailsIntent.LoadPackageDetails -> loadPackageDetails(intent.packageName, intent.deviceId)
+            is PackageDetailsIntent.ClearDetails -> _uiState.value = PackageDetailsUiState()
             is PackageDetailsIntent.FilterPermissions -> updatePermissionSearch(intent.query)
             is PackageDetailsIntent.FilterActivities -> updateActivitySearch(intent.query)
             is PackageDetailsIntent.FilterReceivers -> updateReceiverSearch(intent.query)

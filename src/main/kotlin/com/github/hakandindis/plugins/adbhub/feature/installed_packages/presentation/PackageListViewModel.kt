@@ -63,6 +63,7 @@ class PackageListViewModel(
                         it.copy(
                             packages = packages,
                             filteredPackages = filtered,
+                            selectedPackage = null,
                             isLoading = false
                         )
                     }
@@ -71,6 +72,7 @@ class PackageListViewModel(
                     logger.error("Error refreshing packages for device $deviceId", error)
                     _uiState.update {
                         it.copy(
+                            selectedPackage = null,
                             isLoading = false,
                             error = error.message ?: "Failed to refresh packages"
                         )
