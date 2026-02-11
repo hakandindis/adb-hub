@@ -1,6 +1,7 @@
 package com.github.hakandindis.plugins.adbhub.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,6 +11,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.github.hakandindis.plugins.adbhub.core.adb.AdbInitializer
 import com.github.hakandindis.plugins.adbhub.core.models.DeviceState
 import com.github.hakandindis.plugins.adbhub.feature.console_log.presentation.ConsoleLogViewModel
@@ -75,6 +77,7 @@ fun AdbToolContent(
         modifier = Modifier
             .fillMaxSize()
             .background(AdbHubTheme.background)
+            .border(1.dp, AdbHubTheme.border)
     ) {
         Row(modifier = Modifier.weight(1f).fillMaxWidth()) {
             AdbSidebar(
