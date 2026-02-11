@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.github.hakandindis.plugins.adbhub.core.adb.AdbInitializer
 import com.github.hakandindis.plugins.adbhub.core.models.Device
 import com.github.hakandindis.plugins.adbhub.core.models.DeviceState
 import com.github.hakandindis.plugins.adbhub.feature.console_log.presentation.ConsoleLogViewModel
@@ -27,7 +26,6 @@ import com.github.hakandindis.plugins.adbhub.ui.theme.AdbHubTheme
 
 @Composable
 fun AdbToolContent(
-    adbInitializer: AdbInitializer,
     deviceViewModel: DeviceViewModel,
     packageListViewModel: PackageListViewModel,
     packageDetailsViewModel: PackageDetailsViewModel,
@@ -49,6 +47,7 @@ fun AdbToolContent(
     }
 
     LaunchedEffect(selectedDevice) {
+        packageListViewModel.handleIntent(PackageListIntent.ClearSelection)
         selectedDevice?.let { device ->
             if (device.state == DeviceState.DEVICE) {
                 packageListViewModel.handleIntent(

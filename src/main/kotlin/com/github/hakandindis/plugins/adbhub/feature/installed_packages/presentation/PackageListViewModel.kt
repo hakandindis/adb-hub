@@ -29,8 +29,13 @@ class PackageListViewModel(
         when (intent) {
             is PackageListIntent.SearchPackages -> updateSearchText(intent.query)
             is PackageListIntent.SelectPackage -> selectPackage(intent.packageItem)
+            is PackageListIntent.ClearSelection -> clearSelection()
             is PackageListIntent.RefreshPackages -> refreshPackages(intent.deviceId, intent.includeSystemApps)
         }
+    }
+
+    private fun clearSelection() {
+        _uiState.update { it.copy(selectedPackage = null) }
     }
 
     private fun updateSearchText(text: String) {

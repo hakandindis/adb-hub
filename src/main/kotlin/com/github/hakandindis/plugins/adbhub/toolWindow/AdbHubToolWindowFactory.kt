@@ -46,7 +46,6 @@ class AdbHubToolWindowFactory : ToolWindowFactory, DumbAware {
 
         toolWindow.addComposeTab(focusOnClickInside = true) {
             AdbToolContent(
-                adbInitializer = adbInitializer,
                 deviceViewModel = deviceViewModel,
                 packageListViewModel = packageListViewModel,
                 packageDetailsViewModel = packageDetailsViewModel,
