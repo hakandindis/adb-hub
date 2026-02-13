@@ -49,3 +49,12 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+### Plugin Signing & Publishing (GİZLİ – GitHub'a push edilmez) ###
+.env
+certificate/README.md
+certificate/chain.crt
+certificate/private.pem
+certificate/private_encrypted.pem
+certificate/*.pem
+certificate/*.crt
