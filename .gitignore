@@ -50,7 +50,7 @@ bin/
 ### Mac OS ###
 .DS_Store
 
-### Plugin Signing & Publishing (GİZLİ – GitHub'a push edilmez) ###
+### Plugin Signing & Publishing
 .env
 certificate/README.md
 certificate/chain.crt
