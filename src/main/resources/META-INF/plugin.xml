@@ -8,24 +8,14 @@
     <name>Adbhub</name>
 
     <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
-    <vendor url="https://www.yourcompany.com">YourCompany</vendor>
+    <vendor email="developer.hakandindis@gmail.com" url="https://github.com/hakandindis">Hakan Dindis</vendor>
 
-    <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
-         Guidelines: https://plugins.jetbrains.com/docs/marketplace/best-practices-for-listing.html#plugin-description -->
-    <description><![CDATA[
-        Enter short description for your plugin here.<br>
-        <em>most HTML tags may be used</em>
-    ]]></description>
-
-    <!-- Product and plugin compatibility requirements.
-         Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
     <depends>com.intellij.modules.compose</depends>
 
     <resource-bundle>messages.ADBHubMessageBundle</resource-bundle>
-    <!-- Extensions defined by the plugin.
-         Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow id="ADB Hub" factoryClass="com.github.hakandindis.plugins.adbhub.toolWindow.AdbHubToolWindowFactory"
+        <toolWindow id="ADB Hub"
+                    factoryClass="com.github.hakandindis.plugins.adbhub.toolWindow.AdbHubToolWindowFactory"
                     icon="AllIcons.Toolwindows.ToolWindowPalette"/>
         <projectService
                 serviceImplementation="com.github.hakandindis.plugins.adbhub.core.selection.SelectionManagerImpl"
