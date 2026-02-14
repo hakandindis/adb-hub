@@ -6,25 +6,23 @@ import com.intellij.openapi.project.Project
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 
 class SelectionManagerImpl(
     @Suppress("unused") private val project: Project
 ) : SelectionManager {
 
-    private val _selectionState = MutableStateFlow(SelectionState())
-    override val selectionState: StateFlow<SelectionState> = _selectionState.asStateFlow()
+    private val _selectedDevice = MutableStateFlow<Device?>(null)
+    override val selectedDeviceState: StateFlow<Device?> = _selectedDevice.asStateFlow()
+
+    private val _selectedPackage = MutableStateFlow<ApplicationPackage?>(null)
+    override val selectedPackageState: StateFlow<ApplicationPackage?> = _selectedPackage.asStateFlow()
 
     override fun selectDevice(device: Device?) {
-        _selectionState.update {
-            it.copy(
-                selectedDevice = device,
-                selectedPackage = null
-            )
-        }
+        _selectedDevice.value = device
+        _selectedPackage.value = null
     }
 
     override fun selectPackage(packageItem: ApplicationPackage?) {
-        _selectionState.update { it.copy(selectedPackage = packageItem) }
+        _selectedPackage.value = packageItem
     }
 }

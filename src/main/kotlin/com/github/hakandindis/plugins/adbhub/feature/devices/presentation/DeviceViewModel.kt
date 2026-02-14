@@ -28,18 +28,16 @@ class DeviceViewModel(
 
     init {
         scope.launch {
-            selectionManager.selectionState
-                .distinctUntilChangedBy { it.selectedDevice }
-                .collectLatest { state ->
-                    when (val device = state.selectedDevice) {
-                        null -> _uiState.update { it.copy(deviceInfoItems = emptyList()) }
-                        else -> if (device.state == DeviceState.DEVICE) {
-                            loadDeviceInfo(device.id)
-                        } else {
-                            _uiState.update { it.copy(deviceInfoItems = emptyList()) }
-                        }
+            selectionManager.selectedDeviceState.collectLatest { device ->
+                when (device) {
+                    null -> _uiState.update { it.copy(deviceInfoItems = emptyList()) }
+                    else -> if (device.state == DeviceState.DEVICE) {
+                        loadDeviceInfo(device.id)
+                    } else {
+                        _uiState.update { it.copy(deviceInfoItems = emptyList()) }
                     }
                 }
+            }
         }
     }
 

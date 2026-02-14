@@ -5,7 +5,8 @@ import com.github.hakandindis.plugins.adbhub.models.ApplicationPackage
 import kotlinx.coroutines.flow.StateFlow
 
 interface SelectionManager {
-    val selectionState: StateFlow<SelectionState>
+    val selectedDeviceState: StateFlow<Device?>
+    val selectedPackageState: StateFlow<ApplicationPackage?>
     fun selectDevice(device: Device?)
     fun selectPackage(packageItem: ApplicationPackage?)
 }
