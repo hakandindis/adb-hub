@@ -5,7 +5,7 @@
 
     <!-- Public plugin name should be written in Title Case.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/best-practices-for-listing.html#plugin-name -->
-    <name>Adbhub</name>
+    <name>ADB Hub</name>
 
     <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
     <vendor email="developer.hakandindis@gmail.com" url="https://github.com/hakandindis">Hakan Dindis</vendor>
@@ -16,7 +16,7 @@
     <extensions defaultExtensionNs="com.intellij">
         <toolWindow id="ADB Hub"
                     factoryClass="com.github.hakandindis.plugins.adbhub.toolWindow.AdbHubToolWindowFactory"
-                    icon="AllIcons.Toolwindows.ToolWindowPalette"/>
+                    icon="/icons/pluginIcon.svg"/>
         <projectService
                 serviceImplementation="com.github.hakandindis.plugins.adbhub.core.selection.SelectionManagerImpl"
                 serviceInterface="com.github.hakandindis.plugins.adbhub.core.selection.SelectionManager"/>
