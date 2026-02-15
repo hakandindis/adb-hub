@@ -11,7 +11,7 @@ import androidx.compose.ui.unit.dp
 import com.github.hakandindis.plugins.adbhub.ui.AdbIcons
 import com.github.hakandindis.plugins.adbhub.ui.theme.AdbHubTheme
 import com.github.hakandindis.plugins.adbhub.ui.theme.shapes.AdbHubShapes
-import org.jetbrains.jewel.foundation.theme.JewelTheme
+import com.github.hakandindis.plugins.adbhub.ui.theme.typography.AdbHubTypography
 import org.jetbrains.jewel.ui.component.Icon
 import org.jetbrains.jewel.ui.component.IconButton
 import org.jetbrains.jewel.ui.component.Text
@@ -26,20 +26,20 @@ fun PathCard(
         modifier = Modifier
             .fillMaxWidth()
             .clip(AdbHubShapes.SM)
-            .background(AdbHubTheme.surface.copy(alpha = 0.3f))
-            .border(1.dp, AdbHubTheme.border.copy(alpha = 0.5f), AdbHubShapes.SM)
+            .background(AdbHubTheme.colors.surface.copy(alpha = 0.3f))
+            .border(1.dp, AdbHubTheme.colors.border.copy(alpha = 0.5f), AdbHubShapes.SM)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(AdbHubTheme.whiteOverlay5)
+                .background(AdbHubTheme.colors.whiteOverlay5)
                 .padding(horizontal = 12.dp, vertical = 8.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
                 label,
-                style = JewelTheme.defaultTextStyle
+                style = AdbHubTypography.body
             )
             IconButton(onClick = { onCopy(path) }) {
                 Icon(AdbIcons.contentCopy, contentDescription = "Copy Path", modifier = Modifier.size(14.dp))
@@ -52,7 +52,7 @@ fun PathCard(
         ) {
             Text(
                 path,
-                style = JewelTheme.defaultTextStyle
+                style = AdbHubTypography.body
             )
         }
     }

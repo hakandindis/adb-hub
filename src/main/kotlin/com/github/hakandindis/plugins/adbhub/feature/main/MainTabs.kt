@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import com.github.hakandindis.plugins.adbhub.ui.AdbIcons
 import com.github.hakandindis.plugins.adbhub.ui.theme.AdbHubTheme
 import com.github.hakandindis.plugins.adbhub.ui.theme.dimens.AdbHubDimens
-import org.jetbrains.jewel.foundation.theme.JewelTheme
+import com.github.hakandindis.plugins.adbhub.ui.theme.typography.AdbHubTypography
 import org.jetbrains.jewel.ui.component.Icon
 import org.jetbrains.jewel.ui.component.Text
 import org.jetbrains.jewel.ui.icon.IconKey
@@ -33,7 +33,7 @@ fun MainTabs(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(AdbHubTheme.surface)
+            .background(AdbHubTheme.colors.surface)
     ) {
         Row(
             modifier = Modifier
@@ -46,7 +46,7 @@ fun MainTabs(
         ) {
             MainTab.entries.forEach { tab ->
                 val isSelected = tab == selectedTab
-                val tint = if (isSelected) AdbHubTheme.primary else AdbHubTheme.textMuted
+                val tint = if (isSelected) AdbHubTheme.colors.primary else AdbHubTheme.colors.textMuted
                 Column(
                     modifier = Modifier
                         .height(AdbHubDimens.Layout.TAB_BAR_HEIGHT)
@@ -67,7 +67,7 @@ fun MainTabs(
                         )
                         Text(
                             tab.label,
-                            style = JewelTheme.defaultTextStyle,
+                            style = AdbHubTypography.body,
                             color = tint,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis
@@ -78,7 +78,7 @@ fun MainTabs(
                             .fillMaxWidth()
                             .height(2.dp)
                             .background(
-                                if (isSelected) AdbHubTheme.primary
+                                if (isSelected) AdbHubTheme.colors.primary
                                 else Color.Transparent
                             )
                     )

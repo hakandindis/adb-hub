@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.github.hakandindis.plugins.adbhub.models.ApplicationPackage
 import com.github.hakandindis.plugins.adbhub.ui.AdbIcons
-import org.jetbrains.jewel.foundation.theme.JewelTheme
+import com.github.hakandindis.plugins.adbhub.ui.theme.typography.AdbHubTypography
 import org.jetbrains.jewel.ui.component.Icon
 import org.jetbrains.jewel.ui.component.Text
 import org.jetbrains.jewel.ui.component.TextField
@@ -38,7 +38,7 @@ fun InstalledPackagesSection(
     ) {
         Text(
             "Installed Packages",
-            style = JewelTheme.defaultTextStyle,
+            style = AdbHubTypography.body,
             fontSize = 16.sp,
         )
         Spacer(Modifier.height(16.dp))
@@ -70,7 +70,7 @@ fun InstalledPackagesSection(
                 ) {
                     Text(
                         "No packages found",
-                        style = JewelTheme.defaultTextStyle
+                        style = AdbHubTypography.body
                     )
                 }
             } else {

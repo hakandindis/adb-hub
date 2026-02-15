@@ -7,7 +7,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.github.hakandindis.plugins.adbhub.ui.theme.AdbHubTheme
-import org.jetbrains.jewel.foundation.theme.JewelTheme
+import com.github.hakandindis.plugins.adbhub.ui.theme.typography.AdbHubTypography
 import org.jetbrains.jewel.ui.component.Text
 
 @Composable
@@ -28,13 +28,13 @@ fun InfoRow(
                 modifier = Modifier
                     .weight(3f)
                     .fillMaxHeight()
-                    .background(AdbHubTheme.surface.copy(alpha = 0.3f))
+                    .background(AdbHubTheme.colors.surface.copy(alpha = 0.3f))
                     .padding(12.dp),
                 contentAlignment = Alignment.CenterStart
             ) {
                 Text(
                     label,
-                    style = JewelTheme.defaultTextStyle
+                    style = AdbHubTypography.body
                 )
             }
 
@@ -42,7 +42,7 @@ fun InfoRow(
                 modifier = Modifier
                     .width(1.dp)
                     .fillMaxHeight()
-                    .background(AdbHubTheme.border.copy(alpha = 0.5f))
+                    .background(AdbHubTheme.colors.border.copy(alpha = 0.5f))
             )
 
             Box(
@@ -53,7 +53,7 @@ fun InfoRow(
             ) {
                 Text(
                     value,
-                    style = JewelTheme.defaultTextStyle
+                    style = AdbHubTypography.body
                 )
             }
         }
@@ -62,7 +62,7 @@ fun InfoRow(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(1.dp)
-                    .background(AdbHubTheme.border.copy(alpha = 0.5f))
+                    .background(AdbHubTheme.colors.border.copy(alpha = 0.5f))
             )
         }
     }

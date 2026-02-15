@@ -12,7 +12,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.github.hakandindis.plugins.adbhub.core.models.Device
@@ -20,7 +19,7 @@ import com.github.hakandindis.plugins.adbhub.feature.devices.presentation.ui.Dev
 import com.github.hakandindis.plugins.adbhub.ui.AdbIcons
 import com.github.hakandindis.plugins.adbhub.ui.theme.AdbHubTheme
 import com.github.hakandindis.plugins.adbhub.ui.theme.shapes.AdbHubShapes
-import org.jetbrains.jewel.foundation.theme.JewelTheme
+import com.github.hakandindis.plugins.adbhub.ui.theme.typography.AdbHubTypography
 import org.jetbrains.jewel.ui.component.Icon
 import org.jetbrains.jewel.ui.component.Text
 
@@ -41,7 +40,7 @@ fun DevicesSection(
     ) {
         Text(
             "Connected Devices",
-            style = JewelTheme.defaultTextStyle,
+            style = AdbHubTypography.body,
             fontSize = 16.sp,
         )
         Spacer(Modifier.height(8.dp))
@@ -56,8 +55,8 @@ fun DevicesSection(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clip(AdbHubShapes.SM)
-                        .background(AdbHubTheme.itemHover)
-                        .border(1.dp, AdbHubTheme.border, AdbHubShapes.SM)
+                        .background(AdbHubTheme.colors.itemHover)
+                        .border(1.dp, AdbHubTheme.colors.border, AdbHubShapes.SM)
                         .clickable { if (devices.isNotEmpty()) expanded = !expanded }
                         .padding(12.dp),
                     verticalAlignment = Alignment.CenterVertically,
@@ -65,7 +64,7 @@ fun DevicesSection(
                 ) {
                     Text(
                         selectedDevice?.displayName ?: "Select device",
-                        style = JewelTheme.defaultTextStyle
+                        style = AdbHubTypography.body
                     )
                     Icon(
                         AdbIcons.arrowDropDown,
@@ -80,8 +79,8 @@ fun DevicesSection(
                             .fillMaxWidth()
                             .padding(top = 4.dp)
                             .clip(AdbHubShapes.SM)
-                            .background(AdbHubTheme.surface)
-                            .border(1.dp, AdbHubTheme.border, AdbHubShapes.SM)
+                            .background(AdbHubTheme.colors.surface)
+                            .border(1.dp, AdbHubTheme.colors.border, AdbHubShapes.SM)
                     ) {
                         LazyColumn(
                             modifier = Modifier
@@ -95,8 +94,8 @@ fun DevicesSection(
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .background(
-                                            if (isSelected) AdbHubTheme.primary.copy(alpha = 0.22f)
-                                            else AdbHubTheme.surface
+                                            if (isSelected) AdbHubTheme.colors.primary.copy(alpha = 0.22f)
+                                            else AdbHubTheme.colors.surface
                                         )
                                         .clickable {
                                             onDeviceSelected(device)
@@ -117,16 +116,12 @@ fun DevicesSection(
                                     ) {
                                         Text(
                                             device.displayName,
-                                            style = JewelTheme.defaultTextStyle.copy(
-                                                fontWeight = FontWeight.Medium
-                                            )
+                                            style = AdbHubTypography.label
                                         )
                                         Text(
                                             device.id,
-                                            style = JewelTheme.defaultTextStyle.copy(
-                                                fontSize = JewelTheme.defaultTextStyle.fontSize * 0.85f
-                                            ),
-                                            color = AdbHubTheme.textMuted
+                                            style = AdbHubTypography.caption,
+                                            color = AdbHubTheme.colors.textMuted
                                         )
                                     }
                                 }
@@ -140,8 +135,8 @@ fun DevicesSection(
                 modifier = Modifier
                     .size(40.dp)
                     .clip(CircleShape)
-                    .background(AdbHubTheme.itemHover)
-                    .border(1.dp, AdbHubTheme.border, CircleShape)
+                    .background(AdbHubTheme.colors.itemHover)
+                    .border(1.dp, AdbHubTheme.colors.border, CircleShape)
                     .clickable(
                         onClick = {
                             onRefreshDevices?.invoke()
@@ -165,8 +160,8 @@ fun DevicesSection(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(AdbHubShapes.SM)
-                    .background(AdbHubTheme.background)
-                    .border(1.dp, AdbHubTheme.border.copy(alpha = 0.5f), AdbHubShapes.SM)
+                    .background(AdbHubTheme.colors.background)
+                    .border(1.dp, AdbHubTheme.colors.border.copy(alpha = 0.5f), AdbHubShapes.SM)
                     .padding(12.dp)
             ) {
                 LazyColumn(
@@ -187,15 +182,13 @@ private fun DeviceDetailRow(label: String, value: String) {
     Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
         Text(
             label,
-            style = JewelTheme.defaultTextStyle.copy(
-                fontSize = JewelTheme.defaultTextStyle.fontSize * 0.85f
-            ),
-            color = AdbHubTheme.textMuted
+            style = AdbHubTypography.caption,
+            color = AdbHubTheme.colors.textMuted
         )
         Text(
             value,
-            style = JewelTheme.defaultTextStyle.copy(fontWeight = FontWeight.Medium),
-            color = AdbHubTheme.textMain
+            style = AdbHubTypography.label,
+            color = AdbHubTheme.colors.textMain
         )
     }
 }

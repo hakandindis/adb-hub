@@ -17,7 +17,7 @@ import com.github.hakandindis.plugins.adbhub.ui.AdbIcons
 import com.github.hakandindis.plugins.adbhub.ui.components.common.ListSection
 import com.github.hakandindis.plugins.adbhub.ui.theme.AdbHubTheme
 import com.github.hakandindis.plugins.adbhub.ui.theme.shapes.AdbHubShapes
-import org.jetbrains.jewel.foundation.theme.JewelTheme
+import com.github.hakandindis.plugins.adbhub.ui.theme.typography.AdbHubTypography
 import org.jetbrains.jewel.ui.component.Icon
 import org.jetbrains.jewel.ui.component.Text
 import org.jetbrains.jewel.ui.component.TextField
@@ -70,7 +70,7 @@ fun AppActionsTab(
                         },
                         isLoading = uiState.isLaunching,
                         modifier = Modifier.weight(1f),
-                        color = AdbHubTheme.success
+                        color = AdbHubTheme.colors.success
                     )
                     ActionButton(
                         label = "Force Stop",
@@ -82,7 +82,7 @@ fun AppActionsTab(
                         },
                         isLoading = uiState.isStopping,
                         modifier = Modifier.weight(1f),
-                        color = AdbHubTheme.danger
+                        color = AdbHubTheme.colors.danger
                     )
                 }
                 Row(
@@ -99,7 +99,7 @@ fun AppActionsTab(
                         },
                         isLoading = uiState.isClearingData,
                         modifier = Modifier.weight(1f),
-                        color = AdbHubTheme.warning
+                        color = AdbHubTheme.colors.warning
                     )
                     ActionButton(
                         label = "Uninstall",
@@ -111,7 +111,7 @@ fun AppActionsTab(
                         },
                         isLoading = uiState.isUninstalling,
                         modifier = Modifier.weight(1f),
-                        color = AdbHubTheme.textMuted
+                        color = AdbHubTheme.colors.textMuted
                     )
                 }
             }
@@ -135,7 +135,7 @@ fun AppActionsTab(
                     },
                     isLoading = uiState.isClearingCache,
                     modifier = Modifier.fillMaxWidth(),
-                    color = AdbHubTheme.primary
+                    color = AdbHubTheme.colors.primary
                 )
             }
         }
@@ -160,14 +160,14 @@ fun AppActionsTab(
                             .weight(1f)
                             .fillMaxHeight()
                             .clip(AdbHubShapes.SM)
-                            .border(1.dp, AdbHubTheme.border, AdbHubShapes.SM),
+                            .border(1.dp, AdbHubTheme.colors.border, AdbHubShapes.SM),
                         placeholder = { Text("scheme://host/path?query=...") }
                     )
                     Spacer(modifier = Modifier.width(12.dp))
                     Box(
                         modifier = Modifier
                             .clip(AdbHubShapes.SM)
-                            .background(AdbHubTheme.success)
+                            .background(AdbHubTheme.colors.success)
                             .clickable {
                                 val uri = deepLinkState.text.toString()
                                 if (uri.isNotBlank()) {
@@ -195,25 +195,21 @@ fun AppActionsTab(
                                 modifier = Modifier.size(14.dp),
                                 tint = Color.White
                             )
-                            Text("Send", style = JewelTheme.defaultTextStyle, color = Color.White)
+                            Text("Send", style = AdbHubTypography.body, color = Color.White)
                         }
                     }
                 }
                 Text(
                     "Triggers an implicit intent with ACTION_VIEW.",
-                    style = JewelTheme.defaultTextStyle.copy(
-                        fontSize = JewelTheme.defaultTextStyle.fontSize * 0.9f
-                    ),
-                    color = AdbHubTheme.textMuted
+                    style = AdbHubTypography.caption,
+                    color = AdbHubTheme.colors.textMuted
                 )
                 if (uiState.recentUris.isNotEmpty()) {
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
                         "Recent Deep Links",
-                        style = JewelTheme.defaultTextStyle.copy(
-                            fontSize = JewelTheme.defaultTextStyle.fontSize * 0.9f
-                        ),
-                        color = AdbHubTheme.textMuted
+                        style = AdbHubTypography.caption,
+                        color = AdbHubTheme.colors.textMuted
                     )
                     Spacer(modifier = Modifier.height(6.dp))
                     Column(
@@ -242,16 +238,14 @@ private fun RecentDeepLinkChip(
         modifier = Modifier
             .fillMaxWidth()
             .clip(AdbHubShapes.SM)
-            .background(AdbHubTheme.surface.copy(alpha = 0.5f))
-            .border(1.dp, AdbHubTheme.border.copy(alpha = 0.5f), AdbHubShapes.SM)
+            .background(AdbHubTheme.colors.surface.copy(alpha = 0.5f))
+            .border(1.dp, AdbHubTheme.colors.border.copy(alpha = 0.5f), AdbHubShapes.SM)
             .clickable { onClick() }
             .padding(horizontal = 10.dp, vertical = 6.dp)
     ) {
         Text(
             uri,
-            style = JewelTheme.defaultTextStyle.copy(
-                fontSize = JewelTheme.defaultTextStyle.fontSize * 0.9f
-            ),
+            style = AdbHubTypography.caption,
             maxLines = 2
         )
     }
@@ -264,7 +258,7 @@ private fun ActionButton(
     onClick: () -> Unit,
     isLoading: Boolean,
     modifier: Modifier = Modifier,
-    color: Color = AdbHubTheme.primary
+    color: Color = AdbHubTheme.colors.primary
 ) {
     Box(
         modifier = modifier
@@ -280,7 +274,7 @@ private fun ActionButton(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Icon(icon, contentDescription = null, modifier = Modifier.size(24.dp), tint = color)
-            Text(label, style = JewelTheme.defaultTextStyle, color = color)
+            Text(label, style = AdbHubTypography.body, color = color)
         }
     }
 }

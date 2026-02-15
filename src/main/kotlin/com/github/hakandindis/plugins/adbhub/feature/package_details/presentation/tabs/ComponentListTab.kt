@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.ui.ComponentDisplay
 import com.github.hakandindis.plugins.adbhub.ui.theme.AdbHubTheme
 import com.github.hakandindis.plugins.adbhub.ui.theme.shapes.AdbHubShapes
-import org.jetbrains.jewel.foundation.theme.JewelTheme
+import com.github.hakandindis.plugins.adbhub.ui.theme.typography.AdbHubTypography
 import org.jetbrains.jewel.ui.component.Icon
 import org.jetbrains.jewel.ui.component.Text
 import org.jetbrains.jewel.ui.component.TextField
@@ -48,7 +48,7 @@ fun ComponentListTab(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(AdbHubTheme.background)
+                .background(AdbHubTheme.colors.background)
                 .padding(horizontal = 24.dp, vertical = 16.dp)
         ) {
             Row(
@@ -68,8 +68,8 @@ fun ComponentListTab(
                 Box(
                     modifier = Modifier
                         .clip(AdbHubShapes.XS)
-                        .background(AdbHubTheme.surface)
-                        .border(1.dp, AdbHubTheme.border, AdbHubShapes.XS)
+                        .background(AdbHubTheme.colors.surface)
+                        .border(1.dp, AdbHubTheme.colors.border, AdbHubShapes.XS)
                         .padding(horizontal = 6.dp, vertical = 2.dp)
                         .padding(end = 8.dp)
                         .wrapContentWidth()
@@ -77,7 +77,7 @@ fun ComponentListTab(
                 ) {
                     Text(
                         "${items.size} $label",
-                        style = JewelTheme.defaultTextStyle,
+                        style = AdbHubTypography.body,
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }
@@ -109,8 +109,8 @@ private fun ComponentRow(display: ComponentDisplay) {
             .then(
                 if (isHovered)
                     Modifier
-                        .background(AdbHubTheme.surface)
-                        .border(1.dp, AdbHubTheme.border, AdbHubShapes.SM)
+                        .background(AdbHubTheme.colors.surface)
+                        .border(1.dp, AdbHubTheme.colors.border, AdbHubShapes.SM)
                 else
                     Modifier.border(1.dp, Color.Transparent, AdbHubShapes.SM)
             )
@@ -130,13 +130,13 @@ private fun ComponentRow(display: ComponentDisplay) {
         ) {
             Text(
                 ".${display.shortName}",
-                style = JewelTheme.defaultTextStyle.copy(fontWeight = FontWeight.Bold),
-                color = AdbHubTheme.textMain
+                style = AdbHubTypography.body.copy(fontWeight = FontWeight.Bold),
+                color = AdbHubTheme.colors.textMain
             )
             Text(
                 display.name,
-                style = JewelTheme.defaultTextStyle,
-                color = AdbHubTheme.textMuted
+                style = AdbHubTypography.body,
+                color = AdbHubTheme.colors.textMuted
             )
         }
     }

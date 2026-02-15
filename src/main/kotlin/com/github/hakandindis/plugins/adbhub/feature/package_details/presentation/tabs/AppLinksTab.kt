@@ -14,8 +14,9 @@ import androidx.compose.ui.unit.dp
 import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.components.PathCard
 import com.github.hakandindis.plugins.adbhub.models.AppLinksInfo
 import com.github.hakandindis.plugins.adbhub.ui.theme.AdbHubTheme
+import com.github.hakandindis.plugins.adbhub.ui.theme.colors.AdbHubColorPalette
 import com.github.hakandindis.plugins.adbhub.ui.theme.shapes.AdbHubShapes
-import org.jetbrains.jewel.foundation.theme.JewelTheme
+import com.github.hakandindis.plugins.adbhub.ui.theme.typography.AdbHubTypography
 import org.jetbrains.jewel.ui.component.Text
 
 private val SUCCESS_STATES = setOf(
@@ -40,8 +41,8 @@ fun AppLinksTab(
         ) {
             Text(
                 "No App Links data available",
-                style = JewelTheme.defaultTextStyle,
-                color = AdbHubTheme.textMuted
+                style = AdbHubTypography.body,
+                color = AdbHubTheme.colors.textMuted
             )
         }
         return
@@ -70,24 +71,24 @@ fun AppLinksTab(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(AdbHubShapes.SM)
-                    .background(AdbHubTheme.surface.copy(alpha = 0.3f))
-                    .border(1.dp, AdbHubTheme.border, AdbHubShapes.SM)
+                    .background(AdbHubTheme.colors.surface.copy(alpha = 0.3f))
+                    .border(1.dp, AdbHubTheme.colors.border, AdbHubShapes.SM)
             ) {
                 Column {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .background(AdbHubTheme.surface.copy(alpha = 0.5f))
+                            .background(AdbHubTheme.colors.surface.copy(alpha = 0.5f))
                             .padding(12.dp),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
                             "DOMAIN",
-                            style = JewelTheme.defaultTextStyle
+                            style = AdbHubTypography.body
                         )
                         Text(
                             "STATE",
-                            style = JewelTheme.defaultTextStyle
+                            style = AdbHubTypography.body
                         )
                     }
                     LazyColumn {
@@ -101,12 +102,12 @@ fun AppLinksTab(
                             ) {
                                 Text(
                                     item.domain,
-                                    style = JewelTheme.defaultTextStyle
+                                    style = AdbHubTypography.body
                                 )
                                 Text(
                                     item.state,
-                                    style = JewelTheme.defaultTextStyle,
-                                    color = domainStateColor(item.state)
+                                    style = AdbHubTypography.body,
+                                    color = domainStateColor(item.state, AdbHubTheme.colors)
                                 )
                             }
                         }
@@ -117,16 +118,16 @@ fun AppLinksTab(
     }
 }
 
-private fun domainStateColor(state: String): Color {
+private fun domainStateColor(state: String, colors: AdbHubColorPalette): Color {
     val normalized = state.lowercase().trim()
     return when {
-        normalized in SUCCESS_STATES -> AdbHubTheme.success
+        normalized in SUCCESS_STATES -> colors.success
         normalized == "none" || normalized == "denied" || normalized == "legacy_failure" ->
-            AdbHubTheme.warning
+            colors.warning
 
         state.toIntOrNull() != null && state.toIntOrNull()!! >= 1024 ->
-            AdbHubTheme.warning
+            colors.warning
 
-        else -> AdbHubTheme.textMain
+        else -> colors.textMain
     }
 }

@@ -8,7 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.tabs.*
 import com.github.hakandindis.plugins.adbhub.ui.theme.AdbHubTheme
-import org.jetbrains.jewel.foundation.theme.JewelTheme
+import com.github.hakandindis.plugins.adbhub.ui.theme.typography.AdbHubTypography
 import org.jetbrains.jewel.ui.component.Text
 
 @Composable
@@ -31,7 +31,7 @@ fun DetailsContent(
                 } else {
                     "Select a package to view details"
                 },
-                style = JewelTheme.defaultTextStyle
+                style = AdbHubTypography.body
             )
         }
         return
@@ -42,7 +42,7 @@ fun DetailsContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(AdbHubTheme.background)
+            .background(AdbHubTheme.colors.background)
     ) {
         PackageHeader(
             packageName = packageDetailsUiState.packageName,
@@ -55,7 +55,7 @@ fun DetailsContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f)
-                .background(AdbHubTheme.background)
+                .background(AdbHubTheme.colors.background)
         ) {
             when (selectedTab) {
                 DetailsTab.GeneralInfo -> GeneralInfoTab(

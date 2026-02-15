@@ -25,7 +25,7 @@ import com.github.hakandindis.plugins.adbhub.feature.package_details.presentatio
 import com.github.hakandindis.plugins.adbhub.ui.AdbIcons
 import com.github.hakandindis.plugins.adbhub.ui.theme.AdbHubTheme
 import com.github.hakandindis.plugins.adbhub.ui.theme.shapes.AdbHubShapes
-import org.jetbrains.jewel.foundation.theme.JewelTheme
+import com.github.hakandindis.plugins.adbhub.ui.theme.typography.AdbHubTypography
 import org.jetbrains.jewel.ui.component.Icon
 import org.jetbrains.jewel.ui.component.Text
 import org.jetbrains.jewel.ui.component.TextField
@@ -69,13 +69,13 @@ private fun LazyListScope.permissionSection(section: PermissionSectionUiModel) {
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(AdbHubShapes.MD)
-                .background(AdbHubTheme.surface.copy(alpha = 0.2f))
-                .border(1.dp, AdbHubTheme.border, AdbHubShapes.MD)
+                .background(AdbHubTheme.colors.surface.copy(alpha = 0.2f))
+                .border(1.dp, AdbHubTheme.colors.border, AdbHubShapes.MD)
         ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(AdbHubTheme.surface.copy(alpha = 0.4f))
+                    .background(AdbHubTheme.colors.surface.copy(alpha = 0.4f))
                     .padding(horizontal = 12.dp, vertical = 10.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -87,7 +87,7 @@ private fun LazyListScope.permissionSection(section: PermissionSectionUiModel) {
                 )
                 Text(
                     section.sectionTitle,
-                    style = JewelTheme.defaultTextStyle
+                    style = AdbHubTypography.body
                 )
             }
             Column {
@@ -98,7 +98,7 @@ private fun LazyListScope.permissionSection(section: PermissionSectionUiModel) {
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(1.dp)
-                                .background(AdbHubTheme.border.copy(alpha = 0.5f))
+                                .background(AdbHubTheme.colors.border.copy(alpha = 0.5f))
                         )
                     }
                 }
@@ -118,7 +118,7 @@ private fun PermissionRow(item: PermissionItemUiModel) {
     ) {
         Text(
             item.name,
-            style = JewelTheme.defaultTextStyle,
+            style = AdbHubTypography.body,
             modifier = Modifier.weight(1f, fill = false)
         )
         when (item.permissionDisplay) {
@@ -128,10 +128,8 @@ private fun PermissionRow(item: PermissionItemUiModel) {
                 if (item.permissionDisplay.text.isNotEmpty()) {
                     Text(
                         item.permissionDisplay.text,
-                        style = JewelTheme.defaultTextStyle.copy(
-                            fontSize = JewelTheme.defaultTextStyle.fontSize * 0.9f
-                        ),
-                        color = AdbHubTheme.textMuted
+                        style = AdbHubTypography.caption,
+                        color = AdbHubTheme.colors.textMuted
                     )
                 }
             }
@@ -149,7 +147,7 @@ private fun GrantedBadge() {
             modifier = Modifier
                 .size(20.dp)
                 .clip(CircleShape)
-                .background(AdbHubTheme.consoleCommand),
+                .background(AdbHubTheme.colors.consoleCommand),
             contentAlignment = Alignment.Center
         ) {
             Canvas(modifier = Modifier.size(12.dp)) {
@@ -163,10 +161,8 @@ private fun GrantedBadge() {
         }
         Text(
             "Granted",
-            style = JewelTheme.defaultTextStyle.copy(
-                fontSize = JewelTheme.defaultTextStyle.fontSize * 0.9f
-            ),
-            color = AdbHubTheme.consoleCommand
+            style = AdbHubTypography.caption,
+            color = AdbHubTheme.colors.consoleCommand
         )
     }
 }
@@ -181,7 +177,7 @@ private fun DeniedBadge() {
             modifier = Modifier
                 .size(20.dp)
                 .clip(CircleShape)
-                .background(AdbHubTheme.danger),
+                .background(AdbHubTheme.colors.danger),
             contentAlignment = Alignment.Center
         ) {
             Canvas(modifier = Modifier.size(12.dp)) {
@@ -195,10 +191,8 @@ private fun DeniedBadge() {
         }
         Text(
             "Denied",
-            style = JewelTheme.defaultTextStyle.copy(
-                fontSize = JewelTheme.defaultTextStyle.fontSize * 0.9f
-            ),
-            color = AdbHubTheme.danger
+            style = AdbHubTypography.caption,
+            color = AdbHubTheme.colors.danger
         )
     }
 }
