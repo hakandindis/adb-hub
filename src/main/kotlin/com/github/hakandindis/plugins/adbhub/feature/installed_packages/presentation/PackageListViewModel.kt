@@ -26,15 +26,16 @@ class PackageListViewModel(
 
     init {
         scope.launch {
-            selectionManager.selectionState
-                .distinctUntilChangedBy { it.selectedDevice }
-                .collectLatest { state ->
-                    state.selectedDevice?.let { device ->
-                        if (device.state == DeviceState.DEVICE) {
-                            refreshPackages(device.id, includeSystemApps = true)
-                        }
+            merge(
+                selectionManager.selectedDeviceState,
+                selectionManager.deviceRefreshRequest.map { selectionManager.selectedDeviceState.value }
+            ).collectLatest { device ->
+                device?.let {
+                    if (it.state == DeviceState.DEVICE) {
+                        refreshPackages(it.id, includeSystemApps = true)
                     }
                 }
+            }
         }
     }
 

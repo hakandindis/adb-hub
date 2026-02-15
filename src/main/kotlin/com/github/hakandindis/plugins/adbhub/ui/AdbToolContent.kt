@@ -36,9 +36,8 @@ fun AdbToolContent(
     val devices = deviceUiState.devices
     val deviceInfoItems = deviceUiState.deviceInfoItems
 
-    val selectionState by selectionManager.selectionState.collectAsState()
-    val selectedDevice = selectionState.selectedDevice
-    val selectedPackage = selectionState.selectedPackage
+    val selectedDevice by selectionManager.selectedDeviceState.collectAsState()
+    val selectedPackage by selectionManager.selectedPackageState.collectAsState()
 
     val packageListUiState by packageListViewModel.uiState.collectAsState()
     val filteredPackages = packageListUiState.filteredPackages

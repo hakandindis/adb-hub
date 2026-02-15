@@ -28,18 +28,19 @@ class DeviceViewModel(
 
     init {
         scope.launch {
-            selectionManager.selectionState
-                .distinctUntilChangedBy { it.selectedDevice }
-                .collectLatest { state ->
-                    when (val device = state.selectedDevice) {
-                        null -> _uiState.update { it.copy(deviceInfoItems = emptyList()) }
-                        else -> if (device.state == DeviceState.DEVICE) {
-                            loadDeviceInfo(device.id)
-                        } else {
-                            _uiState.update { it.copy(deviceInfoItems = emptyList()) }
-                        }
+            merge(
+                selectionManager.selectedDeviceState,
+                selectionManager.deviceRefreshRequest.map { selectionManager.selectedDeviceState.value }
+            ).collectLatest { device ->
+                when (device) {
+                    null -> _uiState.update { it.copy(deviceInfoItems = emptyList()) }
+                    else -> if (device.state == DeviceState.DEVICE) {
+                        loadDeviceInfo(device.id)
+                    } else {
+                        _uiState.update { it.copy(deviceInfoItems = emptyList()) }
                     }
                 }
+            }
         }
     }
 
@@ -64,6 +65,7 @@ class DeviceViewModel(
                         )
                     }
                     selectionManager.selectDevice(toSelect)
+                    selectionManager.requestDeviceRefresh()
                 },
                 onFailure = { error ->
                     logger.error("Error refreshing devices", error)

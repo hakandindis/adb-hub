@@ -1,6 +1,7 @@
 package com.github.hakandindis.plugins.adbhub.feature.package_details.presentation
 
 import com.github.hakandindis.plugins.adbhub.core.selection.SelectionManager
+import com.github.hakandindis.plugins.adbhub.core.selection.SelectionState
 import com.github.hakandindis.plugins.adbhub.feature.package_details.domain.usecase.GetPackageDetailsUseCase
 import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.ui.ComponentDisplay
 import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.ui.PermissionSectionUiModel
@@ -25,18 +26,22 @@ class PackageDetailsViewModel(
 
     init {
         scope.launch {
-            selectionManager.selectionState.collectLatest { state ->
-                if (state.hasValidSelection) {
-                    handleIntent(
-                        PackageDetailsIntent.LoadPackageDetails(
-                            state.selectedPackage!!.packageName,
-                            state.selectedDevice!!.id
+            combine(
+                selectionManager.selectedDeviceState,
+                selectionManager.selectedPackageState
+            ) { device, packageItem -> SelectionState(device, packageItem) }
+                .collectLatest { state ->
+                    if (state.hasValidSelection) {
+                        handleIntent(
+                            PackageDetailsIntent.LoadPackageDetails(
+                                state.selectedPackage!!.packageName,
+                                state.selectedDevice!!.id
+                            )
                         )
-                    )
-                } else {
-                    handleIntent(PackageDetailsIntent.ClearDetails)
+                    } else {
+                        handleIntent(PackageDetailsIntent.ClearDetails)
+                    }
                 }
-            }
         }
     }
 
