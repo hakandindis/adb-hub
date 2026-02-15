@@ -1,14 +1,12 @@
 package com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.tabs
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.github.hakandindis.plugins.adbhub.ui.AdbIcons
@@ -28,6 +26,8 @@ enum class DetailsTab(val label: String, val icon: IconKey) {
     ContentProviders("Content Providers", AdbIcons.folder)
 }
 
+private val TabShape = RoundedCornerShape(4.dp)
+
 @Composable
 fun DetailsSubTabs(
     selectedTab: DetailsTab,
@@ -41,38 +41,42 @@ fun DetailsSubTabs(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(AdbHubDimens.Layout.TAB_BAR_HEIGHT)
-                .padding(horizontal = 4.dp)
+                .height(AdbHubDimens.Layout.TAB_BAR_HEIGHT + 16.dp)
+                .padding(horizontal = 4.dp, vertical = 8.dp)
                 .horizontalScroll(rememberScrollState()),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             DetailsTab.entries.forEach { tab ->
                 val isSelected = tab == selectedTab
-                val tint = if (isSelected) AdbHubTheme.colors.primary else AdbHubTheme.colors.textMuted
-                Column(
+                val tint = if (isSelected) AdbHubTheme.colors.textPrimary else AdbHubTheme.colors.textMuted
+                Box(
                     modifier = Modifier
                         .height(AdbHubDimens.Layout.TAB_BAR_HEIGHT)
+                        .clip(TabShape)
+                        .then(
+                            if (isSelected) {
+                                Modifier
+                                    .background(AdbHubTheme.colors.tabSelectedBackground)
+                                    .border(
+                                        width = 1.dp,
+                                        color = AdbHubTheme.colors.tabSelectedStroke,
+                                        shape = TabShape
+                                    )
+                            } else {
+                                Modifier
+                            }
+                        )
                         .clickable { onTabSelected(tab) }
-                        .padding(horizontal = 12.dp)
-                        .width(IntrinsicSize.Max)
+                        .padding(horizontal = 12.dp),
+                    contentAlignment = Alignment.Center
                 ) {
                     Text(
                         tab.label,
                         style = AdbHubTypography.body,
                         color = tint,
                         maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.weight(1f)
-                    )
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(2.dp)
-                            .background(
-                                if (isSelected) AdbHubTheme.colors.primary
-                                else Color.Transparent
-                            )
+                        overflow = TextOverflow.Ellipsis
                     )
                 }
             }
