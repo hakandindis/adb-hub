@@ -21,6 +21,5 @@ fun AdbHubTheme(content: @Composable () -> Unit) {
 object AdbHubTheme {
     val colors: AdbHubColorPalette
         @Composable
-        //@ReadOnlyComposable
         get() = LocalAdbHubColors.current
 }

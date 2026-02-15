@@ -32,7 +32,6 @@ object AdbIcons {
     val contentCopy = AllIconsKeys.Actions.Copy
     val settingsNode = AllIconsKeys.Nodes.Folder
 
-    // Main tabs
     val details = AllIconsKeys.FileTypes.Text
     val actionsTarget = AllIconsKeys.Actions.Execute
     val consoleLog = AllIconsKeys.Toolwindows.ToolWindowBookmarks
