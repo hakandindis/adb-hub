@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.dp
 import com.github.hakandindis.plugins.adbhub.ui.AdbIcons
 import com.github.hakandindis.plugins.adbhub.ui.theme.AdbHubTheme
 import com.github.hakandindis.plugins.adbhub.ui.theme.shapes.AdbHubShapes
-import org.jetbrains.jewel.foundation.theme.JewelTheme
+import com.github.hakandindis.plugins.adbhub.ui.theme.typography.AdbHubTypography
 import org.jetbrains.jewel.ui.component.Icon
 import org.jetbrains.jewel.ui.component.Text
 
@@ -24,15 +24,15 @@ fun ConsoleLogToolbar(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(AdbHubTheme.surface)
+            .background(AdbHubTheme.colors.surface)
             .padding(horizontal = 12.dp, vertical = 8.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
             text = "$logCount command${if (logCount != 1) "s" else ""} logged",
-            style = JewelTheme.defaultTextStyle.copy(
-                color = AdbHubTheme.textMuted
+            style = AdbHubTypography.body.copy(
+                color = AdbHubTheme.colors.textMuted
             )
         )
 
@@ -40,8 +40,8 @@ fun ConsoleLogToolbar(
             modifier = Modifier
                 .height(28.dp)
                 .clip(AdbHubShapes.SM)
-                .background(AdbHubTheme.itemHover)
-                .border(1.dp, AdbHubTheme.border.copy(alpha = 0.3f), AdbHubShapes.SM)
+                .background(AdbHubTheme.colors.itemHover)
+                .border(1.dp, AdbHubTheme.colors.border.copy(alpha = 0.3f), AdbHubShapes.SM)
                 .clickable { onClearLogs() }
                 .padding(horizontal = 12.dp),
             contentAlignment = Alignment.Center
@@ -57,7 +57,7 @@ fun ConsoleLogToolbar(
                 )
                 Text(
                     "Clear",
-                    style = JewelTheme.defaultTextStyle
+                    style = AdbHubTypography.body
                 )
             }
         }

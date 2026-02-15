@@ -7,7 +7,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.github.hakandindis.plugins.adbhub.core.models.CommandLog
 import com.github.hakandindis.plugins.adbhub.ui.theme.AdbHubTheme
-import org.jetbrains.jewel.foundation.theme.JewelTheme
+import com.github.hakandindis.plugins.adbhub.ui.theme.typography.AdbHubTypography
 import org.jetbrains.jewel.ui.component.Text
 
 @Composable
@@ -24,8 +24,8 @@ fun ConsoleLogEntry(log: CommandLog) {
         ) {
             Text(
                 text = log.getFormattedTimestamp(),
-                style = JewelTheme.defaultTextStyle.copy(
-                    color = AdbHubTheme.consoleTimestamp,
+                style = AdbHubTypography.console.copy(
+                    color = AdbHubTheme.colors.consoleTimestamp,
                     fontWeight = FontWeight.Normal
                 ),
                 modifier = Modifier.width(70.dp)
@@ -33,8 +33,8 @@ fun ConsoleLogEntry(log: CommandLog) {
 
             Text(
                 text = "\$ ${log.fullCommand}",
-                style = JewelTheme.defaultTextStyle.copy(
-                    color = AdbHubTheme.consoleCommand,
+                style = AdbHubTypography.console.copy(
+                    color = AdbHubTheme.colors.consoleCommand,
                     fontWeight = FontWeight.Normal
                 ),
                 modifier = Modifier.weight(1f)
@@ -47,11 +47,11 @@ fun ConsoleLogEntry(log: CommandLog) {
                 if (line.isNotBlank()) {
                     Text(
                         text = line,
-                        style = JewelTheme.defaultTextStyle.copy(
+                        style = AdbHubTypography.console.copy(
                             color = if (log.isSuccess) {
-                                AdbHubTheme.consoleOutput
+                                AdbHubTheme.colors.consoleOutput
                             } else {
-                                AdbHubTheme.consoleError
+                                AdbHubTheme.colors.consoleError
                             },
                             fontWeight = FontWeight.Normal
                         ),
@@ -69,8 +69,8 @@ fun ConsoleLogEntry(log: CommandLog) {
                 if (line.isNotBlank()) {
                     Text(
                         text = line,
-                        style = JewelTheme.defaultTextStyle.copy(
-                            color = AdbHubTheme.consoleError,
+                        style = AdbHubTypography.console.copy(
+                            color = AdbHubTheme.colors.consoleError,
                             fontWeight = FontWeight.Normal
                         ),
                         modifier = Modifier
@@ -83,8 +83,8 @@ fun ConsoleLogEntry(log: CommandLog) {
         if (!log.isSuccess) {
             Text(
                 text = "Exit code: ${log.exitCode}",
-                style = JewelTheme.defaultTextStyle.copy(
-                    color = AdbHubTheme.consoleExitCode,
+                style = AdbHubTypography.console.copy(
+                    color = AdbHubTheme.colors.consoleExitCode,
                     fontWeight = FontWeight.Normal
                 ),
                 modifier = Modifier

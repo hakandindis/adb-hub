@@ -10,7 +10,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.github.hakandindis.plugins.adbhub.ui.theme.AdbHubTheme
 import com.github.hakandindis.plugins.adbhub.ui.theme.shapes.AdbHubShapes
-import org.jetbrains.jewel.foundation.theme.JewelTheme
+import com.github.hakandindis.plugins.adbhub.ui.theme.typography.AdbHubTypography
 import org.jetbrains.jewel.ui.component.Icon
 import org.jetbrains.jewel.ui.component.Text
 import org.jetbrains.jewel.ui.icon.IntelliJIconKey
@@ -33,15 +33,15 @@ fun ListSection(
             Icon(icon, contentDescription = null, modifier = Modifier.size(16.dp))
             Text(
                 title,
-                style = JewelTheme.defaultTextStyle
+                style = AdbHubTypography.body
             )
         }
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(AdbHubShapes.MD)
-                .background(AdbHubTheme.surface.copy(alpha = 0.2f))
-                .border(1.dp, AdbHubTheme.border, AdbHubShapes.MD)
+                .background(AdbHubTheme.colors.surface.copy(alpha = 0.2f))
+                .border(1.dp, AdbHubTheme.colors.border, AdbHubShapes.MD)
         ) {
             Column {
                 content()

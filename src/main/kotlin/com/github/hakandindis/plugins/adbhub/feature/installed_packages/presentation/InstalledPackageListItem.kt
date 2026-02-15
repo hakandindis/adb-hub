@@ -14,7 +14,7 @@ import com.github.hakandindis.plugins.adbhub.models.ApplicationPackage
 import com.github.hakandindis.plugins.adbhub.ui.AdbIcons
 import com.github.hakandindis.plugins.adbhub.ui.theme.AdbHubTheme
 import com.github.hakandindis.plugins.adbhub.ui.theme.shapes.AdbHubShapes
-import org.jetbrains.jewel.foundation.theme.JewelTheme
+import com.github.hakandindis.plugins.adbhub.ui.theme.typography.AdbHubTypography
 import org.jetbrains.jewel.ui.component.Icon
 import org.jetbrains.jewel.ui.component.Text
 
@@ -34,10 +34,10 @@ fun InstalledPackageListItem(
             .fillMaxWidth()
             .clip(AdbHubShapes.SM)
             .then(
-                if (isSelected) Modifier.background(AdbHubTheme.primary)
+                if (isSelected) Modifier.background(AdbHubTheme.colors.primary)
                 else Modifier
-                    .background(AdbHubTheme.background)
-                    .border(1.dp, AdbHubTheme.border.copy(alpha = 0.5f), AdbHubShapes.SM)
+                    .background(AdbHubTheme.colors.background)
+                    .border(1.dp, AdbHubTheme.colors.border.copy(alpha = 0.5f), AdbHubShapes.SM)
             )
             .clickable { onClick() }
             .padding(12.dp),
@@ -50,7 +50,7 @@ fun InstalledPackageListItem(
                 .clip(AdbHubShapes.SM)
                 .background(
                     if (isSelected) Color.White.copy(alpha = 0.3f)
-                    else AdbHubTheme.itemHover
+                    else AdbHubTheme.colors.itemHover
                 ),
             contentAlignment = Alignment.Center
         ) {
@@ -64,7 +64,7 @@ fun InstalledPackageListItem(
             } else {
                 Text(
                     packageItem.initials,
-                    style = JewelTheme.defaultTextStyle
+                    style = AdbHubTypography.body
                 )
             }
         }
@@ -75,11 +75,11 @@ fun InstalledPackageListItem(
         ) {
             Text(
                 packageItem.packageName,
-                style = JewelTheme.defaultTextStyle
+                style = AdbHubTypography.body
             )
             Text(
                 statusText,
-                style = JewelTheme.defaultTextStyle
+                style = AdbHubTypography.body
             )
         }
     }

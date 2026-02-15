@@ -15,7 +15,7 @@ import com.github.hakandindis.plugins.adbhub.feature.package_details.presentatio
 import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.PackageDetailsViewModel
 import com.github.hakandindis.plugins.adbhub.models.ApplicationPackage
 import com.github.hakandindis.plugins.adbhub.ui.theme.AdbHubTheme
-import org.jetbrains.jewel.foundation.theme.JewelTheme
+import com.github.hakandindis.plugins.adbhub.ui.theme.typography.AdbHubTypography
 import org.jetbrains.jewel.ui.component.Text
 
 @Composable
@@ -35,7 +35,7 @@ fun AdbMainContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f)
-                .background(AdbHubTheme.background)
+                .background(AdbHubTheme.colors.background)
         ) {
             when (selectedTab) {
                 MainTab.Details -> DetailsContent(
@@ -74,8 +74,8 @@ private fun TabPlaceholder(title: String, message: String) {
         contentAlignment = Alignment.Center
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(title, style = JewelTheme.defaultTextStyle)
-            Text(message, style = JewelTheme.defaultTextStyle, modifier = Modifier.padding(top = 8.dp))
+            Text(title, style = AdbHubTypography.body)
+            Text(message, style = AdbHubTypography.body, modifier = Modifier.padding(top = 8.dp))
         }
     }
 }

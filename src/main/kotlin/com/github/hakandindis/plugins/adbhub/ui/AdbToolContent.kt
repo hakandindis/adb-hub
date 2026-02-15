@@ -69,8 +69,8 @@ fun AdbToolContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(AdbHubTheme.background)
-            .border(1.dp, AdbHubTheme.border)
+            .background(AdbHubTheme.colors.background)
+            .border(1.dp, AdbHubTheme.colors.border)
     ) {
         Row(modifier = Modifier.weight(1f).fillMaxWidth()) {
             AdbSidebar(

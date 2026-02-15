@@ -11,7 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.github.hakandindis.plugins.adbhub.ui.theme.AdbHubTheme
-import org.jetbrains.jewel.foundation.theme.JewelTheme
+import com.github.hakandindis.plugins.adbhub.ui.theme.typography.AdbHubTypography
 import org.jetbrains.jewel.ui.component.Text
 
 @Composable
@@ -23,7 +23,7 @@ fun ConsoleLogTab(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(AdbHubTheme.background)
+            .background(AdbHubTheme.colors.background)
     ) {
         ConsoleLogToolbar(
             onClearLogs = {
@@ -41,8 +41,8 @@ fun ConsoleLogTab(
             ) {
                 Text(
                     "No commands executed yet",
-                    style = JewelTheme.defaultTextStyle.copy(
-                        color = AdbHubTheme.textMuted
+                    style = AdbHubTypography.body.copy(
+                        color = AdbHubTheme.colors.textMuted
                     )
                 )
             }

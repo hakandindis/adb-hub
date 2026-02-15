@@ -9,6 +9,7 @@ import com.github.hakandindis.plugins.adbhub.feature.package_actions.di.PackageA
 import com.github.hakandindis.plugins.adbhub.feature.package_details.di.PackageDetailsViewModelFactory
 import com.github.hakandindis.plugins.adbhub.ui.AdbToolContent
 import com.github.hakandindis.plugins.adbhub.ui.AdbUnavailableContent
+import com.github.hakandindis.plugins.adbhub.ui.theme.AdbHubTheme
 import com.intellij.openapi.components.service
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
@@ -28,7 +29,9 @@ class AdbHubToolWindowFactory : ToolWindowFactory, DumbAware {
 
         if (executor == null) {
             toolWindow.addComposeTab(focusOnClickInside = true) {
-                AdbUnavailableContent()
+                AdbHubTheme {
+                    AdbUnavailableContent()
+                }
             }
             return
         }
@@ -47,14 +50,16 @@ class AdbHubToolWindowFactory : ToolWindowFactory, DumbAware {
         Disposer.register(toolWindow.disposable, consoleLogViewModel)
 
         toolWindow.addComposeTab(focusOnClickInside = true) {
-            AdbToolContent(
-                deviceViewModel = deviceViewModel,
-                packageListViewModel = packageListViewModel,
-                packageDetailsViewModel = packageDetailsViewModel,
-                packageActionsViewModel = packageActionsViewModel,
-                consoleLogViewModel = consoleLogViewModel,
-                selectionManager = selectionManager
-            )
+            AdbHubTheme {
+                AdbToolContent(
+                    deviceViewModel = deviceViewModel,
+                    packageListViewModel = packageListViewModel,
+                    packageDetailsViewModel = packageDetailsViewModel,
+                    packageActionsViewModel = packageActionsViewModel,
+                    consoleLogViewModel = consoleLogViewModel,
+                    selectionManager = selectionManager
+                )
+            }
         }
     }
 }

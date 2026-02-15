@@ -30,8 +30,8 @@ fun GeneralInfoTab(
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(AdbHubShapes.MD)
-                .background(AdbHubTheme.surface.copy(alpha = 0.2f))
-                .border(1.dp, AdbHubTheme.border, AdbHubShapes.MD)
+                .background(AdbHubTheme.colors.surface.copy(alpha = 0.2f))
+                .border(1.dp, AdbHubTheme.colors.border, AdbHubShapes.MD)
         ) {
             LazyColumn {
                 itemsIndexed(generalInfoItems) { index, item ->

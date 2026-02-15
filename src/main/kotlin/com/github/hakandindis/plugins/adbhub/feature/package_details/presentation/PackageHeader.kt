@@ -10,7 +10,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.github.hakandindis.plugins.adbhub.ui.theme.AdbHubTheme
 import com.github.hakandindis.plugins.adbhub.ui.theme.shapes.AdbHubShapes
-import org.jetbrains.jewel.foundation.theme.JewelTheme
+import com.github.hakandindis.plugins.adbhub.ui.theme.typography.AdbHubTypography
 import org.jetbrains.jewel.ui.component.Text
 
 @Composable
@@ -27,7 +27,7 @@ fun PackageHeader(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(AdbHubTheme.surface)
+            .background(AdbHubTheme.colors.surface)
             .padding(24.dp)
     ) {
         Row(
@@ -39,12 +39,12 @@ fun PackageHeader(
                 modifier = Modifier
                     .size(64.dp)
                     .clip(AdbHubShapes.MD)
-                    .background(AdbHubTheme.primary),
+                    .background(AdbHubTheme.colors.primary),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
                     packageInitials,
-                    style = JewelTheme.defaultTextStyle,
+                    style = AdbHubTypography.body,
                     color = Color.White
                 )
             }
@@ -55,7 +55,7 @@ fun PackageHeader(
             ) {
                 Text(
                     packageName,
-                    style = JewelTheme.defaultTextStyle
+                    style = AdbHubTypography.body
                 )
                 uid?.let {
                     Row(
@@ -64,7 +64,7 @@ fun PackageHeader(
                     ) {
                         Text(
                             "UID: $it",
-                            style = JewelTheme.defaultTextStyle
+                            style = AdbHubTypography.body
                         )
                     }
                 }

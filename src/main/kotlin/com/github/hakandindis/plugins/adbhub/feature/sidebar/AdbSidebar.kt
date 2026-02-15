@@ -34,7 +34,7 @@ fun AdbSidebar(
         modifier = Modifier
             .width(AdbHubDimens.Layout.SIDEBAR_WIDTH)
             .fillMaxHeight()
-            .background(AdbHubTheme.surface)
+            .background(AdbHubTheme.colors.surface)
     ) {
         DevicesSection(
             devices = devices,
