@@ -2,9 +2,9 @@
 
 ## [Unreleased]
 
-## [1.0.0-alpha] - 2026-02-16
+## [0.1.0] - 2026-02-15
 
-Initial alpha release. Manage Android devices and applications directly from your IDE.
+Initial release. Manage Android devices and applications directly from your IDE.
 
 ### Added
 
