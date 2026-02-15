@@ -2,40 +2,16 @@
 
 ## [Unreleased]
 
-## [1.0.0-alpha] - 2025-02-13
+## [1.0.0-alpha] - 2026-02-16
 
-Initial alpha release. Enables Android developers to manage connected devices and applications directly from the IDE.
+Initial alpha release. Manage Android devices and applications directly from your IDE.
 
 ### Added
 
-- **Device Management**
-    - List connected Android devices (USB and wireless)
-    - View device info (model, state, API level)
-    - Switch between multiple devices
-
-- **Package List**
-    - List installed applications on the selected device
-    - Search and filter packages
-    - View all packages including system apps
-
-- **Package Details**
-    - General info (version, package name, app name)
-    - Inspect App Links definitions
-    - Permissions list with search
-    - Activities, Receivers, Services, Content Providers lists (search supported)
-
-- **App Actions**
-    - Launch app
-    - Force stop app
-    - Clear app data
-    - Uninstall app
-    - Clear app cache
-    - Launch deep link (via implicit intent)
-
-- **ADB Console**
-    - View log of executed ADB commands
-
-- **IDE Integration**
-    - Tool Window access
-    - Compatible with JetBrains AI (2025.2+) and Android Studio
-    - Compose-based UI
+- **Device Management** – List USB/wireless devices, view device info, switch between devices
+- **Package Browser** – Search and filter installed apps, view system packages
+- **Package Details** – General info, App Links, Permissions, Activities, Receivers, Services, Content Providers
+- **App Actions** – Launch, force stop, clear data, uninstall, clear cache, send deep links
+- **ADB Console** – Real-time log of executed ADB commands
+- **Theme Support** – Light and dark theme with IDE integration
+- **Compose UI** – Modern Jetpack Compose (Jewel) interface

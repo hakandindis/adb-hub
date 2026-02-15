@@ -10,6 +10,7 @@
     <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
     <vendor email="developer.hakandindis@gmail.com" url="https://github.com/hakandindis">Hakan Dindis</vendor>
 
+    <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.modules.compose</depends>
 
     <resource-bundle>messages.ADBHubMessageBundle</resource-bundle>
