@@ -28,7 +28,10 @@ class DeviceViewModel(
 
     init {
         scope.launch {
-            selectionManager.selectedDeviceState.collectLatest { device ->
+            merge(
+                selectionManager.selectedDeviceState,
+                selectionManager.deviceRefreshRequest.map { selectionManager.selectedDeviceState.value }
+            ).collectLatest { device ->
                 when (device) {
                     null -> _uiState.update { it.copy(deviceInfoItems = emptyList()) }
                     else -> if (device.state == DeviceState.DEVICE) {
@@ -62,6 +65,7 @@ class DeviceViewModel(
                         )
                     }
                     selectionManager.selectDevice(toSelect)
+                    selectionManager.requestDeviceRefresh()
                 },
                 onFailure = { error ->
                     logger.error("Error refreshing devices", error)
