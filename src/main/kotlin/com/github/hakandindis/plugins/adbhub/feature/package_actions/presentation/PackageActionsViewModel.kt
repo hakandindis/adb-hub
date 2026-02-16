@@ -42,11 +42,7 @@ class PackageActionsViewModel(
             is PackageActionsIntent.ClearData -> clearData(intent.packageName, intent.deviceId)
             is PackageActionsIntent.ClearCache -> clearCache(intent.packageName, intent.deviceId)
             is PackageActionsIntent.Uninstall -> uninstall(intent.packageName, intent.deviceId)
-            is PackageActionsIntent.LaunchDeepLink -> launchDeepLink(
-                intent.uri,
-                intent.packageName,
-                intent.deviceId
-            )
+            is PackageActionsIntent.LaunchDeepLink -> launchDeepLink(intent.uri, intent.deviceId)
 
             is PackageActionsIntent.StayAwake -> setStayAwake(intent.enabled, intent.deviceId)
             is PackageActionsIntent.PackageEnabled -> setPackageEnabled(
@@ -157,9 +153,9 @@ class PackageActionsViewModel(
         }
     }
 
-    private fun launchDeepLink(uri: String, packageName: String, deviceId: String) {
+    private fun launchDeepLink(uri: String, deviceId: String) {
         scope.launch {
-            launchDeepLinkUseCase(uri, packageName, deviceId).fold(
+            launchDeepLinkUseCase(uri, deviceId).fold(
                 onSuccess = {
                     recentDeepLinksService.addAndTruncate(uri)
                     _uiState.update { it.copy(recentUris = recentDeepLinksService.getRecentUris()) }

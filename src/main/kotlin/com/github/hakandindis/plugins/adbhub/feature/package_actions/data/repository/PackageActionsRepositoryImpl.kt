@@ -47,16 +47,12 @@ class PackageActionsRepositoryImpl(
         }
     }
 
-    override suspend fun launchDeepLink(uri: String, packageName: String, deviceId: String): Result<Unit> {
+    override suspend fun launchDeepLink(uri: String, deviceId: String): Result<Unit> {
         return try {
-            val command = AmCommands.startActivityWithAction(
-                IntentConstants.Actions.VIEW,
-                uri,
-                packageName
-            )
+            val command = AmCommands.startActivityWithAction(IntentConstants.Actions.VIEW, uri)
             val result = commandExecutor.executeCommandForDevice(deviceId, command)
             if (result.isSuccess) {
-                logger.info("Deep link launched: $uri for $packageName")
+                logger.info("Deep link launched: $uri")
                 Result.success(Unit)
             } else {
                 logger.error("Failed to launch deep link: ${result.error ?: result.output}")

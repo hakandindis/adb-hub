@@ -174,7 +174,6 @@ fun AppActionsTab(
                                     packageActionsViewModel.handleIntent(
                                         PackageActionsIntent.LaunchDeepLink(
                                             uri = uri,
-                                            packageName = packageName,
                                             deviceId = deviceId
                                         )
                                     )
@@ -200,7 +199,7 @@ fun AppActionsTab(
                     }
                 }
                 Text(
-                    "Triggers an implicit intent with ACTION_VIEW.",
+                    "Triggers an implicit intent with ACTION_VIEW. System resolves which app handles the link.",
                     style = AdbHubTypography.caption,
                     color = AdbHubTheme.colors.textMuted
                 )
