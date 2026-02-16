@@ -40,7 +40,7 @@ class AdbCommandExecutor(private val adbPath: String) {
         command: String,
         timeoutSeconds: Long = DEFAULT_TIMEOUT_SECONDS
     ): CommandResult {
-        val fullCommand = command.split(" ").filter { it.isNotBlank() }
+        val fullCommand = parseCommandLine(command)
 
         val cmdLine = GeneralCommandLine(adbPath)
             .withParameters(fullCommand)
@@ -66,5 +66,37 @@ class AdbCommandExecutor(private val adbPath: String) {
                 isSuccess = false
             )
         }
+    }
+
+    private fun parseCommandLine(command: String): List<String> {
+        val result = mutableListOf<String>()
+        val current = StringBuilder()
+        var inQuotes = false
+        var quoteChar: Char? = null
+
+        for (c in command) {
+            when {
+                (c == '"' || c == '\'') && !inQuotes -> {
+                    inQuotes = true
+                    quoteChar = c
+                }
+
+                inQuotes && c == quoteChar -> {
+                    inQuotes = false
+                    quoteChar = null
+                }
+
+                (c == ' ' || c == '\t') && !inQuotes -> {
+                    if (current.isNotEmpty()) {
+                        result.add(current.toString())
+                        current.clear()
+                    }
+                }
+
+                else -> current.append(c)
+            }
+        }
+        if (current.isNotEmpty()) result.add(current.toString())
+        return result
     }
 }
