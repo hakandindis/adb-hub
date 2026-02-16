@@ -15,9 +15,5 @@ class AdbInitializer(
         }
     }
 
-    fun isAdbAvailable(): Boolean {
-        return executor != null || initialize()
-    }
-
     fun getExecutor(): AdbCommandExecutor? = executor
 }
