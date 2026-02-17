@@ -4,6 +4,8 @@ import com.github.hakandindis.plugins.adbhub.constants.AdbCommands
 import com.github.hakandindis.plugins.adbhub.constants.AdbConfig
 import com.github.hakandindis.plugins.adbhub.constants.SystemPaths
 import com.github.hakandindis.plugins.adbhub.core.adb.AdbCommandExecutor
+import com.github.hakandindis.plugins.adbhub.core.result.AdbHubError
+import com.github.hakandindis.plugins.adbhub.core.result.AdbHubResult
 import com.github.hakandindis.plugins.adbhub.feature.installed_packages.domain.repository.PackageRepository
 import com.github.hakandindis.plugins.adbhub.models.ApplicationPackage
 import com.intellij.openapi.diagnostic.Logger
@@ -14,17 +16,22 @@ class PackageRepositoryImpl(
 
     private val logger = Logger.getInstance(PackageRepositoryImpl::class.java)
 
-    override suspend fun getPackages(deviceId: String, includeSystemApps: Boolean): Result<List<ApplicationPackage>> {
+    override suspend fun getPackages(
+        deviceId: String,
+        includeSystemApps: Boolean
+    ): AdbHubResult<List<ApplicationPackage>> {
         return try {
-            val packages = fetchPackages(deviceId, includeSystemApps)
-            Result.success(packages)
+            fetchPackages(deviceId, includeSystemApps)
         } catch (e: Exception) {
             logger.error("Error getting packages for device $deviceId", e)
-            Result.failure(e)
+            AdbHubResult.failure(AdbHubError.Unknown(e.message ?: "Failed to get packages", e))
         }
     }
 
-    private suspend fun fetchPackages(deviceId: String, includeSystemApps: Boolean): List<ApplicationPackage> {
+    private suspend fun fetchPackages(
+        deviceId: String,
+        includeSystemApps: Boolean
+    ): AdbHubResult<List<ApplicationPackage>> {
         val command = if (includeSystemApps) {
             AdbCommands.LIST_PACKAGES
         } else {
@@ -42,14 +49,22 @@ class PackageRepositoryImpl(
                 AdbCommands.LIST_PACKAGES_USER_NO_PATH
             }
             val fallbackResult = commandExecutor.executeCommandForDevice(deviceId, fallbackCommand)
-            if (fallbackResult.isSuccess) {
-                return parsePackages(fallbackResult.output)
+            return if (fallbackResult.isSuccess) {
+                AdbHubResult.success(parsePackages(fallbackResult.output))
+            } else {
+                AdbHubResult.failure(
+                    AdbHubError.AdbCommandFailed(
+                        command = command,
+                        exitCode = result.exitCode,
+                        stderr = result.error?.takeIf { it.isNotBlank() },
+                        stdout = result.output.takeIf { it.isNotBlank() }
+                    )
+                )
             }
-            return emptyList()
         }
 
         val outputLines = result.output.lines()
-        val packages = parsePackages(result.output)
+        var packages = parsePackages(result.output)
         logger.info("Found ${packages.size} packages for device $deviceId (from ${outputLines.size} lines)")
 
         if (logger.isDebugEnabled && outputLines.isNotEmpty()) {
@@ -66,12 +81,12 @@ class PackageRepositoryImpl(
                 val newPackages = fallbackPackages.filter { it.packageName !in existingNames }
                 if (newPackages.isNotEmpty()) {
                     logger.info("Found ${newPackages.size} additional packages without -f flag")
-                    return (packages + newPackages).sortedBy { it.packageName }
+                    packages = (packages + newPackages).sortedBy { it.packageName }
                 }
             }
         }
 
-        return packages
+        return AdbHubResult.success(packages)
     }
 
     private fun parsePackages(output: String): List<ApplicationPackage> {

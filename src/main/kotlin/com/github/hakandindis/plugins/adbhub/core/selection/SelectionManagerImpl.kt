@@ -1,12 +1,12 @@
 package com.github.hakandindis.plugins.adbhub.core.selection
 
+import com.github.hakandindis.plugins.adbhub.core.coroutine.safeLaunch
 import com.github.hakandindis.plugins.adbhub.core.models.Device
 import com.github.hakandindis.plugins.adbhub.models.ApplicationPackage
 import com.intellij.openapi.project.Project
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 
 class SelectionManagerImpl(
     @Suppress("unused") private val project: Project
@@ -33,6 +33,6 @@ class SelectionManagerImpl(
     }
 
     override fun requestDeviceRefresh() {
-        scope.launch { _deviceRefreshRequest.emit(Unit) }
+        scope.safeLaunch { _deviceRefreshRequest.emit(Unit) }
     }
 }

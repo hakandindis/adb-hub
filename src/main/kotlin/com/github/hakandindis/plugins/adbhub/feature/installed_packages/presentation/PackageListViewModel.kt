@@ -1,15 +1,14 @@
 package com.github.hakandindis.plugins.adbhub.feature.installed_packages.presentation
 
+import com.github.hakandindis.plugins.adbhub.core.coroutine.safeLaunch
 import com.github.hakandindis.plugins.adbhub.core.models.DeviceState
 import com.github.hakandindis.plugins.adbhub.core.selection.SelectionManager
 import com.github.hakandindis.plugins.adbhub.feature.installed_packages.domain.usecase.FilterPackagesUseCase
 import com.github.hakandindis.plugins.adbhub.feature.installed_packages.domain.usecase.GetPackagesUseCase
 import com.intellij.openapi.Disposable
-import com.intellij.openapi.diagnostic.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 
 class PackageListViewModel(
     private val getPackagesUseCase: GetPackagesUseCase,
@@ -18,14 +17,13 @@ class PackageListViewModel(
     coroutineScope: CoroutineScope
 ) : Disposable {
 
-    private val logger = Logger.getInstance(PackageListViewModel::class.java)
     private val scope = coroutineScope
 
     private val _uiState = MutableStateFlow(PackageListUiState())
     val uiState: StateFlow<PackageListUiState> = _uiState.asStateFlow()
 
     init {
-        scope.launch {
+        scope.safeLaunch {
             merge(
                 selectionManager.selectedDeviceState,
                 selectionManager.deviceRefreshRequest.map { selectionManager.selectedDeviceState.value }
@@ -61,7 +59,7 @@ class PackageListViewModel(
     }
 
     private fun refreshPackages(deviceId: String, includeSystemApps: Boolean) {
-        scope.launch {
+        scope.safeLaunch {
             _uiState.update { it.copy(isLoading = true, error = null) }
             getPackagesUseCase(deviceId, includeSystemApps).fold(
                 onSuccess = { packages ->
@@ -78,11 +76,10 @@ class PackageListViewModel(
                     }
                 },
                 onFailure = { error ->
-                    logger.error("Error refreshing packages for device $deviceId", error)
                     _uiState.update {
                         it.copy(
                             isLoading = false,
-                            error = error.message ?: "Failed to refresh packages"
+                            error = error.toUserMessage()
                         )
                     }
                 }

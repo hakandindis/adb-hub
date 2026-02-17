@@ -1,16 +1,15 @@
 package com.github.hakandindis.plugins.adbhub.feature.package_actions.presentation
 
+import com.github.hakandindis.plugins.adbhub.core.coroutine.safeLaunch
 import com.github.hakandindis.plugins.adbhub.feature.package_actions.domain.usecase.*
 import com.github.hakandindis.plugins.adbhub.service.RecentDeepLinksService
 import com.intellij.openapi.Disposable
-import com.intellij.openapi.diagnostic.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 
 class PackageActionsViewModel(
     private val launchAppUseCase: LaunchAppUseCase,
@@ -25,7 +24,6 @@ class PackageActionsViewModel(
     coroutineScope: CoroutineScope
 ) : Disposable {
 
-    private val logger = Logger.getInstance(PackageActionsViewModel::class.java)
     private val scope = coroutineScope
 
     private val _uiState = MutableStateFlow(PackageActionsUiState())
@@ -54,18 +52,17 @@ class PackageActionsViewModel(
     }
 
     private fun launchApp(packageName: String, deviceId: String) {
-        scope.launch {
+        scope.safeLaunch {
             _uiState.update { it.copy(isLaunching = true, error = null) }
             launchAppUseCase(packageName, deviceId).fold(
                 onSuccess = {
                     _uiState.update { it.copy(isLaunching = false) }
                 },
                 onFailure = { error ->
-                    logger.error("Error launching app $packageName", error)
                     _uiState.update {
                         it.copy(
                             isLaunching = false,
-                            error = error.message ?: "Failed to launch app"
+                            error = error.toUserMessage()
                         )
                     }
                 }
@@ -74,18 +71,17 @@ class PackageActionsViewModel(
     }
 
     private fun forceStop(packageName: String, deviceId: String) {
-        scope.launch {
+        scope.safeLaunch {
             _uiState.update { it.copy(isStopping = true, error = null) }
             forceStopUseCase(packageName, deviceId).fold(
                 onSuccess = {
                     _uiState.update { it.copy(isStopping = false) }
                 },
                 onFailure = { error ->
-                    logger.error("Error force stopping app $packageName", error)
                     _uiState.update {
                         it.copy(
                             isStopping = false,
-                            error = error.message ?: "Failed to force stop app"
+                            error = error.toUserMessage()
                         )
                     }
                 }
@@ -94,18 +90,17 @@ class PackageActionsViewModel(
     }
 
     private fun clearData(packageName: String, deviceId: String) {
-        scope.launch {
+        scope.safeLaunch {
             _uiState.update { it.copy(isClearingData = true, error = null) }
             clearDataUseCase(packageName, deviceId).fold(
                 onSuccess = {
                     _uiState.update { it.copy(isClearingData = false) }
                 },
                 onFailure = { error ->
-                    logger.error("Error clearing data for $packageName", error)
                     _uiState.update {
                         it.copy(
                             isClearingData = false,
-                            error = error.message ?: "Failed to clear data"
+                            error = error.toUserMessage()
                         )
                     }
                 }
@@ -114,18 +109,17 @@ class PackageActionsViewModel(
     }
 
     private fun clearCache(packageName: String, deviceId: String) {
-        scope.launch {
+        scope.safeLaunch {
             _uiState.update { it.copy(isClearingCache = true, error = null) }
             clearCacheUseCase(packageName, deviceId).fold(
                 onSuccess = {
                     _uiState.update { it.copy(isClearingCache = false) }
                 },
                 onFailure = { error ->
-                    logger.error("Error clearing cache for $packageName", error)
                     _uiState.update {
                         it.copy(
                             isClearingCache = false,
-                            error = error.message ?: "Failed to clear cache"
+                            error = error.toUserMessage()
                         )
                     }
                 }
@@ -134,18 +128,17 @@ class PackageActionsViewModel(
     }
 
     private fun uninstall(packageName: String, deviceId: String) {
-        scope.launch {
+        scope.safeLaunch {
             _uiState.update { it.copy(isUninstalling = true, error = null) }
             uninstallUseCase(packageName, deviceId).fold(
                 onSuccess = {
                     _uiState.update { it.copy(isUninstalling = false) }
                 },
                 onFailure = { error ->
-                    logger.error("Error uninstalling app $packageName", error)
                     _uiState.update {
                         it.copy(
                             isUninstalling = false,
-                            error = error.message ?: "Failed to uninstall app"
+                            error = error.toUserMessage()
                         )
                     }
                 }
@@ -154,16 +147,15 @@ class PackageActionsViewModel(
     }
 
     private fun launchDeepLink(uri: String, deviceId: String) {
-        scope.launch {
+        scope.safeLaunch {
             launchDeepLinkUseCase(uri, deviceId).fold(
                 onSuccess = {
                     recentDeepLinksService.addAndTruncate(uri)
                     _uiState.update { it.copy(recentUris = recentDeepLinksService.getRecentUris()) }
                 },
                 onFailure = { error ->
-                    logger.error("Error launching deep link $uri", error)
                     _uiState.update {
-                        it.copy(error = error.message ?: "Failed to launch deep link")
+                        it.copy(error = error.toUserMessage())
                     }
                 }
             )
@@ -171,7 +163,7 @@ class PackageActionsViewModel(
     }
 
     private fun setStayAwake(enabled: Boolean, deviceId: String) {
-        scope.launch {
+        scope.safeLaunch {
             _uiState.update { it.copy(isSettingStayAwake = true, error = null) }
             setStayAwakeUseCase(enabled, deviceId).fold(
                 onSuccess = {
@@ -183,11 +175,10 @@ class PackageActionsViewModel(
                     }
                 },
                 onFailure = { error ->
-                    logger.error("Error setting stay awake", error)
                     _uiState.update {
                         it.copy(
                             isSettingStayAwake = false,
-                            error = error.message ?: "Failed to set stay awake"
+                            error = error.toUserMessage()
                         )
                     }
                 }
@@ -196,7 +187,7 @@ class PackageActionsViewModel(
     }
 
     private fun setPackageEnabled(packageName: String, enabled: Boolean, deviceId: String) {
-        scope.launch {
+        scope.safeLaunch {
             _uiState.update { it.copy(isSettingEnabled = true, error = null) }
             setPackageEnabledUseCase(packageName, enabled, deviceId).fold(
                 onSuccess = {
@@ -208,11 +199,10 @@ class PackageActionsViewModel(
                     }
                 },
                 onFailure = { error ->
-                    logger.error("Error ${if (enabled) "enabling" else "disabling"} package $packageName", error)
                     _uiState.update {
                         it.copy(
                             isSettingEnabled = false,
-                            error = error.message ?: "Failed to ${if (enabled) "enable" else "disable"} package"
+                            error = error.toUserMessage()
                         )
                     }
                 }

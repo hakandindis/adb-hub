@@ -6,6 +6,9 @@ import com.github.hakandindis.plugins.adbhub.constants.GetpropCommands
 import com.github.hakandindis.plugins.adbhub.core.adb.AdbCommandExecutor
 import com.github.hakandindis.plugins.adbhub.core.models.Device
 import com.github.hakandindis.plugins.adbhub.core.models.DeviceState
+import com.github.hakandindis.plugins.adbhub.core.result.AdbHubError
+import com.github.hakandindis.plugins.adbhub.core.result.AdbHubResult
+import com.github.hakandindis.plugins.adbhub.core.result.toAdbHubResultWithOutput
 import com.github.hakandindis.plugins.adbhub.feature.devices.domain.repository.DeviceRepository
 import com.github.hakandindis.plugins.adbhub.models.DeviceInfo
 import com.intellij.openapi.diagnostic.Logger
@@ -16,27 +19,28 @@ class DeviceRepositoryImpl(
 
     private val logger = Logger.getInstance(DeviceRepositoryImpl::class.java)
 
-    override suspend fun getDevices(): Result<List<Device>> {
+    override suspend fun getDevices(): AdbHubResult<List<Device>> {
         return try {
-            val result = commandExecutor.executeCommand(AdbCommands.DEVICES)
-            Result.success(parseDevices(result.output))
+            commandExecutor.executeCommand(AdbCommands.DEVICES)
+                .toAdbHubResultWithOutput()
+                .map { parseDevices(it) }
         } catch (e: Exception) {
             logger.error("Error getting devices", e)
-            Result.failure(e)
+            AdbHubResult.failure(AdbHubError.Unknown(e.message ?: "Failed to get devices", e))
         }
     }
 
-    override suspend fun getDeviceInfo(deviceId: String): Result<DeviceInfo> {
+    override suspend fun getDeviceInfo(deviceId: String): AdbHubResult<DeviceInfo> {
         return try {
             val info = fetchDeviceInfo(deviceId)
             if (info != null) {
-                Result.success(info)
+                AdbHubResult.success(info)
             } else {
-                Result.failure(Exception("Device info not found for device: $deviceId"))
+                AdbHubResult.failure(AdbHubError.DeviceNotFound(deviceId))
             }
         } catch (e: Exception) {
             logger.error("Error getting device info for $deviceId", e)
-            Result.failure(e)
+            AdbHubResult.failure(AdbHubError.Unknown(e.message ?: "Failed to get device info", e))
         }
     }
 

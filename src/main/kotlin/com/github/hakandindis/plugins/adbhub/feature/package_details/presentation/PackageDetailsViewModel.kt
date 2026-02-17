@@ -1,16 +1,15 @@
 package com.github.hakandindis.plugins.adbhub.feature.package_details.presentation
 
+import com.github.hakandindis.plugins.adbhub.core.coroutine.safeLaunch
 import com.github.hakandindis.plugins.adbhub.core.selection.SelectionManager
 import com.github.hakandindis.plugins.adbhub.core.selection.SelectionState
 import com.github.hakandindis.plugins.adbhub.feature.package_details.domain.usecase.GetPackageDetailsUseCase
 import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.ui.ComponentDisplay
 import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.ui.PermissionSectionUiModel
 import com.intellij.openapi.Disposable
-import com.intellij.openapi.diagnostic.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 
 class PackageDetailsViewModel(
     private val getPackageDetailsUseCase: GetPackageDetailsUseCase,
@@ -18,14 +17,13 @@ class PackageDetailsViewModel(
     coroutineScope: CoroutineScope
 ) : Disposable {
 
-    private val logger = Logger.getInstance(PackageDetailsViewModel::class.java)
     private val scope = coroutineScope
 
     private val _uiState = MutableStateFlow(PackageDetailsUiState())
     val uiState: StateFlow<PackageDetailsUiState> = _uiState.asStateFlow()
 
     init {
-        scope.launch {
+        scope.safeLaunch {
             combine(
                 selectionManager.selectedDeviceState,
                 selectionManager.selectedPackageState
@@ -58,7 +56,7 @@ class PackageDetailsViewModel(
     }
 
     private fun loadPackageDetails(packageName: String, deviceId: String) {
-        scope.launch {
+        scope.safeLaunch {
             _uiState.update { it.copy(isLoading = true, error = null) }
 
             getPackageDetailsUseCase(packageName, deviceId).fold(
@@ -89,11 +87,10 @@ class PackageDetailsViewModel(
                     }
                 },
                 onFailure = { error ->
-                    logger.error("Error loading package details for $packageName", error)
                     _uiState.update {
                         it.copy(
                             isLoading = false,
-                            error = error.message ?: "Failed to load package details"
+                            error = error.toUserMessage()
                         )
                     }
                 }

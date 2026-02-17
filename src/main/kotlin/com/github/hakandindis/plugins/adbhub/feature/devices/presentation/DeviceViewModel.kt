@@ -1,5 +1,6 @@
 package com.github.hakandindis.plugins.adbhub.feature.devices.presentation
 
+import com.github.hakandindis.plugins.adbhub.core.coroutine.safeLaunch
 import com.github.hakandindis.plugins.adbhub.core.models.Device
 import com.github.hakandindis.plugins.adbhub.core.models.DeviceState
 import com.github.hakandindis.plugins.adbhub.core.selection.SelectionManager
@@ -7,11 +8,9 @@ import com.github.hakandindis.plugins.adbhub.feature.devices.domain.mapper.Devic
 import com.github.hakandindis.plugins.adbhub.feature.devices.domain.usecase.GetDeviceInfoUseCase
 import com.github.hakandindis.plugins.adbhub.feature.devices.domain.usecase.GetDevicesUseCase
 import com.intellij.openapi.Disposable
-import com.intellij.openapi.diagnostic.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 
 class DeviceViewModel(
     private val getDevicesUseCase: GetDevicesUseCase,
@@ -20,14 +19,13 @@ class DeviceViewModel(
     coroutineScope: CoroutineScope
 ) : Disposable {
 
-    private val logger = Logger.getInstance(DeviceViewModel::class.java)
     private val scope = coroutineScope
 
     private val _uiState = MutableStateFlow(DeviceUiState())
     val uiState: StateFlow<DeviceUiState> = _uiState.asStateFlow()
 
     init {
-        scope.launch {
+        scope.safeLaunch {
             merge(
                 selectionManager.selectedDeviceState,
                 selectionManager.deviceRefreshRequest.map { selectionManager.selectedDeviceState.value }
@@ -53,7 +51,7 @@ class DeviceViewModel(
     }
 
     private fun refreshDevices() {
-        scope.launch {
+        scope.safeLaunch {
             _uiState.update { it.copy(isLoading = true, error = null) }
             getDevicesUseCase().fold(
                 onSuccess = { devices ->
@@ -68,11 +66,10 @@ class DeviceViewModel(
                     selectionManager.requestDeviceRefresh()
                 },
                 onFailure = { error ->
-                    logger.error("Error refreshing devices", error)
                     _uiState.update {
                         it.copy(
                             isLoading = false,
-                            error = error.message ?: "Failed to refresh devices"
+                            error = error.toUserMessage()
                         )
                     }
                 }
@@ -85,7 +82,7 @@ class DeviceViewModel(
     }
 
     private fun loadDeviceInfo(deviceId: String) {
-        scope.launch {
+        scope.safeLaunch {
             _uiState.update { it.copy(deviceInfoItems = emptyList(), isLoading = true, error = null) }
             getDeviceInfoUseCase(deviceId).fold(
                 onSuccess = { info ->
@@ -97,11 +94,10 @@ class DeviceViewModel(
                     }
                 },
                 onFailure = { error ->
-                    logger.error("Error loading device info for $deviceId", error)
                     _uiState.update {
                         it.copy(
                             isLoading = false,
-                            error = error.message ?: "Failed to load device info"
+                            error = error.toUserMessage()
                         )
                     }
                 }
