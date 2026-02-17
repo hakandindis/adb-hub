@@ -1,5 +1,6 @@
 package com.github.hakandindis.plugins.adbhub.feature.package_details.presentation
 
+import com.github.hakandindis.plugins.adbhub.core.coroutine.safeLaunch
 import com.github.hakandindis.plugins.adbhub.core.selection.SelectionManager
 import com.github.hakandindis.plugins.adbhub.core.selection.SelectionState
 import com.github.hakandindis.plugins.adbhub.feature.package_details.domain.usecase.GetPackageDetailsUseCase
@@ -10,7 +11,6 @@ import com.intellij.openapi.diagnostic.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 
 class PackageDetailsViewModel(
     private val getPackageDetailsUseCase: GetPackageDetailsUseCase,
@@ -25,7 +25,7 @@ class PackageDetailsViewModel(
     val uiState: StateFlow<PackageDetailsUiState> = _uiState.asStateFlow()
 
     init {
-        scope.launch {
+        scope.safeLaunch {
             combine(
                 selectionManager.selectedDeviceState,
                 selectionManager.selectedPackageState
@@ -58,7 +58,7 @@ class PackageDetailsViewModel(
     }
 
     private fun loadPackageDetails(packageName: String, deviceId: String) {
-        scope.launch {
+        scope.safeLaunch {
             _uiState.update { it.copy(isLoading = true, error = null) }
 
             getPackageDetailsUseCase(packageName, deviceId).fold(

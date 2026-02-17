@@ -1,5 +1,6 @@
 package com.github.hakandindis.plugins.adbhub.feature.installed_packages.presentation
 
+import com.github.hakandindis.plugins.adbhub.core.coroutine.safeLaunch
 import com.github.hakandindis.plugins.adbhub.core.models.DeviceState
 import com.github.hakandindis.plugins.adbhub.core.selection.SelectionManager
 import com.github.hakandindis.plugins.adbhub.feature.installed_packages.domain.usecase.FilterPackagesUseCase
@@ -9,7 +10,6 @@ import com.intellij.openapi.diagnostic.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 
 class PackageListViewModel(
     private val getPackagesUseCase: GetPackagesUseCase,
@@ -25,7 +25,7 @@ class PackageListViewModel(
     val uiState: StateFlow<PackageListUiState> = _uiState.asStateFlow()
 
     init {
-        scope.launch {
+        scope.safeLaunch {
             merge(
                 selectionManager.selectedDeviceState,
                 selectionManager.deviceRefreshRequest.map { selectionManager.selectedDeviceState.value }
@@ -61,7 +61,7 @@ class PackageListViewModel(
     }
 
     private fun refreshPackages(deviceId: String, includeSystemApps: Boolean) {
-        scope.launch {
+        scope.safeLaunch {
             _uiState.update { it.copy(isLoading = true, error = null) }
             getPackagesUseCase(deviceId, includeSystemApps).fold(
                 onSuccess = { packages ->
