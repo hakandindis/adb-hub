@@ -1,5 +1,6 @@
 package com.github.hakandindis.plugins.adbhub.feature.package_details.domain.usecase
 
+import com.github.hakandindis.plugins.adbhub.core.result.AdbHubResult
 import com.github.hakandindis.plugins.adbhub.feature.package_details.domain.mapper.GeneralInfoMapper
 import com.github.hakandindis.plugins.adbhub.feature.package_details.domain.mapper.PermissionMapper
 import com.github.hakandindis.plugins.adbhub.feature.package_details.domain.repository.PackageDetailsRepository
@@ -12,10 +13,10 @@ class GetPackageDetailsUseCase(
     suspend operator fun invoke(
         packageName: String,
         deviceId: String
-    ): Result<GetPackageDetailsResult> {
+    ): AdbHubResult<GetPackageDetailsResult> {
         return repository.getPackageDetails(packageName, deviceId)
             .mapCatching { packageDetails ->
-                val appLinks = repository.getAppLinks(packageName, deviceId).getOrNull() ?: null
+                val appLinks = repository.getAppLinks(packageName, deviceId).getOrNull()
                 val generalInfoItems = GeneralInfoMapper.toMergedInfoItems(packageDetails)
                 val appName =
                     generalInfoItems.firstOrNull { it.label == "App Name" }?.value ?: packageDetails.packageName

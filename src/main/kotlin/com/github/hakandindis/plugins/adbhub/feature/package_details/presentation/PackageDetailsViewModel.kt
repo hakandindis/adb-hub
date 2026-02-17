@@ -89,11 +89,11 @@ class PackageDetailsViewModel(
                     }
                 },
                 onFailure = { error ->
-                    logger.error("Error loading package details for $packageName", error)
+                    logger.error("Error loading package details for $packageName: ${error.toUserMessage()}")
                     _uiState.update {
                         it.copy(
                             isLoading = false,
-                            error = error.message ?: "Failed to load package details"
+                            error = error.toUserMessage()
                         )
                     }
                 }

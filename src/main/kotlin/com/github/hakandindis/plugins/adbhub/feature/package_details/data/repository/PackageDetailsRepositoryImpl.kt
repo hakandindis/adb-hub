@@ -5,6 +5,8 @@ import com.github.hakandindis.plugins.adbhub.constants.DumpsysParseStrings
 import com.github.hakandindis.plugins.adbhub.constants.ParsePatterns
 import com.github.hakandindis.plugins.adbhub.constants.PmCommands
 import com.github.hakandindis.plugins.adbhub.core.adb.AdbCommandExecutor
+import com.github.hakandindis.plugins.adbhub.core.result.AdbHubError
+import com.github.hakandindis.plugins.adbhub.core.result.AdbHubResult
 import com.github.hakandindis.plugins.adbhub.feature.package_details.data.parser.*
 import com.github.hakandindis.plugins.adbhub.feature.package_details.domain.repository.PackageDetailsRepository
 import com.github.hakandindis.plugins.adbhub.models.AppLinksInfo
@@ -17,32 +19,32 @@ class PackageDetailsRepositoryImpl(
 
     private val logger = Logger.getInstance(PackageDetailsRepositoryImpl::class.java)
 
-    override suspend fun getPackageDetails(packageName: String, deviceId: String): Result<PackageDetails> {
+    override suspend fun getPackageDetails(packageName: String, deviceId: String): AdbHubResult<PackageDetails> {
         return try {
             val details = fetchPackageDetails(packageName, deviceId)
             if (details != null) {
-                Result.success(details)
+                AdbHubResult.success(details)
             } else {
-                Result.failure(Exception("Failed to get package details for $packageName"))
+                AdbHubResult.failure(AdbHubError.NotFound("Failed to get package details for $packageName"))
             }
         } catch (e: Exception) {
             logger.error("Error getting package details for $packageName", e)
-            Result.failure(e)
+            AdbHubResult.failure(AdbHubError.Unknown(e.message ?: "Failed to get package details", e))
         }
     }
 
-    override suspend fun getAppLinks(packageName: String, deviceId: String): Result<AppLinksInfo?> {
+    override suspend fun getAppLinks(packageName: String, deviceId: String): AdbHubResult<AppLinksInfo?> {
         return try {
             val result = commandExecutor.executeCommandForDevice(deviceId, PmCommands.getAppLinks(packageName))
             if (!result.isSuccess) {
                 logger.warn("Failed to get app links for $packageName: ${result.error}")
-                Result.success(null)
+                AdbHubResult.success(null)
             } else {
-                Result.success(AppLinksParser.parse(result.output, packageName))
+                AdbHubResult.success(AppLinksParser.parse(result.output, packageName))
             }
         } catch (e: Exception) {
             logger.error("Error getting app links for $packageName", e)
-            Result.failure(e)
+            AdbHubResult.failure(AdbHubError.Unknown(e.message ?: "Failed to get app links", e))
         }
     }
 

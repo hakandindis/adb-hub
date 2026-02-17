@@ -61,11 +61,11 @@ class PackageActionsViewModel(
                     _uiState.update { it.copy(isLaunching = false) }
                 },
                 onFailure = { error ->
-                    logger.error("Error launching app $packageName", error)
+                    logger.error("Error launching app $packageName: ${error.toUserMessage()}")
                     _uiState.update {
                         it.copy(
                             isLaunching = false,
-                            error = error.message ?: "Failed to launch app"
+                            error = error.toUserMessage()
                         )
                     }
                 }
@@ -81,11 +81,11 @@ class PackageActionsViewModel(
                     _uiState.update { it.copy(isStopping = false) }
                 },
                 onFailure = { error ->
-                    logger.error("Error force stopping app $packageName", error)
+                    logger.error("Error force stopping app $packageName: ${error.toUserMessage()}")
                     _uiState.update {
                         it.copy(
                             isStopping = false,
-                            error = error.message ?: "Failed to force stop app"
+                            error = error.toUserMessage()
                         )
                     }
                 }
@@ -101,11 +101,11 @@ class PackageActionsViewModel(
                     _uiState.update { it.copy(isClearingData = false) }
                 },
                 onFailure = { error ->
-                    logger.error("Error clearing data for $packageName", error)
+                    logger.error("Error clearing data for $packageName: ${error.toUserMessage()}")
                     _uiState.update {
                         it.copy(
                             isClearingData = false,
-                            error = error.message ?: "Failed to clear data"
+                            error = error.toUserMessage()
                         )
                     }
                 }
@@ -121,11 +121,11 @@ class PackageActionsViewModel(
                     _uiState.update { it.copy(isClearingCache = false) }
                 },
                 onFailure = { error ->
-                    logger.error("Error clearing cache for $packageName", error)
+                    logger.error("Error clearing cache for $packageName: ${error.toUserMessage()}")
                     _uiState.update {
                         it.copy(
                             isClearingCache = false,
-                            error = error.message ?: "Failed to clear cache"
+                            error = error.toUserMessage()
                         )
                     }
                 }
@@ -141,11 +141,11 @@ class PackageActionsViewModel(
                     _uiState.update { it.copy(isUninstalling = false) }
                 },
                 onFailure = { error ->
-                    logger.error("Error uninstalling app $packageName", error)
+                    logger.error("Error uninstalling app $packageName: ${error.toUserMessage()}")
                     _uiState.update {
                         it.copy(
                             isUninstalling = false,
-                            error = error.message ?: "Failed to uninstall app"
+                            error = error.toUserMessage()
                         )
                     }
                 }
@@ -161,9 +161,9 @@ class PackageActionsViewModel(
                     _uiState.update { it.copy(recentUris = recentDeepLinksService.getRecentUris()) }
                 },
                 onFailure = { error ->
-                    logger.error("Error launching deep link $uri", error)
+                    logger.error("Error launching deep link $uri: ${error.toUserMessage()}")
                     _uiState.update {
-                        it.copy(error = error.message ?: "Failed to launch deep link")
+                        it.copy(error = error.toUserMessage())
                     }
                 }
             )
@@ -183,11 +183,11 @@ class PackageActionsViewModel(
                     }
                 },
                 onFailure = { error ->
-                    logger.error("Error setting stay awake", error)
+                    logger.error("Error setting stay awake: ${error.toUserMessage()}")
                     _uiState.update {
                         it.copy(
                             isSettingStayAwake = false,
-                            error = error.message ?: "Failed to set stay awake"
+                            error = error.toUserMessage()
                         )
                     }
                 }
@@ -208,11 +208,11 @@ class PackageActionsViewModel(
                     }
                 },
                 onFailure = { error ->
-                    logger.error("Error ${if (enabled) "enabling" else "disabling"} package $packageName", error)
+                    logger.error("Error ${if (enabled) "enabling" else "disabling"} package $packageName: ${error.toUserMessage()}")
                     _uiState.update {
                         it.copy(
                             isSettingEnabled = false,
-                            error = error.message ?: "Failed to ${if (enabled) "enable" else "disable"} package"
+                            error = error.toUserMessage()
                         )
                     }
                 }

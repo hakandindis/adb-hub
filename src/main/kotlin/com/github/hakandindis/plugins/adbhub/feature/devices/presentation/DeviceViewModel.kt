@@ -68,11 +68,11 @@ class DeviceViewModel(
                     selectionManager.requestDeviceRefresh()
                 },
                 onFailure = { error ->
-                    logger.error("Error refreshing devices", error)
+                    logger.error("Error refreshing devices: ${error.toUserMessage()}")
                     _uiState.update {
                         it.copy(
                             isLoading = false,
-                            error = error.message ?: "Failed to refresh devices"
+                            error = error.toUserMessage()
                         )
                     }
                 }
@@ -97,11 +97,11 @@ class DeviceViewModel(
                     }
                 },
                 onFailure = { error ->
-                    logger.error("Error loading device info for $deviceId", error)
+                    logger.error("Error loading device info for $deviceId: ${error.toUserMessage()}")
                     _uiState.update {
                         it.copy(
                             isLoading = false,
-                            error = error.message ?: "Failed to load device info"
+                            error = error.toUserMessage()
                         )
                     }
                 }

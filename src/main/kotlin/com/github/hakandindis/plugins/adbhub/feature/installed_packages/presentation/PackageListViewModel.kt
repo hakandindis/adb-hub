@@ -78,11 +78,11 @@ class PackageListViewModel(
                     }
                 },
                 onFailure = { error ->
-                    logger.error("Error refreshing packages for device $deviceId", error)
+                    logger.error("Error refreshing packages for device $deviceId: ${error.toUserMessage()}")
                     _uiState.update {
                         it.copy(
                             isLoading = false,
-                            error = error.message ?: "Failed to refresh packages"
+                            error = error.toUserMessage()
                         )
                     }
                 }
