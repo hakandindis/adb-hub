@@ -8,7 +8,6 @@ import com.github.hakandindis.plugins.adbhub.feature.devices.domain.mapper.Devic
 import com.github.hakandindis.plugins.adbhub.feature.devices.domain.usecase.GetDeviceInfoUseCase
 import com.github.hakandindis.plugins.adbhub.feature.devices.domain.usecase.GetDevicesUseCase
 import com.intellij.openapi.Disposable
-import com.intellij.openapi.diagnostic.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.*
@@ -20,7 +19,6 @@ class DeviceViewModel(
     coroutineScope: CoroutineScope
 ) : Disposable {
 
-    private val logger = Logger.getInstance(DeviceViewModel::class.java)
     private val scope = coroutineScope
 
     private val _uiState = MutableStateFlow(DeviceUiState())
@@ -68,7 +66,6 @@ class DeviceViewModel(
                     selectionManager.requestDeviceRefresh()
                 },
                 onFailure = { error ->
-                    logger.error("Error refreshing devices: ${error.toUserMessage()}")
                     _uiState.update {
                         it.copy(
                             isLoading = false,
@@ -97,7 +94,6 @@ class DeviceViewModel(
                     }
                 },
                 onFailure = { error ->
-                    logger.error("Error loading device info for $deviceId: ${error.toUserMessage()}")
                     _uiState.update {
                         it.copy(
                             isLoading = false,

@@ -6,7 +6,6 @@ import com.github.hakandindis.plugins.adbhub.core.selection.SelectionManager
 import com.github.hakandindis.plugins.adbhub.feature.installed_packages.domain.usecase.FilterPackagesUseCase
 import com.github.hakandindis.plugins.adbhub.feature.installed_packages.domain.usecase.GetPackagesUseCase
 import com.intellij.openapi.Disposable
-import com.intellij.openapi.diagnostic.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.*
@@ -18,7 +17,6 @@ class PackageListViewModel(
     coroutineScope: CoroutineScope
 ) : Disposable {
 
-    private val logger = Logger.getInstance(PackageListViewModel::class.java)
     private val scope = coroutineScope
 
     private val _uiState = MutableStateFlow(PackageListUiState())
@@ -78,7 +76,6 @@ class PackageListViewModel(
                     }
                 },
                 onFailure = { error ->
-                    logger.error("Error refreshing packages for device $deviceId: ${error.toUserMessage()}")
                     _uiState.update {
                         it.copy(
                             isLoading = false,

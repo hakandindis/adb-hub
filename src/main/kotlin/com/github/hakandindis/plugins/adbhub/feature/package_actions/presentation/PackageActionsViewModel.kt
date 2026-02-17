@@ -4,7 +4,6 @@ import com.github.hakandindis.plugins.adbhub.core.coroutine.safeLaunch
 import com.github.hakandindis.plugins.adbhub.feature.package_actions.domain.usecase.*
 import com.github.hakandindis.plugins.adbhub.service.RecentDeepLinksService
 import com.intellij.openapi.Disposable
-import com.intellij.openapi.diagnostic.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,7 +24,6 @@ class PackageActionsViewModel(
     coroutineScope: CoroutineScope
 ) : Disposable {
 
-    private val logger = Logger.getInstance(PackageActionsViewModel::class.java)
     private val scope = coroutineScope
 
     private val _uiState = MutableStateFlow(PackageActionsUiState())
@@ -61,7 +59,6 @@ class PackageActionsViewModel(
                     _uiState.update { it.copy(isLaunching = false) }
                 },
                 onFailure = { error ->
-                    logger.error("Error launching app $packageName: ${error.toUserMessage()}")
                     _uiState.update {
                         it.copy(
                             isLaunching = false,
@@ -81,7 +78,6 @@ class PackageActionsViewModel(
                     _uiState.update { it.copy(isStopping = false) }
                 },
                 onFailure = { error ->
-                    logger.error("Error force stopping app $packageName: ${error.toUserMessage()}")
                     _uiState.update {
                         it.copy(
                             isStopping = false,
@@ -101,7 +97,6 @@ class PackageActionsViewModel(
                     _uiState.update { it.copy(isClearingData = false) }
                 },
                 onFailure = { error ->
-                    logger.error("Error clearing data for $packageName: ${error.toUserMessage()}")
                     _uiState.update {
                         it.copy(
                             isClearingData = false,
@@ -121,7 +116,6 @@ class PackageActionsViewModel(
                     _uiState.update { it.copy(isClearingCache = false) }
                 },
                 onFailure = { error ->
-                    logger.error("Error clearing cache for $packageName: ${error.toUserMessage()}")
                     _uiState.update {
                         it.copy(
                             isClearingCache = false,
@@ -141,7 +135,6 @@ class PackageActionsViewModel(
                     _uiState.update { it.copy(isUninstalling = false) }
                 },
                 onFailure = { error ->
-                    logger.error("Error uninstalling app $packageName: ${error.toUserMessage()}")
                     _uiState.update {
                         it.copy(
                             isUninstalling = false,
@@ -161,7 +154,6 @@ class PackageActionsViewModel(
                     _uiState.update { it.copy(recentUris = recentDeepLinksService.getRecentUris()) }
                 },
                 onFailure = { error ->
-                    logger.error("Error launching deep link $uri: ${error.toUserMessage()}")
                     _uiState.update {
                         it.copy(error = error.toUserMessage())
                     }
@@ -183,7 +175,6 @@ class PackageActionsViewModel(
                     }
                 },
                 onFailure = { error ->
-                    logger.error("Error setting stay awake: ${error.toUserMessage()}")
                     _uiState.update {
                         it.copy(
                             isSettingStayAwake = false,
@@ -208,7 +199,6 @@ class PackageActionsViewModel(
                     }
                 },
                 onFailure = { error ->
-                    logger.error("Error ${if (enabled) "enabling" else "disabling"} package $packageName: ${error.toUserMessage()}")
                     _uiState.update {
                         it.copy(
                             isSettingEnabled = false,

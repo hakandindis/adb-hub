@@ -7,7 +7,6 @@ import com.github.hakandindis.plugins.adbhub.feature.package_details.domain.usec
 import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.ui.ComponentDisplay
 import com.github.hakandindis.plugins.adbhub.feature.package_details.presentation.ui.PermissionSectionUiModel
 import com.intellij.openapi.Disposable
-import com.intellij.openapi.diagnostic.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.*
@@ -18,7 +17,6 @@ class PackageDetailsViewModel(
     coroutineScope: CoroutineScope
 ) : Disposable {
 
-    private val logger = Logger.getInstance(PackageDetailsViewModel::class.java)
     private val scope = coroutineScope
 
     private val _uiState = MutableStateFlow(PackageDetailsUiState())
@@ -89,7 +87,6 @@ class PackageDetailsViewModel(
                     }
                 },
                 onFailure = { error ->
-                    logger.error("Error loading package details for $packageName: ${error.toUserMessage()}")
                     _uiState.update {
                         it.copy(
                             isLoading = false,
