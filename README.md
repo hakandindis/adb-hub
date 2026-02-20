@@ -90,7 +90,7 @@ View the log of executed ADB commands in real time for debugging and transparenc
 
 This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
 
-[jb:marketplace]: https://plugins.jetbrains.com/search?search=ADB%20Hub
+[jb:marketplace]: https://plugins.jetbrains.com/plugin/30230-adb-hub
 [license]: LICENSE
 
 ---
