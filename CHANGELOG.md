@@ -2,6 +2,25 @@
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-02-21
+
+### Changed
+
+- **Device Info** – Optimized to use single `getprop` call instead of 12 separate ADB round-trips
+- **Screen Info** – Combined `wm size` and `wm density` into one shell command
+- **Package Details** – Extract install path from `dumpsys` output, removed redundant `pm path` call
+- **UID Display** – Package UID now shown in details header (parsed from dumpsys)
+- **Launch App** – Reverted to monkey command for reliable app launching across devices
+- **Marketplace Link** – README badge now links to plugin page instead of search
+
+### Removed
+
+- **Clear Cache** – ADB has no command to clear only app cache; `pm clear` wipes both data and cache
+
+### Added
+
+- **Foojay Resolver** – Gradle toolchain convention plugin for JDK resolution
+
 ## [0.2.0] - 2026-02-18
 
 ### Changed
