@@ -58,17 +58,8 @@ class PackageDetailsRepositoryImpl(
             }
 
             val dumpsysOutput = dumpsysResult.output
-
-            val pathResult = commandExecutor.executeCommandForDevice(deviceId, PmCommands.getPackagePath(packageName))
-            val installLocation = if (pathResult.isSuccess) {
-                pathResult.output.lines()
-                    .firstOrNull { it.startsWith(DumpsysParseStrings.PACKAGE_PREFIX) }
-                    ?.substringAfter(DumpsysParseStrings.PACKAGE_PREFIX)
-                    ?.trim()
-                    ?.takeIf { it.isNotEmpty() }
-            } else {
-                null
-            }
+            val installLocation = DumpsysParser.extractCodePath(dumpsysOutput)
+            val uid = DumpsysParser.extractUserId(dumpsysOutput)
 
             val versionName = DumpsysParser.extractVersionName(dumpsysOutput)
             val versionCode = DumpsysParser.extractVersionCode(dumpsysOutput)
@@ -89,6 +80,7 @@ class PackageDetailsRepositoryImpl(
                 packageName = packageName,
                 versionName = versionName,
                 versionCode = versionCode,
+                uid = uid,
                 installLocation = installLocation,
                 dataDirectory = dataDirectory,
                 permissionSections = permissionSections,

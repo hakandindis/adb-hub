@@ -15,7 +15,6 @@ class PackageActionsViewModel(
     private val launchAppUseCase: LaunchAppUseCase,
     private val forceStopUseCase: ForceStopUseCase,
     private val clearDataUseCase: ClearDataUseCase,
-    private val clearCacheUseCase: ClearCacheUseCase,
     private val uninstallUseCase: UninstallUseCase,
     private val launchDeepLinkUseCase: LaunchDeepLinkUseCase,
     private val setStayAwakeUseCase: SetStayAwakeUseCase,
@@ -38,7 +37,6 @@ class PackageActionsViewModel(
             is PackageActionsIntent.LaunchApp -> launchApp(intent.packageName, intent.deviceId)
             is PackageActionsIntent.ForceStop -> forceStop(intent.packageName, intent.deviceId)
             is PackageActionsIntent.ClearData -> clearData(intent.packageName, intent.deviceId)
-            is PackageActionsIntent.ClearCache -> clearCache(intent.packageName, intent.deviceId)
             is PackageActionsIntent.Uninstall -> uninstall(intent.packageName, intent.deviceId)
             is PackageActionsIntent.LaunchDeepLink -> launchDeepLink(intent.uri, intent.deviceId)
 
@@ -100,25 +98,6 @@ class PackageActionsViewModel(
                     _uiState.update {
                         it.copy(
                             isClearingData = false,
-                            error = error.toUserMessage()
-                        )
-                    }
-                }
-            )
-        }
-    }
-
-    private fun clearCache(packageName: String, deviceId: String) {
-        scope.safeLaunch {
-            _uiState.update { it.copy(isClearingCache = true, error = null) }
-            clearCacheUseCase(packageName, deviceId).fold(
-                onSuccess = {
-                    _uiState.update { it.copy(isClearingCache = false) }
-                },
-                onFailure = { error ->
-                    _uiState.update {
-                        it.copy(
-                            isClearingCache = false,
                             error = error.toUserMessage()
                         )
                     }

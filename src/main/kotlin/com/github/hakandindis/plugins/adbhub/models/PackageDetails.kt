@@ -4,6 +4,7 @@ data class PackageDetails(
     val packageName: String,
     val versionName: String? = null,
     val versionCode: String? = null,
+    val uid: String? = null,
     val installLocation: String? = null,
     val dataDirectory: String? = null,
     val permissionSections: List<PermissionSection> = emptyList(),

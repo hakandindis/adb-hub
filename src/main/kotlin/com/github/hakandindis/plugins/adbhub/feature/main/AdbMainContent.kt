@@ -24,9 +24,11 @@ fun AdbMainContent(
     packageActionsViewModel: PackageActionsViewModel,
     consoleLogViewModel: ConsoleLogViewModel,
     selectedDevice: Device?,
-    selectedPackage: ApplicationPackage?,
-    uid: String? = null
+    selectedPackage: ApplicationPackage?
 ) {
+    val packageDetailsUiState by packageDetailsViewModel.uiState.collectAsState()
+    val uid = packageDetailsUiState.uid
+
     var selectedTab by remember { mutableStateOf(MainTab.Details) }
 
     Column(modifier = Modifier.fillMaxSize()) {

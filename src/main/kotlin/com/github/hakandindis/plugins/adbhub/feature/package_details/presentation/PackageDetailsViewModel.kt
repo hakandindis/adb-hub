@@ -65,6 +65,7 @@ class PackageDetailsViewModel(
                         it.copy(
                             packageName = result.packageName,
                             appName = result.appName,
+                            uid = result.uid,
                             generalInfoItems = result.generalInfoItems,
                             activities = result.activities,
                             activitySearchText = "",

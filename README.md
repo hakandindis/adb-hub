@@ -50,7 +50,6 @@ Quick actions for installed applications:
 - **Force stop** – Stop the running app
 - **Clear data** – Wipe app data
 - **Uninstall** – Remove the app
-- **Clear cache** – Clear app cache
 - **Send deep link** – Launch via implicit intent
 
 ![App Actions Tab](docs/images/app_actions_tab.png)
@@ -105,7 +104,7 @@ without leaving the IDE.
 - **Package browser** – List installed apps with search, filter by package name
 - **Package details** – Inspect manifest components: Activities, Services, Receivers, Content Providers, Permissions,
   App Links
-- **Quick actions** – Launch, force stop, clear data, uninstall, clear cache, send deep links
+- **Quick actions** – Launch, force stop, clear data, uninstall, send deep links
 - **ADB console** – View executed ADB commands in real time
 
 <!-- Plugin description end -->

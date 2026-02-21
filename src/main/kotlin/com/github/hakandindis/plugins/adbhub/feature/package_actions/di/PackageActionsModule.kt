@@ -23,10 +23,6 @@ object PackageActionsModule {
         return ClearDataUseCase(repository)
     }
 
-    fun createClearCacheUseCase(repository: PackageActionsRepository): ClearCacheUseCase {
-        return ClearCacheUseCase(repository)
-    }
-
     fun createUninstallUseCase(repository: PackageActionsRepository): UninstallUseCase {
         return UninstallUseCase(repository)
     }

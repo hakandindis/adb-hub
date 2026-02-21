@@ -20,7 +20,6 @@ class PackageActionsViewModelFactory(
         val launchAppUseCase = PackageActionsModule.createLaunchAppUseCase(packageActionsRepository)
         val forceStopUseCase = PackageActionsModule.createForceStopUseCase(packageActionsRepository)
         val clearDataUseCase = PackageActionsModule.createClearDataUseCase(packageActionsRepository)
-        val clearCacheUseCase = PackageActionsModule.createClearCacheUseCase(packageActionsRepository)
         val uninstallUseCase = PackageActionsModule.createUninstallUseCase(packageActionsRepository)
         val launchDeepLinkUseCase = PackageActionsModule.createLaunchDeepLinkUseCase(packageActionsRepository)
         val setStayAwakeUseCase = PackageActionsModule.createSetStayAwakeUseCase(packageActionsRepository)
@@ -30,7 +29,6 @@ class PackageActionsViewModelFactory(
             launchAppUseCase = launchAppUseCase,
             forceStopUseCase = forceStopUseCase,
             clearDataUseCase = clearDataUseCase,
-            clearCacheUseCase = clearCacheUseCase,
             uninstallUseCase = uninstallUseCase,
             launchDeepLinkUseCase = launchDeepLinkUseCase,
             setStayAwakeUseCase = setStayAwakeUseCase,

@@ -4,7 +4,6 @@ data class PackageActionsUiState(
     val isLaunching: Boolean = false,
     val isStopping: Boolean = false,
     val isClearingData: Boolean = false,
-    val isClearingCache: Boolean = false,
     val isUninstalling: Boolean = false,
     val isSettingStayAwake: Boolean = false,
     val isSettingEnabled: Boolean = false,

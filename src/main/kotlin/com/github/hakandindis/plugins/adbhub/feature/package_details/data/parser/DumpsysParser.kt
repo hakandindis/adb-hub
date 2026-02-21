@@ -47,4 +47,12 @@ object DumpsysParser {
     fun extractDataDirectory(output: String): String? {
         return ParsePatterns.DATA_DIR.find(output)?.groupValues?.get(1)?.trim()
     }
+
+    fun extractCodePath(output: String): String? {
+        return ParsePatterns.CODE_PATH.find(output)?.groupValues?.get(1)?.trim()?.takeIf { it.isNotEmpty() }
+    }
+
+    fun extractUserId(output: String): String? {
+        return ParsePatterns.USER_ID.find(output)?.groupValues?.get(1)?.takeIf { it.isNotEmpty() }
+    }
 }

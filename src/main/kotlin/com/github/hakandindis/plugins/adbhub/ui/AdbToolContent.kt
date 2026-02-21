@@ -90,8 +90,7 @@ fun AdbToolContent(
                 packageActionsViewModel = packageActionsViewModel,
                 consoleLogViewModel = consoleLogViewModel,
                 selectedDevice = selectedDevice,
-                selectedPackage = selectedPackage,
-                uid = null // TODO: Get UID from package details or device info
+                selectedPackage = selectedPackage
             )
         }
     }

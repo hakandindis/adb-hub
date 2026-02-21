@@ -8,6 +8,8 @@ object ParsePatterns {
     val MIN_SDK = "minSdk=(\\d+)".toRegex()
     val MIN_SDK_VERSION = "minSdkVersion=(\\d+)".toRegex()
     val DATA_DIR = "dataDir=(\\S+)".toRegex()
+    val CODE_PATH = "codePath=(\\S+)".toRegex()
+    val USER_ID = "userId=(\\d+)".toRegex()
 
     val FIRST_INSTALL_TIME = "firstInstallTime=(\\d+)".toRegex()
     val LAST_UPDATE_TIME = "lastUpdateTime=(\\d+)".toRegex()
