@@ -26,6 +26,7 @@ class GetPackageDetailsUseCase(
                 GetPackageDetailsResult(
                     packageName = packageDetails.packageName,
                     appName = appName,
+                    uid = packageDetails.uid,
                     generalInfoItems = generalInfoItems,
                     activities = packageDetails.activities.map {
                         ComponentDisplay(name = it.name, exported = it.exported, icon = AdbIcons.apps)

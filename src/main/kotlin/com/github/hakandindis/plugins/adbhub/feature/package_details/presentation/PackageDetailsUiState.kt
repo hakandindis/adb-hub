@@ -8,6 +8,7 @@ import com.github.hakandindis.plugins.adbhub.models.AppLinksInfo
 data class PackageDetailsUiState(
     val packageName: String = "",
     val appName: String = "",
+    val uid: String? = null,
     val generalInfoItems: List<InfoItemUiModel> = emptyList(),
     val activities: List<ComponentDisplay> = emptyList(),
     val activitySearchText: String = "",

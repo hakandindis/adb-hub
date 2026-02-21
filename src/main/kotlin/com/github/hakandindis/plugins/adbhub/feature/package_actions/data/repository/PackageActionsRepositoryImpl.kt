@@ -38,12 +38,6 @@ class PackageActionsRepositoryImpl(
         }
     }
 
-    override suspend fun clearCache(packageName: String, deviceId: String): AdbHubResult<Unit> {
-        return execute(deviceId, PmCommands.clearCache(packageName)) {
-            logger.info("App cache cleared: $packageName")
-        }
-    }
-
     override suspend fun uninstall(packageName: String, deviceId: String): AdbHubResult<Unit> {
         return execute(deviceId, PmCommands.uninstall(packageName)) {
             logger.info("App uninstalled: $packageName")

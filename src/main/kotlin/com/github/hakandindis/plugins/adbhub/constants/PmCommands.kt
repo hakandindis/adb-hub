@@ -4,9 +4,7 @@ object PmCommands {
     private const val SHELL_PREFIX = "shell"
     private const val PM = "pm"
 
-    fun getPackagePath(packageName: String): String = "$SHELL_PREFIX $PM path $packageName"
     fun clearData(packageName: String): String = "$SHELL_PREFIX $PM clear $packageName"
-    fun clearCache(packageName: String): String = "$SHELL_PREFIX $PM clear-cache $packageName"
     fun enablePackage(packageName: String): String = "$SHELL_PREFIX $PM enable $packageName"
     fun disablePackage(packageName: String): String = "$SHELL_PREFIX $PM disable $packageName"
     fun grantPermission(packageName: String, permission: String): String =

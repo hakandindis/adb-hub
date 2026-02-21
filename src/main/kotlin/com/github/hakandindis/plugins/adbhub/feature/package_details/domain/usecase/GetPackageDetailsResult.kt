@@ -8,6 +8,7 @@ import com.github.hakandindis.plugins.adbhub.models.AppLinksInfo
 data class GetPackageDetailsResult(
     val packageName: String,
     val appName: String,
+    val uid: String? = null,
     val generalInfoItems: List<InfoItemUiModel>,
     val activities: List<ComponentDisplay>,
     val permissionSections: List<PermissionSectionUiModel>,

@@ -118,29 +118,6 @@ fun AppActionsTab(
         }
 
         ListSection(
-            title = "DATA & STORAGE",
-            icon = AdbIcons.cleaningServices
-        ) {
-            Column(
-                modifier = Modifier.padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                ActionButton(
-                    label = "Clear Cache",
-                    icon = AdbIcons.cleaningServices,
-                    onClick = {
-                        packageActionsViewModel.handleIntent(
-                            PackageActionsIntent.ClearCache(packageName, deviceId)
-                        )
-                    },
-                    isLoading = uiState.isClearingCache,
-                    modifier = Modifier.fillMaxWidth(),
-                    color = AdbHubTheme.colors.primary
-                )
-            }
-        }
-
-        ListSection(
             title = "DEEP LINK",
             icon = AdbIcons.link
         ) {
