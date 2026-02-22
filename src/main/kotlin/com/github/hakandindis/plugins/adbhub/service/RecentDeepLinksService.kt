@@ -25,10 +25,6 @@ class RecentDeepLinksService :
     private val state: RecentDeepLinksState
         get() = getState()
 
-    /**
-     * Adds the URI to the front of the list, removes any prior occurrence,
-     * and keeps at most [maxSize] items. Persists to XML.
-     */
     fun addAndTruncate(uri: String, maxSize: Int = 20) {
         val trimmed = uri.trim()
         if (trimmed.isBlank()) return
@@ -37,8 +33,5 @@ class RecentDeepLinksService :
         state.replaceUrisAndMarkModified(newList)
     }
 
-    /**
-     * Returns the list of recent URIs (newest first). Read-only copy.
-     */
     fun getRecentUris(): List<String> = state.recentUris.toList()
 }
