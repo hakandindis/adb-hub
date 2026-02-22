@@ -2,10 +2,6 @@ package com.github.hakandindis.plugins.adbhub.ui.theme.colors
 
 import androidx.compose.ui.graphics.Color
 
-/**
- * Raw color tokens – shared across light and dark palettes.
- * Semantic colors (primary, success, danger) work in both themes.
- */
 object AdbHubColorTokens {
     val blue500 = Color(0xFF3574F0)
     val blue600 = Color(0xFF3064CF)
@@ -15,7 +11,6 @@ object AdbHubColorTokens {
     val red500 = Color(0xFFDB5860)
     val yellow500 = Color(0xFFEDA200)
 
-    // Dark theme greys
     val grey900 = Color(0xFF1E1F22)
     val grey800 = Color(0xFF2B2D30)
     val grey700 = Color(0xFF2D3135)
@@ -28,10 +23,6 @@ object AdbHubColorTokens {
     val grey50 = Color(0xFFF9FAFB)
 }
 
-/**
- * Semantic color palette – theme-aware.
- * Use via [AdbHubTheme.colors] inside [AdbHubTheme] composable.
- */
 data class AdbHubColorPalette(
     val primary: Color,
     val primaryHover: Color,
