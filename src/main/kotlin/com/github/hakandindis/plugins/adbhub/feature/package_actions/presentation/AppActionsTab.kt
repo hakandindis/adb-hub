@@ -195,7 +195,12 @@ fun AppActionsTab(
                         uiState.recentUris.forEach { uri ->
                             RecentDeepLinkChip(
                                 uri = uri,
-                                onClick = { deepLinkInput = uri }
+                                onClick = { deepLinkInput = uri },
+                                onRemoveClick = {
+                                    packageActionsViewModel.handleIntent(
+                                        PackageActionsIntent.RemoveRecentDeepLink(uri)
+                                    )
+                                }
                             )
                         }
                     }
@@ -208,22 +213,41 @@ fun AppActionsTab(
 @Composable
 private fun RecentDeepLinkChip(
     uri: String,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    onRemoveClick: () -> Unit
 ) {
-    Box(
+    Row(
         modifier = Modifier
             .fillMaxWidth()
             .clip(AdbHubShapes.SM)
             .background(AdbHubTheme.colors.surface.copy(alpha = 0.5f))
             .border(1.dp, AdbHubTheme.colors.border.copy(alpha = 0.5f), AdbHubShapes.SM)
-            .clickable { onClick() }
-            .padding(horizontal = 10.dp, vertical = 6.dp)
+            .padding(horizontal = 10.dp, vertical = 6.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(6.dp)
     ) {
         Text(
             uri,
             style = AdbHubTypography.caption,
-            maxLines = 2
+            maxLines = 2,
+            modifier = Modifier
+                .weight(1f)
+                .clickable { onClick() }
         )
+        Box(
+            modifier = Modifier
+                .size(24.dp)
+                .clip(AdbHubShapes.SM)
+                .clickable { onRemoveClick() },
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                AdbIcons.delete,
+                contentDescription = "Remove",
+                modifier = Modifier.size(14.dp),
+                tint = AdbHubTheme.colors.textMuted
+            )
+        }
     }
 }
 
