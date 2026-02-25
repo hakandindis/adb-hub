@@ -34,4 +34,9 @@ class RecentDeepLinksService :
     }
 
     fun getRecentUris(): List<String> = state.recentUris.toList()
+
+    fun remove(uri: String) {
+        val newList = state.recentUris.filter { it != uri }
+        state.replaceUrisAndMarkModified(newList)
+    }
 }

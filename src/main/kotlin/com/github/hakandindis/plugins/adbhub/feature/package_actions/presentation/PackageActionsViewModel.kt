@@ -39,6 +39,7 @@ class PackageActionsViewModel(
             is PackageActionsIntent.ClearData -> clearData(intent.packageName, intent.deviceId)
             is PackageActionsIntent.Uninstall -> uninstall(intent.packageName, intent.deviceId)
             is PackageActionsIntent.LaunchDeepLink -> launchDeepLink(intent.uri, intent.deviceId)
+            is PackageActionsIntent.RemoveRecentDeepLink -> removeRecentDeepLink(intent.uri)
 
             is PackageActionsIntent.StayAwake -> setStayAwake(intent.enabled, intent.deviceId)
             is PackageActionsIntent.PackageEnabled -> setPackageEnabled(
@@ -139,6 +140,11 @@ class PackageActionsViewModel(
                 }
             )
         }
+    }
+
+    private fun removeRecentDeepLink(uri: String) {
+        recentDeepLinksService.remove(uri)
+        _uiState.update { it.copy(recentUris = recentDeepLinksService.getRecentUris()) }
     }
 
     private fun setStayAwake(enabled: Boolean, deviceId: String) {
