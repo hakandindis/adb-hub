@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-02-27
+
+### Added
+
+- **Recent Deep Links** – Remove (X) button added to the right of each recent deep link item; clicking it permanently removes the URI from the list
+
 ## [0.3.0] - 2026-02-21
 
 ### Changed
