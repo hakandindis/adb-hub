@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-05-18
+
+### Changed
+
+- **Kotlin** – Gradle plugin updated from 2.3.20 to 2.3.21
+- **Gradle** – Wrapper updated from 9.4.1 to 9.5.0
+- **IntelliJ Platform Gradle plugin** – Updated from 2.13.1 to 2.16.0
+
 ## [0.5.0] - 2026-03-29
 
 ### Changed
