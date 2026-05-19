@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-05-19
+
+### Changed
+
+- **IDE** – Min IDE version updated from 252 to 253
+
 ## [0.6.0] - 2026-05-18
 
 ### Changed
