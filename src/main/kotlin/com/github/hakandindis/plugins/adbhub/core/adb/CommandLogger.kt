@@ -14,7 +14,6 @@ class CommandLogger {
     val logs: StateFlow<List<CommandLog>> = _logs.asStateFlow()
 
     fun logCommand(
-        adbPath: String,
         command: String,
         result: CommandResult,
         deviceId: String? = null
