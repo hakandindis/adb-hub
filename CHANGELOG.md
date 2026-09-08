@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## [0.8.0] - 2026-09-08
+
+### Changed
+
+- **Kotlin** – Gradle plugin updated from 2.4.0 to 2.4.20
+
 ## [0.7.0] - 2026-05-19
 
 ### Changed
